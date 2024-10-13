@@ -1,0 +1,224 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\drive_z\\OdaDataService\\OdaWepApi\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\permission.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\permission.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\package.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\package.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\invoice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\invoice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\apartmentaddon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\apartmentaddon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\apartment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\apartment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|c:\\drive_z\\odadataservice\\odawepapi\\models\\addon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB0C730E-E830-4F4F-A25D-150FA1DDA735}|OdaWepApi.csproj|solutionrelative:models\\addon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 335,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\User.cs",
+              "RelativeToolTip": "Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:31:35.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Role.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Role.cs",
+              "RelativeDocumentMoniker": "Models\\Role.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Role.cs",
+              "RelativeToolTip": "Models\\Role.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:30:02.431Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Project.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Project.cs",
+              "RelativeDocumentMoniker": "Models\\Project.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Project.cs",
+              "RelativeToolTip": "Models\\Project.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:28:25.505Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Permission.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Permission.cs",
+              "RelativeDocumentMoniker": "Models\\Permission.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Permission.cs",
+              "RelativeToolTip": "Models\\Permission.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:27:20.308Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Package.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Package.cs",
+              "RelativeDocumentMoniker": "Models\\Package.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Package.cs",
+              "RelativeToolTip": "Models\\Package.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:11:15.843Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:14:05.084Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Invoice.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Invoice.cs",
+              "RelativeDocumentMoniker": "Models\\Invoice.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Invoice.cs",
+              "RelativeToolTip": "Models\\Invoice.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:23:38.916Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Booking.cs",
+              "RelativeDocumentMoniker": "Models\\Booking.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Booking.cs",
+              "RelativeToolTip": "Models\\Booking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:21:35.467Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Customer.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Customer.cs",
+              "RelativeDocumentMoniker": "Models\\Customer.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Customer.cs",
+              "RelativeToolTip": "Models\\Customer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:22:34.975Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Apartment.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Apartment.cs",
+              "RelativeDocumentMoniker": "Models\\Apartment.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Apartment.cs",
+              "RelativeToolTip": "Models\\Apartment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:11:31.646Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Addon.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Addon.cs",
+              "RelativeDocumentMoniker": "Models\\Addon.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Addon.cs",
+              "RelativeToolTip": "Models\\Addon.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAMwCYAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:10:21.853Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Apartmentaddon.cs",
+              "DocumentMoniker": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Apartmentaddon.cs",
+              "RelativeDocumentMoniker": "Models\\Apartmentaddon.cs",
+              "ToolTip": "C:\\drive_z\\OdaDataService\\OdaWepApi\\Models\\Apartmentaddon.cs",
+              "RelativeToolTip": "Models\\Apartmentaddon.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-13T16:01:05.307Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

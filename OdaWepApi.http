@@ -1,0 +1,6 @@
+@OdaWepApi_HostAddress = http://localhost:5188
+
+GET {{OdaWepApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

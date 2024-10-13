@@ -1,0 +1,6 @@
+C:\drive_z\OdaDataService\OdaWepApi\obj\Release\net8.0\OdaWepApi.csproj.AssemblyReference.cache
+C:\drive_z\OdaDataService\OdaWepApi\obj\Release\net8.0\OdaWepApi.GeneratedMSBuildEditorConfig.editorconfig
+C:\drive_z\OdaDataService\OdaWepApi\obj\Release\net8.0\OdaWepApi.AssemblyInfoInputs.cache
+C:\drive_z\OdaDataService\OdaWepApi\obj\Release\net8.0\OdaWepApi.AssemblyInfo.cs
+C:\drive_z\OdaDataService\OdaWepApi\obj\Release\net8.0\OdaWepApi.csproj.CoreCompileInputs.cache
+C:\drive_z\OdaDataService\OdaWepApi\obj\Release\net8.0\OdaWepApi.MvcApplicationPartsAssemblyInfo.cache
