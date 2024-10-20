@@ -1,0 +1,22 @@
+1.Migrate :
+    dotnet ef database drop
+    dotnet ef migrations remove
+    dotnet ef migrations add InitialCreate
+    dotnet ef database update
+
+2.Build and run :
+    dotnet clean OdaWepApi.csproj
+    dotnet restore OdaWepApi.csproj
+    dotnet build OdaWepApi.csproj 
+    dotnet run OdaWepApi.csproj 
+
+3.prettier:
+    dotnet format OdaWepApi.csproj
+    dotnet format whitespace OdaWepApi.csproj
+    dotnet format style OdaWepApi.csproj
+    dotnet format analyzers OdaWepApi.csproj
+
+4. Check DB :
+    psql -U postgres -p 5432 -d postgres
+
+5. Stop Process: Stop-Process -Id 151980 -Force    

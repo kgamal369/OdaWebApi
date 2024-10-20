@@ -1,0 +1,220 @@
+1. Roles : [Visitor,SuperAdmin,ContentCreator]
+
+2. Role Permission :
+2.1. Visitor :
+    a. Epic : General :
+    -   As a Visitor, I want to view the home page to navigate the website
+    -   As a Visitor, I want to view the about us page and view our vision and our team sections
+    -   As a Visitor, I want to view the Why oda page and view How it works, Packages, Payment Program & Rewards sections
+    -   As a Visitor, I want to view the Projects page
+    - As a Visitor, I want to view and use the Contact Us page so that I can submit my inquiry and receive support or information from Oda	
+    With Acceptance Criteria :
+        1. The Visitor must enter their first name; this field is mandatory
+        2. The Visitor must enter their last name; this field is mandatory
+        3. The Visitor must enter a valid phone number; this field is mandatory
+        4. The Visitor must enter a valid email address; this field is mandatory
+        5. The Visitor must enter a message in the message field; this field is mandatory
+        6. The form should have a 'Submit' button that is enabled only when all mandatory fields are correctly filled
+        7. Error messages should be shown if any mandatory field is left empty or filled incorrectly
+        8. A confirmation message should be displayed after the successful submission of the inquiry"
+
+    b. Epic : Build your Kit (Developers) :
+    -   As a Visitor, I want to view the Build Your Kit page to explore options for Developers, Non-Developers, and Face-Lift services
+    -   As a Visitor, I want to view the Developers List page to see available developers and their associated residential projects
+    -   As a Visitor, I want to Select certain Developer from the Developers List page to view to view a customized kit estimation, so that I can understand the costs and options for finishing my residential unit
+    With Acceptance Criteria:
+        1. The Visitor must select the residential project name; this field is mandatory
+        2. The Visitor must select the residential unit; this field is mandatory
+        3. The Visitor must select a plan; this field is mandatory, and the plan price will be adjusted based on the uresidential unit selection.
+        4. The Visitor can optionally select from the following add-ons:
+        • Interior Design option
+        • Air Conditioning option
+        • Standard Heater option
+        • Instant Heater option
+        • Boilers option
+        • Automation Plan option
+        • Solar Heating option
+        • Shower Tempered Glass option
+        • Shutters & Aluminum Glass option
+        5. The Visitor must enter their contact and payment details; these fields are mandatory:
+        • First name
+        • Last name
+        • Valid phone number
+        • Valid email address
+        • Payment method selection
+        • Option to view payment program details
+        6. The form should have a 'Checkout' button that is enabled only when all mandatory fields are correctly filled.
+        7. Error messages should be shown if any mandatory field is left empty or filled incorrectly.
+        8. A confirmation message should be displayed after successful submission."
+
+    c. Epic : Build your Kit (Non Developers) :
+    -   As a Visitor, I want to select Non-Developers option from the Build Your Kit page to view a customized kit estimation, so that I can understand the costs and options for finishing my residential unit
+    	With Acceptance Criteria:
+        1. The Visitor must enter the unit area in square meters as a numeric value; this field is mandatory.
+        2. The Visitor must enter the address; this field is mandatory
+        3. The Visitor must pin location on the map; this field is mandatory
+        4. The Visitor must select a plan; this field is mandatory, and the plan price will be adjusted based on the unit area entered.
+        5. The Visitor can optionally select from the following add-ons:
+        • Interior Design option
+        • Air Conditioning option
+        • Standard Heater option
+        • Instant Heater option
+        • Boilers option
+        • Automation Plan option
+        • Solar Heating option
+        • Shower Tempered Glass option
+        • Shutters & Aluminum Glass option
+        6. The Visitor must enter their contact and payment details; these fields are mandatory:
+        • First name
+        • Last name
+        • Valid phone number
+        • Valid email address
+        • Payment method selection
+        • Option to view payment program details
+        7. The form should have a 'Checkout' button that is enabled only when all mandatory fields are correctly filled.
+        8. Error messages should be shown if any mandatory field is left empty or filled incorrectly.
+        9. A confirmation message should be displayed after successful submission"
+
+    d. Epic : Build your Kit (Face-Lift):
+    -   As a Visitor, I want to select the Face-Lift option from the Build Your Kit page to view a customized kit estimation, so that I can understand the costs and options for updating my residential unit.
+    	With Acceptance Criteria:
+        1. The Visitor must enter the unit area in square meters as a numeric value; this field is mandatory.
+        2. The Visitor must enter the address; this field is mandatory.
+        3. The Visitor must pin the location on the map; this field is mandatory.
+        4. The Visitor must view the Face-Lift price, which will be adjusted based on the unit area entered.
+        5. The Visitor can optionally select from the following add-ons:
+        • Foundation paint option
+        • Decoration paint option
+        • Gypsum Board option
+        • Flooring option
+        • Stairs option
+        • Shutters & Aluminum option
+        • Shower Tempered Glass option
+        • Solar Heating option
+        • Automation Plan option
+        6. The Visitor must enter their contact and payment details; these fields are mandatory:
+        • First name
+        • Last name
+        • Valid phone number
+        • Valid email address
+        • Payment method selection
+        • Option to view payment program details
+        7. The form should have a 'Checkout' button that is enabled only when all mandatory fields are correctly filled.
+        8. Error messages should be shown if any mandatory field is left empty or filled incorrectly.
+
+
+
+
+2.2. SuperAdmin:
+    a.Epic: User Management : 
+    -   As a Super Admin, I want to create new Content Creator accounts so that authorized users can access content management tools.	
+    With Acceptance Criteria :
+    1. The Super Admin must have access to a ""Create Account"" option in the admin panel.
+    2. The Super Admin must enter a valid email address for the new Content Creator; this field is mandatory.
+    3. The Super Admin must set a temporary password for the Content Creator account; this field is mandatory.
+    4. The Super Admin must assign a role (Content Creator) to the new account; this field is mandatory.
+    5. A confirmation message should be displayed after successfully creating an account: ""Content Creator account has been successfully created.""
+    6. An email notification with login details and a prompt to change the password should be sent to the new Content Creator."
+
+    -   As a Super Admin, I want to update Content Creator account details so that account information is always accurate and up-to-date.	
+    With Acceptance Criteria :
+    1. The Super Admin must be able to view a list of existing Content Creator accounts.
+    2. The Super Admin must select a Content Creator account to edit details such as name, email, and status.
+    3. The Super Admin must have the ability to reset a Content Creator's password.
+    4. A confirmation message should be displayed after successfully updating account details: ""Content Creator account has been successfully updated.""
+    5. An email notification should be sent to the Content Creator if their account details have been changed."
+
+    -   As a Super Admin, I want to deactivate a Content Creator account so that only active users can access content management tools.
+    With Acceptance Criteria:
+    1. The Super Admin must be able to view a list of existing Content Creator accounts.
+    2. The Super Admin must select a Content Creator account to deactivate.
+    3. A confirmation prompt should appear before deactivating the account: ""Are you sure you want to deactivate this account?""
+    4. Once confirmed, the account status should change to ""Deactivated.""
+    5. The deactivated Content Creator should receive an email notification: ""Your account has been deactivated by the administrator."""
+
+
+
+2.3.ContentCreator :
+    a. Epic: Authentication
+    -   As a Content Creator, I want to log in to the application using the credentials provided by the Super Admin so that I can access the content management tools.
+    With Acceptance Criteria:
+        1. The Content Creator must enter a valid email address and password.
+        2. The system must authenticate the credentials against the stored information.
+        3. If the credentials are correct, the Content Creator should be redirected to the content management dashboard.
+        4. If the credentials are incorrect, an error message should be displayed: ""Invalid email or password.""
+        5. If the Content Creator’s account is deactivated, an error message should be displayed: ""Your account has been deactivated. Please contact the administrator."""
+
+    -   As a Content Creator, I want to request a password reset if I forget my password, so that I can regain access to my account. The reset process will be initiated by the Super Admin.
+    With Acceptance Criteria:
+        1. The Content Creator must click on the ""Forgot Password"" link on the login page.
+        2. The Content Creator must enter a valid email address associated with their account; this field is mandatory.
+        3. An email notification should be sent to the Super Admin to initiate the password reset process.
+        4. The Super Admin should provide a temporary password or a reset link to the Content Creator.
+        5. Upon receiving the temporary password or reset link, the Content Creator should be able to log in and change their password.
+        6. The Content Creator must enter a new password that meets security requirements (e.g., minimum length, complexity).
+        7. A confirmation message should be displayed after successfully changing the password: ""Your password has been successfully updated."""
+
+    b. Epic: Website Content:
+    -   As a Content Creator, I want to add, edit, and delete website content so that I can keep the information up to date and relevant for visitors.	
+    With Acceptance Criteria :
+        1. The Content Creator should be able to add new content sections or articles to predefined areas of the website (e.g., About Us, Why Oda).
+        2. The Content Creator should be able to edit existing content by selecting a section and making changes to text, images, or links.
+        3. The Content Creator should be able to delete content sections or articles if they are no longer relevant.
+        4. Changes made by the Content Creator should be visible immediately upon saving.
+        5. A confirmation message should be displayed after successful addition, editing, or deletion of content.
+        6. Error messages should be shown if mandatory fields are left empty during content creation or editing."
+
+    c. Epic: Developers :
+    -   As a Content Creator, I want to add, edit, and delete developer profiles so that I can manage the list of developers associated with the platform.	
+    With Acceptance Criteria:
+        1. The Content Creator should be able to add new developer profiles with details like developer name, logo, contact information, and associated residential projects.
+        2. The Content Creator should be able to edit existing developer profiles to update information.
+        3. The Content Creator should be able to delete developer profiles if they are no longer associated with the platform.
+        4. Changes made to developer profiles should be reflected in the Developers List page.
+        5. A confirmation message should be displayed after successful addition, editing, or deletion of a developer profile.
+        6. Error messages should be shown if mandatory fields are left empty or if there are invalid inputs."
+
+    d. Epic: Projects:
+    -   As a Content Creator, I want to add, edit, and delete project listings and link them to specific developers so that I can keep the project information organized and up to date.	
+    With Acceptance Criteria:
+        1. The Content Creator should be able to add new projects, including project name, description, images, and the associated developer.
+        2. The Content Creator should be able to edit existing project details.
+        3. The Content Creator should be able to delete projects that are no longer relevant.
+        4. The Content Creator should be able to link each project to a specific developer.
+        5. Changes made to projects should be reflected in the Projects page and the linked Developers List page.
+        6. A confirmation message should be displayed after successful addition, editing, or deletion of a project.
+        7. Error messages should be shown if mandatory fields are left empty or if there are invalid inputs."
+
+    e. Epic :Units	
+    -   As a Content Creator, I want to add, edit, and delete unit listings and link them to specific projects so that users can easily find units available for finishing or facelift.	
+    With Acceptance Criteria:
+        1. The Content Creator should be able to add new units with details like unit type, size, location, and associated project.
+        2. The Content Creator should be able to edit existing unit details.
+        3. The Content Creator should be able to delete units that are no longer available.
+        4. The Content Creator should be able to link each unit to a specific project.
+        5. Changes made to units should be reflected in the Units section under the respective project.
+        6. A confirmation message should be displayed after successful addition, editing, or deletion of a unit.
+        7. Error messages should be shown if mandatory fields are left empty or if there are invalid inputs."
+
+    f. Epic :Plans and Add-ons
+    -	As a Content Creator, I want to add, edit, and delete plans and add-ons for both developers and non-developers so that I can provide accurate pricing and customization options.	
+    With Acceptance Criteria:
+        1. The Content Creator should be able to add new plans and add-ons, including their details and prices.
+        2. The Content Creator should be able to edit the details and prices of existing plans and add-ons.
+        3. The Content Creator should be able to delete plans and add-ons that are no longer offered.
+        4. Changes made to plans and add-ons should be reflected in the Build Your Kit section for developers and non-developers.
+        5. A confirmation message should be displayed after successful addition, editing, or deletion of plans or add-ons.
+        6. Error messages should be shown if mandatory fields are left empty or if there are invalid inputs."
+
+    g.Face-Lift Plans and Add-ons:
+    -	As a Content Creator, I want to add, edit, and delete Face-Lift plans and add-ons so that I can offer tailored options and pricing for residential unit facelifts.	
+    With Acceptance Criteria:
+        1. The Content Creator should be able to add new Face-Lift plans and add-ons, including their details and prices.
+        2. The Content Creator should be able to edit the details and prices of existing Face-Lift plans and add-ons.
+        3. The Content Creator should be able to delete Face-Lift plans and add-ons that are no longer offered.
+        4. Changes made to Face-Lift plans and add-ons should be reflected in the Build Your Kit (Face-Lift) section.
+        5. A confirmation message should be displayed after successful addition, editing, or deletion of Face-Lift plans or add-ons.
+        6. Error messages should be shown if mandatory fields are left empty or if there are invalid inputs."
+
+
+

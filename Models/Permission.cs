@@ -27,7 +27,7 @@ public partial class Permission
 
 public static class PermissionEndpoints
 {
-	public static void MapPermissionEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapPermissionEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Permission").WithTags(nameof(Permission));
 
@@ -70,7 +70,7 @@ public static class PermissionEndpoints
         {
             db.Permissions.Add(permission);
             await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/Permission/{permission.Permissionid}",permission);
+            return TypedResults.Created($"/api/Permission/{permission.Permissionid}", permission);
         })
         .WithName("CreatePermission")
         .WithOpenApi();

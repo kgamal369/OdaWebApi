@@ -31,7 +31,7 @@ public partial class Project
 
 public static class ProjectEndpoints
 {
-	public static void MapProjectEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapProjectEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Project").WithTags(nameof(Project));
 
@@ -76,7 +76,7 @@ public static class ProjectEndpoints
         {
             db.Projects.Add(project);
             await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/Project/{project.Projectid}",project);
+            return TypedResults.Created($"/api/Project/{project.Projectid}", project);
         })
         .WithName("CreateProject")
         .WithOpenApi();

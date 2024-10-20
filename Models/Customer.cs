@@ -31,7 +31,7 @@ public partial class Customer
 
 public static class CustomerEndpoints
 {
-	public static void MapCustomerEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapCustomerEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Customer").WithTags(nameof(Customer));
 
@@ -76,7 +76,7 @@ public static class CustomerEndpoints
         {
             db.Customers.Add(customer);
             await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/Customer/{customer.Customerid}",customer);
+            return TypedResults.Created($"/api/Customer/{customer.Customerid}", customer);
         })
         .WithName("CreateCustomer")
         .WithOpenApi();

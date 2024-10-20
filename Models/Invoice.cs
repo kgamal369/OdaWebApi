@@ -29,7 +29,7 @@ public partial class Invoice
 
 public static class InvoiceEndpoints
 {
-	public static void MapInvoiceEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapInvoiceEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Invoice").WithTags(nameof(Invoice));
 
@@ -73,7 +73,7 @@ public static class InvoiceEndpoints
         {
             db.Invoices.Add(invoice);
             await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/Invoice/{invoice.Invoiceid}",invoice);
+            return TypedResults.Created($"/api/Invoice/{invoice.Invoiceid}", invoice);
         })
         .WithName("CreateInvoice")
         .WithOpenApi();

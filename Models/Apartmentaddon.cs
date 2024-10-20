@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ namespace OdaWepApi.Models;
 
 public partial class Apartmentaddon
 {
+    [Key]
     public int Apartmentaddonsid { get; set; }
 
     public int? Apartmentid { get; set; }
@@ -35,7 +37,7 @@ public partial class Apartmentaddon
 
 public static class ApartmentaddonEndpoints
 {
-	public static void MapApartmentaddonEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapApartmentaddonEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Apartmentaddon").WithTags(nameof(Apartmentaddon));
 
@@ -81,7 +83,7 @@ public static class ApartmentaddonEndpoints
         {
             db.Apartmentaddons.Add(apartmentaddon);
             await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/Apartmentaddon/{apartmentaddon.Apartmentaddonsid}",apartmentaddon);
+            return TypedResults.Created($"/api/Apartmentaddon/{apartmentaddon.Apartmentaddonsid}", apartmentaddon);
         })
         .WithName("CreateApartmentaddon")
         .WithOpenApi();

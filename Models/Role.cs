@@ -27,7 +27,7 @@ public partial class Role
 
 public static class RoleEndpoints
 {
-	public static void MapRoleEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapRoleEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Role").WithTags(nameof(Role));
 
@@ -69,7 +69,7 @@ public static class RoleEndpoints
         {
             db.Roles.Add(role);
             await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/Role/{role.Roleid}",role);
+            return TypedResults.Created($"/api/Role/{role.Roleid}", role);
         })
         .WithName("CreateRole")
         .WithOpenApi();

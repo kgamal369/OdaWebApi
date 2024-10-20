@@ -10,6 +10,7 @@ namespace OdaWepApi.Models;
 
 public partial class Addon
 {
+    [Key]
     public int Addonid { get; set; }
 
     [Required(ErrorMessage = "Addon Name is required.")]
@@ -38,10 +39,11 @@ public partial class Addon
 
 public static class AddonEndpoints
 {
-	public static void MapAddonEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapAddonEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Addon").WithTags(nameof(Addon));
 
+        //Get all Addons
         group.MapGet("/", async (OdaDbContext db) =>
         {
             return await db.Addons.ToListAsync();
@@ -49,6 +51,7 @@ public static class AddonEndpoints
         .WithName("GetAllAddons")
         .WithOpenApi();
 
+        //Get Addon by Id
         group.MapGet("/{id}", async Task<Results<Ok<Addon>, NotFound>> (int addonid, OdaDbContext db) =>
         {
             return await db.Addons.AsNoTracking()
@@ -60,8 +63,12 @@ public static class AddonEndpoints
         .WithName("GetAddonById")
         .WithOpenApi();
 
+        //UpdateAddon
         group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int addonid, Addon addon, OdaDbContext db) =>
         {
+            // Set the Lastmodifieddatetime to the current time for updates
+            addon.Lastmodifieddatetime = DateTime.UtcNow;
+
             var affected = await db.Addons
                 .Where(model => model.Addonid == addonid)
                 .ExecuteUpdateAsync(setters => setters
@@ -71,7 +78,7 @@ public static class AddonEndpoints
                   .SetProperty(m => m.Priceperunit, addon.Priceperunit)
                   .SetProperty(m => m.Description, addon.Description)
                   .SetProperty(m => m.Brand, addon.Brand)
-                  .SetProperty(m => m.Createddatetime, addon.Createddatetime)
+                  //.SetProperty(m => m.Createddatetime, addon.Createddatetime)
                   .SetProperty(m => m.Lastmodifieddatetime, addon.Lastmodifieddatetime)
                   );
             return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
@@ -79,15 +86,43 @@ public static class AddonEndpoints
         .WithName("UpdateAddon")
         .WithOpenApi();
 
+
+        // Update Addon Price
+        group.MapPut("/{id}/price", async Task<Results<Ok, NotFound>> (int addonid, decimal newPrice, OdaDbContext db) =>
+        {
+            var affected = await db.Addons
+                .Where(a => a.Addonid == addonid)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(a => a.Priceperunit, newPrice)
+                    .SetProperty(a => a.Lastmodifieddatetime, DateTime.UtcNow)
+                );
+
+            return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
+        })
+        .WithName("UpdateAddonPrice")
+        .WithOpenApi();
+
+
+        //Create a new Addon
         group.MapPost("/", async (Addon addon, OdaDbContext db) =>
         {
+            // Set AddonId to MaxAddonId + 1
+            var maxAddonId = await db.Addons.MaxAsync(a => (int?)a.Addonid) ?? 0;
+            addon.Addonid = maxAddonId + 1;
+
+            // Set the Createddatetime for the first insertion
+            addon.Createddatetime = DateTime.UtcNow;
+            addon.Lastmodifieddatetime = addon.Createddatetime;
+
+
             db.Addons.Add(addon);
             await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/Addon/{addon.Addonid}",addon);
+            return TypedResults.Created($"/api/Addon/{addon.Addonid}", addon);
         })
         .WithName("CreateAddon")
         .WithOpenApi();
 
+        // Delete Addon
         group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int addonid, OdaDbContext db) =>
         {
             var affected = await db.Addons

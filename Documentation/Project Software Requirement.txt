@@ -1,0 +1,8 @@
+Project Software requirements:
+1. C# .NET BackEnd
+2. API Will be Accessible via serveral System 
+3. We are working code first approach so our model should be migrated to OdaDbContext
+4. Our DB is PostgresSQL DB 
+5. API should be able test via Swagger  
+6. Our system will be hosted in Azure Cloud later one 
+7. Our backend system should be able to be used for front End (Web and mobile phone)

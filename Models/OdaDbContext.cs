@@ -9,8 +9,8 @@ namespace OdaWepApi.Models;
 public partial class OdaDbContext : DbContext
 {
 
-    public OdaDbContext(DbContextOptions<OdaDbContext> options) : 
-        base(options) 
+    public OdaDbContext(DbContextOptions<OdaDbContext> options) :
+        base(options)
     {
     }
 

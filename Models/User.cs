@@ -39,7 +39,7 @@ public partial class User
 
 public static class UserEndpoints
 {
-	public static void MapUserEndpoints (this IEndpointRouteBuilder routes)
+    public static void MapUserEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/User").WithTags(nameof(User));
 
@@ -87,7 +87,7 @@ public static class UserEndpoints
         {
             db.Users.Add(user);
             await db.SaveChangesAsync();
-            return TypedResults.Created($"/api/User/{user.Userid}",user);
+            return TypedResults.Created($"/api/User/{user.Userid}", user);
         })
         .WithName("CreateUser")
         .WithOpenApi();
