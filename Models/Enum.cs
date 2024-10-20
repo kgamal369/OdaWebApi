@@ -30,10 +30,11 @@
         public enum ApartmentStatus
         {
             ForSale,
-            Booked,
-            InReview,
-            InProgress,
             Template,
+            Draft,
+            InProgress,
+            InReview,
+            Booked,
             Completed
         }
         public enum InvoiceStatus
@@ -79,5 +80,28 @@
             Customer
         }
 
+        public enum EntitiesNames
+        {
+            Addon,
+            Apartment,
+            Apartmentaddon,
+            Booking,
+            Customer,
+            Enum,
+            Invoices,
+            Package,
+            Permission,
+            Project,
+            Role,
+            User
+        }
+
+        public enum PermissionActions
+        {
+            Get,
+            Remove,
+            Add,
+            Update
+        }
     }
 }

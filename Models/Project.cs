@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
@@ -9,8 +10,11 @@ namespace OdaWepApi.Models;
 
 public partial class Project
 {
+    [Key]
     public int Projectid { get; set; }
 
+    [Required(ErrorMessage = "Project Name is required.")]
+    [StringLength(100, MinimumLength = 2, ErrorMessage = "Project Name must be between 2 and 100 characters.")]
     public string? Projectname { get; set; }
 
     public string? Location { get; set; }
@@ -35,6 +39,7 @@ public static class ProjectEndpoints
     {
         var group = routes.MapGroup("/api/Project").WithTags(nameof(Project));
 
+        // Get All Projects
         group.MapGet("/", async (OdaDbContext db) =>
         {
             return await db.Projects.ToListAsync();
@@ -42,6 +47,7 @@ public static class ProjectEndpoints
         .WithName("GetAllProjects")
         .WithOpenApi();
 
+        // Get Project by Id
         group.MapGet("/{id}", async Task<Results<Ok<Project>, NotFound>> (int projectid, OdaDbContext db) =>
         {
             return await db.Projects.AsNoTracking()
@@ -53,27 +59,60 @@ public static class ProjectEndpoints
         .WithName("GetProjectById")
         .WithOpenApi();
 
-        group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int projectid, Project project, OdaDbContext db) =>
+        // Update Project
+        group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int projectid, Project project, IFormFile? logo, OdaDbContext db) =>
         {
-            var affected = await db.Projects
-                .Where(model => model.Projectid == projectid)
-                .ExecuteUpdateAsync(setters => setters
-                  .SetProperty(m => m.Projectid, project.Projectid)
-                  .SetProperty(m => m.Projectname, project.Projectname)
-                  .SetProperty(m => m.Location, project.Location)
-                  .SetProperty(m => m.Amenities, project.Amenities)
-                  .SetProperty(m => m.Totalunits, project.Totalunits)
-                  .SetProperty(m => m.Projectlogo, project.Projectlogo)
-                  .SetProperty(m => m.Createdatetime, project.Createdatetime)
-                  .SetProperty(m => m.Lastmodifieddatetime, project.Lastmodifieddatetime)
-                  );
-            return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
+            var existingProject = await db.Projects.FindAsync(projectid);
+            if (existingProject == null)
+            {
+                return TypedResults.NotFound();
+            }
+
+            // Update properties
+            existingProject.Projectname = project.Projectname;
+            existingProject.Location = project.Location;
+            existingProject.Amenities = project.Amenities;
+            existingProject.Totalunits = project.Totalunits;
+            existingProject.Lastmodifieddatetime = DateTime.UtcNow;
+
+            // Update Project Logo if provided
+            if (logo != null && logo.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await logo.CopyToAsync(memoryStream);
+                    existingProject.Projectlogo = new List<byte[]> { memoryStream.ToArray() };
+                }
+            }
+
+            await db.SaveChangesAsync();
+            return TypedResults.Ok();
         })
         .WithName("UpdateProject")
         .WithOpenApi();
 
-        group.MapPost("/", async (Project project, OdaDbContext db) =>
+
+        // Create Project
+        group.MapPost("/", async (Project project, IFormFile? logo, OdaDbContext db) =>
         {
+            // Set Project ID to MaxProjectId + 1
+            var maxProjectId = await db.Projects.MaxAsync(p => (int?)p.Projectid) ?? 0;
+            project.Projectid = maxProjectId + 1;
+
+            // Set CreateDateTime and LastModifiedDateTime
+            project.Createdatetime = DateTime.UtcNow;
+            project.Lastmodifieddatetime = project.Createdatetime;
+
+            // Handle Project Logo if provided
+            if (logo != null && logo.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await logo.CopyToAsync(memoryStream);
+                    project.Projectlogo = new List<byte[]> { memoryStream.ToArray() };
+                }
+            }
+
             db.Projects.Add(project);
             await db.SaveChangesAsync();
             return TypedResults.Created($"/api/Project/{project.Projectid}", project);
@@ -81,6 +120,7 @@ public static class ProjectEndpoints
         .WithName("CreateProject")
         .WithOpenApi();
 
+        // Delete Project
         group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int projectid, OdaDbContext db) =>
         {
             var affected = await db.Projects

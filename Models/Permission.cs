@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
@@ -9,12 +10,20 @@ namespace OdaWepApi.Models;
 
 public partial class Permission
 {
+    [Key]
     public int Permissionid { get; set; }
+
+    [Required(ErrorMessage = "Entities Name is required.")]
+    [EnumDataType(typeof(Enum.EntitiesNames), ErrorMessage = "Invalid Entities.")]
 
     public string? Entityname { get; set; }
 
+    [Required(ErrorMessage = "Permission Actions is required.")]
+    [EnumDataType(typeof(Enum.PermissionActions), ErrorMessage = "Invalid Actions.")]
+
     public string? Action { get; set; }
 
+    [Required]
     public int? Roleid { get; set; }
 
     public DateTime? Createdatetime { get; set; }
@@ -31,6 +40,7 @@ public static class PermissionEndpoints
     {
         var group = routes.MapGroup("/api/Permission").WithTags(nameof(Permission));
 
+        //Get All
         group.MapGet("/", async (OdaDbContext db) =>
         {
             return await db.Permissions.ToListAsync();
@@ -38,6 +48,7 @@ public static class PermissionEndpoints
         .WithName("GetAllPermissions")
         .WithOpenApi();
 
+        //Get By ID
         group.MapGet("/{id}", async Task<Results<Ok<Permission>, NotFound>> (int permissionid, OdaDbContext db) =>
         {
             return await db.Permissions.AsNoTracking()
@@ -49,8 +60,17 @@ public static class PermissionEndpoints
         .WithName("GetPermissionById")
         .WithOpenApi();
 
-        group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int permissionid, Permission permission, OdaDbContext db) =>
+
+        //Update Permssion
+        group.MapPut("/{id}", async Task<IResult> (int permissionid, Permission permission, OdaDbContext db) =>
         {
+            // Validate Role ID
+            if (!await db.Roles.AnyAsync(r => r.Roleid == permission.Roleid))
+                return TypedResults.BadRequest("Invalid Role ID.");
+
+            // Update LastModifiedDateTime
+            permission.Lastmodifieddatetime = DateTime.UtcNow;
+
             var affected = await db.Permissions
                 .Where(model => model.Permissionid == permissionid)
                 .ExecuteUpdateAsync(setters => setters
@@ -58,7 +78,6 @@ public static class PermissionEndpoints
                   .SetProperty(m => m.Entityname, permission.Entityname)
                   .SetProperty(m => m.Action, permission.Action)
                   .SetProperty(m => m.Roleid, permission.Roleid)
-                  .SetProperty(m => m.Createdatetime, permission.Createdatetime)
                   .SetProperty(m => m.Lastmodifieddatetime, permission.Lastmodifieddatetime)
                   );
             return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
@@ -66,8 +85,21 @@ public static class PermissionEndpoints
         .WithName("UpdatePermission")
         .WithOpenApi();
 
+        //Created Permssion
         group.MapPost("/", async (Permission permission, OdaDbContext db) =>
         {
+            // Validate Role ID
+            if (!await db.Roles.AnyAsync(r => r.Roleid == permission.Roleid))
+                return Results.BadRequest("Invalid Role ID.");
+
+            // Set Permission ID to MaxPermissionId + 1
+            var maxPermissionId = await db.Permissions.MaxAsync(p => (int?)p.Permissionid) ?? 0;
+            permission.Permissionid = maxPermissionId + 1;
+
+            // Set CreateDateTime and LastModifiedDateTime
+            permission.Createdatetime = DateTime.UtcNow;
+            permission.Lastmodifieddatetime = permission.Createdatetime;
+
             db.Permissions.Add(permission);
             await db.SaveChangesAsync();
             return TypedResults.Created($"/api/Permission/{permission.Permissionid}", permission);
@@ -75,6 +107,7 @@ public static class PermissionEndpoints
         .WithName("CreatePermission")
         .WithOpenApi();
 
+        //Delete Persmission
         group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int permissionid, OdaDbContext db) =>
         {
             var affected = await db.Permissions

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,11 @@ namespace OdaWepApi.Models;
 
 public partial class Role
 {
+    [Key]
     public int Roleid { get; set; }
+
+    [Required(ErrorMessage = "Role Name is required.")]
+    [StringLength(30, MinimumLength = 2, ErrorMessage = "Role Name must be between 2 and 20 characters.")]
 
     public string? Rolename { get; set; }
 
@@ -30,7 +35,8 @@ public static class RoleEndpoints
     public static void MapRoleEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Role").WithTags(nameof(Role));
-
+        
+        //Get ALL
         group.MapGet("/", async (OdaDbContext db) =>
         {
             return await db.Roles.ToListAsync();
@@ -38,7 +44,10 @@ public static class RoleEndpoints
         .WithName("GetAllRoles")
         .WithOpenApi();
 
+        //Get By ID
         group.MapGet("/{id}", async Task<Results<Ok<Role>, NotFound>> (int roleid, OdaDbContext db) =>
+
+
         {
             return await db.Roles.AsNoTracking()
                 .FirstOrDefaultAsync(model => model.Roleid == roleid)
@@ -49,15 +58,18 @@ public static class RoleEndpoints
         .WithName("GetRoleById")
         .WithOpenApi();
 
+        //Update Role
         group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int roleid, Role role, OdaDbContext db) =>
         {
+            // Update LastModifiedDateTime
+            role.Lastmodifieddatetime = DateTime.UtcNow;
+
             var affected = await db.Roles
                 .Where(model => model.Roleid == roleid)
                 .ExecuteUpdateAsync(setters => setters
                   .SetProperty(m => m.Roleid, role.Roleid)
                   .SetProperty(m => m.Rolename, role.Rolename)
                   .SetProperty(m => m.Description, role.Description)
-                  .SetProperty(m => m.Createdatetime, role.Createdatetime)
                   .SetProperty(m => m.Lastmodifieddatetime, role.Lastmodifieddatetime)
                   );
             return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
@@ -65,8 +77,18 @@ public static class RoleEndpoints
         .WithName("UpdateRole")
         .WithOpenApi();
 
+
+        //Create
         group.MapPost("/", async (Role role, OdaDbContext db) =>
         {
+            // Set Role ID to MaxRoleId + 1
+            var maxRoleId = await db.Roles.MaxAsync(r => (int?)r.Roleid) ?? 0;
+            role.Roleid = maxRoleId + 1;
+
+            // Set CreateDateTime and LastModifiedDateTime
+            role.Createdatetime = DateTime.UtcNow;
+            role.Lastmodifieddatetime = role.Createdatetime;
+
             db.Roles.Add(role);
             await db.SaveChangesAsync();
             return TypedResults.Created($"/api/Role/{role.Roleid}", role);
@@ -74,6 +96,7 @@ public static class RoleEndpoints
         .WithName("CreateRole")
         .WithOpenApi();
 
+        //Remove
         group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int roleid, OdaDbContext db) =>
         {
             var affected = await db.Roles
