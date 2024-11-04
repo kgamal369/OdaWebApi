@@ -14,6 +14,16 @@ builder.Services.AddDbContext<OdaDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configure Kestrel to listen on specific URLs
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(5188); // HTTP
+    serverOptions.ListenAnyIP(7205, listenOptions =>
+    {
+        listenOptions.UseHttps(); // HTTPS
+    });
+});
+
 var app = builder.Build();
 
 // Enable Swagger middleware in development mode

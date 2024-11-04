@@ -20,3 +20,5 @@
     psql -U postgres -p 5432 -d postgres
 
 5. Stop Process: Stop-Process -Id 151980 -Force    
+
+6. dotnet dev-certs https --trust

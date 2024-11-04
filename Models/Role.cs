@@ -35,7 +35,7 @@ public static class RoleEndpoints
     public static void MapRoleEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/Role").WithTags(nameof(Role));
-        
+
         //Get ALL
         group.MapGet("/", async (OdaDbContext db) =>
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
@@ -60,8 +61,12 @@ public static class ProjectEndpoints
         .WithOpenApi();
 
         // Update Project
-        group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int projectid, Project project, IFormFile? logo, OdaDbContext db) =>
+        group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int projectid, HttpRequest request, OdaDbContext db) =>
         {
+            // Deserialize JSON data from the form
+            var projectJson = request.Form["project"].ToString();
+            var project = JsonSerializer.Deserialize<Project>(projectJson);
+
             var existingProject = await db.Projects.FindAsync(projectid);
             if (existingProject == null)
             {
@@ -69,32 +74,41 @@ public static class ProjectEndpoints
             }
 
             // Update properties
-            existingProject.Projectname = project.Projectname;
-            existingProject.Location = project.Location;
-            existingProject.Amenities = project.Amenities;
-            existingProject.Totalunits = project.Totalunits;
+            existingProject.Projectname = project?.Projectname;
+            existingProject.Location = project?.Location;
+            existingProject.Amenities = project?.Amenities;
+            existingProject.Totalunits = project?.Totalunits;
             existingProject.Lastmodifieddatetime = DateTime.UtcNow;
 
             // Update Project Logo if provided
-            if (logo != null && logo.Length > 0)
+            if (request.Form.Files.Count > 0)
             {
-                using (var memoryStream = new MemoryStream())
+                var logo = request.Form.Files[0];
+                if (logo.Length > 0)
                 {
-                    await logo.CopyToAsync(memoryStream);
-                    existingProject.Projectlogo = new List<byte[]> { memoryStream.ToArray() };
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await logo.CopyToAsync(memoryStream);
+                        existingProject.Projectlogo = new List<byte[]> { memoryStream.ToArray() };
+                    }
                 }
             }
 
             await db.SaveChangesAsync();
             return TypedResults.Ok();
         })
-        .WithName("UpdateProject")
-        .WithOpenApi();
+ .WithName("UpdateProject")
+ .WithOpenApi();
+
 
 
         // Create Project
-        group.MapPost("/", async (Project project, IFormFile? logo, OdaDbContext db) =>
+        group.MapPost("/", async (HttpRequest request, OdaDbContext db) =>
         {
+            // Deserialize JSON data from the form
+            var projectJson = request.Form["project"].ToString();
+            var project = JsonSerializer.Deserialize<Project>(projectJson);
+
             // Set Project ID to MaxProjectId + 1
             var maxProjectId = await db.Projects.MaxAsync(p => (int?)p.Projectid) ?? 0;
             project.Projectid = maxProjectId + 1;
@@ -104,12 +118,16 @@ public static class ProjectEndpoints
             project.Lastmodifieddatetime = project.Createdatetime;
 
             // Handle Project Logo if provided
-            if (logo != null && logo.Length > 0)
+            if (request.Form.Files.Count > 0)
             {
-                using (var memoryStream = new MemoryStream())
+                var logo = request.Form.Files[0];
+                if (logo.Length > 0)
                 {
-                    await logo.CopyToAsync(memoryStream);
-                    project.Projectlogo = new List<byte[]> { memoryStream.ToArray() };
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await logo.CopyToAsync(memoryStream);
+                        project.Projectlogo = new List<byte[]> { memoryStream.ToArray() };
+                    }
                 }
             }
 
@@ -119,6 +137,7 @@ public static class ProjectEndpoints
         })
         .WithName("CreateProject")
         .WithOpenApi();
+
 
         // Delete Project
         group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int projectid, OdaDbContext db) =>
