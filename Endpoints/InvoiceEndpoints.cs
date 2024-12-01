@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
-using OdaWepApi.Models;
+using OdaWepApi.Domain.Models;
+using OdaWepApi.Infrastructure;
 
 namespace OdaWepApi.Endpoints
 {

@@ -1,8 +1,6 @@
-﻿namespace OdaWepApi.Models
+﻿namespace OdaWepApi.Domain.Enums
 {
-    public class Enum
-    {
-        public enum PackageType
+            public enum PackageType
         {
             Golden,
             Silver,
@@ -103,5 +101,4 @@
             Add,
             Update
         }
-    }
 }

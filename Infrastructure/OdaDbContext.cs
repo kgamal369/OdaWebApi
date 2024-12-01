@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using OdaWepApi.Domain.Models;
 
-
-namespace OdaWepApi.Models;
+namespace OdaWepApi.Infrastructure;
 
 public partial class OdaDbContext : DbContext
 {

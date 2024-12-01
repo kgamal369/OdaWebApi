@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OdaWepApi.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
-namespace OdaWepApi.Models
+namespace OdaWepApi.Domain.Models
 {
     public partial class Permission
     {
@@ -8,11 +9,11 @@ namespace OdaWepApi.Models
         public int Permissionid { get; set; }
 
         [Required(ErrorMessage = "Entities Name is required.")]
-        [EnumDataType(typeof(Enum.EntitiesNames), ErrorMessage = "Invalid Entities.")]
+        [EnumDataType(typeof(EntitiesNames), ErrorMessage = "Invalid Entities.")]
         public string? Entityname { get; set; }
 
         [Required(ErrorMessage = "Permission Actions is required.")]
-        [EnumDataType(typeof(Enum.PermissionActions), ErrorMessage = "Invalid Actions.")]
+        [EnumDataType(typeof(PermissionActions), ErrorMessage = "Invalid Actions.")]
         public string? Action { get; set; }
 
         [Required]

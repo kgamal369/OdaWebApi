@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using OdaWepApi.Domain.Enums;
 
-namespace OdaWepApi.Models
+namespace OdaWepApi.Domain.Models
 {
     public class Addon
     {
@@ -12,7 +13,7 @@ namespace OdaWepApi.Models
         public string? Addonname { get; set; }
 
         [Required(ErrorMessage = "AddOn Type is required.")]
-        [EnumDataType(typeof(Enum.AddOnType), ErrorMessage = "Invalid AddOn Type.")]
+        [EnumDataType(typeof(AddOnType), ErrorMessage = "Invalid AddOn Type.")]
         public string? Addontype { get; set; }
 
         [Required(ErrorMessage = "Price per unit is required.")]

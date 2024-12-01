@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using OdaWepApi.Domain.Enums;
 
-namespace OdaWepApi.Models
+namespace OdaWepApi.Domain.Models
 {
     public partial class Invoice
     {
@@ -18,7 +19,7 @@ namespace OdaWepApi.Models
         public decimal? Invoiceamount { get; set; }
 
         [Required(ErrorMessage = "Invoice Status is required.")]
-        [EnumDataType(typeof(Enum.InvoiceStatus), ErrorMessage = "Invalid Invoice Status.")]
+        [EnumDataType(typeof(InvoiceStatus), ErrorMessage = "Invalid Invoice Status.")]
         public string? Invoicestatus { get; set; }
 
         public DateTime? Invoiceduedate { get; set; }

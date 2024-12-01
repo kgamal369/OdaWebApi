@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using OdaWepApi.Domain.Enums;
 
-namespace OdaWepApi.Models
+namespace OdaWepApi.Domain.Models
 {
     public class Apartment
     {
@@ -12,11 +13,11 @@ namespace OdaWepApi.Models
         public string? Apartmentname { get; set; }
 
         [Required(ErrorMessage = "Apartment Type is required.")]
-        [EnumDataType(typeof(Enum.ApartmentType), ErrorMessage = "Invalid Apartment Type.")]
+        [EnumDataType(typeof(ApartmentType), ErrorMessage = "Invalid Apartment Type.")]
         public string? Apartmenttype { get; set; }
 
         [Required(ErrorMessage = "Apartment status is required.")]
-        [EnumDataType(typeof(Enum.ApartmentStatus), ErrorMessage = "Invalid Apartment Status.")]
+        [EnumDataType(typeof(ApartmentStatus), ErrorMessage = "Invalid Apartment Status.")]
         public string? Apartmentstatus { get; set; }
 
         [Required(ErrorMessage = "Apartment space is required.")]

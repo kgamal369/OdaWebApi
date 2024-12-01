@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using OdaWepApi.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
-namespace OdaWepApi.Models
+namespace OdaWepApi.Domain.Models
 {
     public class Booking
     {
@@ -17,7 +18,7 @@ namespace OdaWepApi.Models
         public DateTime? Lastmodifieddatetime { get; set; }
 
         [Required(ErrorMessage = "Booking Status is required.")]
-        [EnumDataType(typeof(Enum.BookingStatus), ErrorMessage = "Invalid Booking Status.")]
+        [EnumDataType(typeof(BookingStatus), ErrorMessage = "Invalid Booking Status.")]
         public string? Bookingstatus { get; set; }
 
         public int? Userid { get; set; }

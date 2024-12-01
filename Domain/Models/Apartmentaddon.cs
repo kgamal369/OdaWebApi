@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OdaWepApi.Models
+namespace OdaWepApi.Domain.Models
 {
     public class Apartmentaddon
     {

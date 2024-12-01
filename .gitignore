@@ -1,5 +1,6 @@
 ﻿# Visual Studio temporary files
 .vs/
+.config/
 *.vsidx
 *.suo
 *.cache
@@ -8,6 +9,7 @@
 # Build directories
 bin/
 obj/
+
 
 # Other temporary files
 *.tmp
