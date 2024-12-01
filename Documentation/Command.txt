@@ -21,4 +21,7 @@
 
 5. Stop Process: Stop-Process -Id 151980 -Force    
 
-6. dotnet dev-certs https --trust
+6. 
+dotnet dev-certs https --clean
+dotnet dev-certs https --check 
+dotnet dev-certs https --trust
