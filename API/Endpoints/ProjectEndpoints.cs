@@ -27,10 +27,12 @@ namespace OdaWepApi.API.Endpoints
             ).WithName("GetAllProjectNames").WithOpenApi();
 
 
+
+
             // Get All Available Apartment Spaces for a Selected Project Name
-            group.MapGet("/{projectName}/available-apartment-spaces", async Task<Results<Ok<List<decimal>>, NotFound>> (string projectName, OdaDbContext db) =>
+            group.MapGet("/by-name/{projectName}/available-apartment-spaces", async Task<Results<Ok<List<decimal>>, NotFound>> (string projectName, OdaDbContext db) =>
             {
-                // Find the project by name
+                // Find the project by Id
                 var project = await db.Projects
                     .Include(p => p.Apartments) // Include Apartments to access them
                     .AsNoTracking()
@@ -42,9 +44,9 @@ namespace OdaWepApi.API.Endpoints
                     return TypedResults.NotFound();
                 }
 
-                // Get available apartment spaces
+                // Get available apartment spaces (adjust the status filter as necessary)
                 var availableSpaces = project.Apartments
-                    .Where(a => a.Apartmentstatus == "Available") // Assuming "Available" is a valid status
+                    .Where(a => a.Apartmentstatus == "Available" || a.Apartmentstatus == "ForSale") // Include other statuses if needed
                     .Select(a => a.Apartmentspace)
                     .Where(space => space.HasValue)
                     .Select(space => space.Value)
@@ -54,8 +56,8 @@ namespace OdaWepApi.API.Endpoints
             }).WithName("GetAvailableApartmentSpacesByProjectName").WithOpenApi();
 
 
-            // Get All Available Apartment Spaces for a Selected Project Name
-            group.MapGet("/{id}/available-apartment-spaces", async Task<Results<Ok<List<decimal>>, NotFound>> (int projectId, OdaDbContext db) =>
+            // Get All Available Apartment Spaces for a Selected Project ID
+            group.MapGet("/by-id/{projectId:int}/available-apartment-spaces", async Task<Results<Ok<List<decimal>>, NotFound>> (int projectId, OdaDbContext db) =>
             {
                 // Find the project by Id
                 var project = await db.Projects
@@ -69,9 +71,9 @@ namespace OdaWepApi.API.Endpoints
                     return TypedResults.NotFound();
                 }
 
-                // Get available apartment spaces
+                // Get available apartment spaces (adjust the status filter as necessary)
                 var availableSpaces = project.Apartments
-                    .Where(a => a.Apartmentstatus == "Available") // Assuming "Available" is a valid status
+                    .Where(a => a.Apartmentstatus == "Available" || a.Apartmentstatus == "ForSale") // Include other statuses if needed
                     .Select(a => a.Apartmentspace)
                     .Where(space => space.HasValue)
                     .Select(space => space.Value)
@@ -79,6 +81,10 @@ namespace OdaWepApi.API.Endpoints
 
                 return TypedResults.Ok(availableSpaces);
             }).WithName("GetAvailableApartmentSpacesByProjectId").WithOpenApi();
+
+
+
+
 
             // Get Project by Id
             group.MapGet("/{id}", async Task<Results<Ok<Project>, NotFound>> (int projectid, OdaDbContext db) =>
@@ -90,7 +96,6 @@ namespace OdaWepApi.API.Endpoints
             ).WithName("GetProjectById").WithOpenApi();
 
 
-            // Get List of Avaiblable unit Area Per Project 
 
             // Update Project
             group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int projectid, HttpRequest request, OdaDbContext db) =>
