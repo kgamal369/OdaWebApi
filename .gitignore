@@ -1,0 +1,15 @@
+﻿# Visual Studio temporary files
+.vs/
+*.vsidx
+*.suo
+*.cache
+*.log
+
+# Build directories
+bin/
+obj/
+
+# Other temporary files
+*.tmp
+*.user
+*.backup
