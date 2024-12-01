@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Infrastructure;
 
-namespace OdaWepApi.Endpoints
+namespace OdaWepApi.API.Endpoints
 {
     public static class ApartmentEndpoints
     {
@@ -11,6 +11,7 @@ namespace OdaWepApi.Endpoints
         {
             var group = routes.MapGroup("/api/Apartment").WithTags(nameof(Apartment));
 
+            //Get all Apartment
             group.MapGet("/", async (OdaDbContext db) =>
                 await db.Apartments.ToListAsync()
             ).WithName("GetAllApartments").WithOpenApi();

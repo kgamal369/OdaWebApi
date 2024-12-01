@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace OdaWepApi.Domain.Models
 {
@@ -19,7 +17,6 @@ namespace OdaWepApi.Domain.Models
         public List<byte[]>? Projectlogo { get; set; }
         public DateTime? Createdatetime { get; set; }
         public DateTime? Lastmodifieddatetime { get; set; }
-
         public virtual ICollection<Apartment> Apartments { get; set; } = new List<Apartment>();
     }
 }

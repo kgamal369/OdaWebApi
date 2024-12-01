@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Infrastructure;
 
-namespace OdaWepApi.Endpoints
+namespace OdaWepApi.API.Endpoints
 {
     public static class UserEndpoints
     {

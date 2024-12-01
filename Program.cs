@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OdaWepApi.Endpoints;
+using OdaWepApi.API.Endpoints;
 using OdaWepApi.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
