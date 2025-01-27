@@ -4,7 +4,7 @@ using System.Text.Json;
 using OdaWepApi.Infrastructure;
 using OdaWepApi.Domain.Models;
 
-namespace OdaWepApi.API.Endpoints
+namespace OdaWepApi.API.DomainEndpoints
 {
     public static class ProjectEndpoints
     {

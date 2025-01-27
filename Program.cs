@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OdaWepApi.API.Endpoints;
+using OdaWepApi.API.DomainEndpoints;
 using OdaWepApi.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +56,8 @@ app.MapAddperrequestEndpoints();
 //app.MapBookingEndpoints();
 
 app.MapCustomerEndpoints();
+
+app.MapDeveloperEndpoints();
 
 app.MapInvoiceEndpoints();
 

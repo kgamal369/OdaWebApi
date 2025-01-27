@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Infrastructure;
 
-namespace OdaWepApi.API.Endpoints
+namespace OdaWepApi.API.DomainEndpoints
 {
     public static class PermissionEndpoints
     {
