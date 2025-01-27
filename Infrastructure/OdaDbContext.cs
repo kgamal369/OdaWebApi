@@ -1,46 +1,62 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using OdaWepApi.Domain.Models;
 
 namespace OdaWepApi.Infrastructure;
 
 public partial class OdaDbContext : DbContext
 {
+    public OdaDbContext()
+    {
+    }
 
-    public OdaDbContext(DbContextOptions<OdaDbContext> options) :
-        base(options)
+    public OdaDbContext(DbContextOptions<OdaDbContext> options)
+        : base(options)
     {
     }
 
     public virtual DbSet<Addon> Addons { get; set; }
 
+    public virtual DbSet<Addperrequest> Addperrequests { get; set; }
+
     public virtual DbSet<Apartment> Apartments { get; set; }
 
-    public virtual DbSet<Apartmentaddon> Apartmentaddons { get; set; }
+    public virtual DbSet<ApartmentAddon> ApartmentAddons { get; set; }
+
+    public virtual DbSet<ApartmentAddonperrequest> ApartmentAddonperrequests { get; set; }
+
+    public virtual DbSet<Automation> Automations { get; set; }
+
+    public virtual DbSet<Automationdetail> Automationdetails { get; set; }
 
     public virtual DbSet<Booking> Bookings { get; set; }
 
     public virtual DbSet<Customer> Customers { get; set; }
 
+    public virtual DbSet<Developer> Developers { get; set; }
+
     public virtual DbSet<Invoice> Invoices { get; set; }
 
-    public virtual DbSet<Package> Packages { get; set; }
+    public virtual DbSet<Paymentmethod> Paymentmethods { get; set; }
 
     public virtual DbSet<Permission> Permissions { get; set; }
+
+    public virtual DbSet<Plan> Plans { get; set; }
+
+    public virtual DbSet<Plandetail> Plandetails { get; set; }
 
     public virtual DbSet<Project> Projects { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
+    public virtual DbSet<Testimonial> Testimonials { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            // Fallback if the connection string is not passed via DI
-            optionsBuilder.UseNpgsql("DefaultConnection");
-        }
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseNpgsql("Host=localhost;Database=OdaDB;Username=postgres;Password=THEspider369;Port=5432");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -51,12 +67,12 @@ public partial class OdaDbContext : DbContext
             entity.ToTable("addons");
 
             entity.Property(e => e.Addonid).HasColumnName("addonid");
+            entity.Property(e => e.Addongroup)
+                .HasMaxLength(50)
+                .HasColumnName("addongroup");
             entity.Property(e => e.Addonname)
                 .HasMaxLength(255)
                 .HasColumnName("addonname");
-            entity.Property(e => e.Addontype)
-                .HasMaxLength(50)
-                .HasColumnName("addontype");
             entity.Property(e => e.Brand).HasColumnName("brand");
             entity.Property(e => e.Createddatetime)
                 .HasColumnType("timestamp without time zone")
@@ -65,9 +81,34 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
-            entity.Property(e => e.Priceperunit)
+            entity.Property(e => e.Price)
                 .HasPrecision(10, 2)
-                .HasColumnName("priceperunit");
+                .HasColumnName("price");
+            entity.Property(e => e.Unitormeter)
+                .HasColumnType("character varying")
+                .HasColumnName("unitormeter");
+        });
+
+        modelBuilder.Entity<Addperrequest>(entity =>
+        {
+            entity.HasKey(e => e.Addperrequestid).HasName("addperrequest_pkey");
+
+            entity.ToTable("addperrequest");
+
+            entity.Property(e => e.Addperrequestid).HasColumnName("addperrequestid");
+            entity.Property(e => e.Addperrequestname)
+                .HasMaxLength(255)
+                .HasColumnName("addperrequestname");
+            entity.Property(e => e.Createddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createddatetime");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Price)
+                .HasPrecision(10, 2)
+                .HasColumnName("price");
         });
 
         modelBuilder.Entity<Apartment>(entity =>
@@ -90,6 +131,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Apartmenttype)
                 .HasMaxLength(50)
                 .HasColumnName("apartmenttype");
+            entity.Property(e => e.Automationid).HasColumnName("automationid");
             entity.Property(e => e.Availabilitydate)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("availabilitydate");
@@ -101,7 +143,18 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Planid).HasColumnName("planid");
             entity.Property(e => e.Projectid).HasColumnName("projectid");
+
+            entity.HasOne(d => d.Automation).WithMany(p => p.Apartments)
+                .HasForeignKey(d => d.Automationid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("apartment_automationid_fkey");
+
+            entity.HasOne(d => d.Plan).WithMany(p => p.Apartments)
+                .HasForeignKey(d => d.Planid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("apartment_planid_fkey");
 
             entity.HasOne(d => d.Project).WithMany(p => p.Apartments)
                 .HasForeignKey(d => d.Projectid)
@@ -109,35 +162,96 @@ public partial class OdaDbContext : DbContext
                 .HasConstraintName("apartment_projectid_fkey");
         });
 
-        modelBuilder.Entity<Apartmentaddon>(entity =>
+        modelBuilder.Entity<ApartmentAddon>(entity =>
         {
-            entity.HasKey(e => e.Apartmentaddonsid).HasName("apartmentaddons_pkey");
+            entity.HasKey(e => new { e.Apartmentid, e.Addonid }).HasName("apartment_addon_pkey");
 
-            entity.ToTable("apartmentaddons");
+            entity.ToTable("apartment_addon");
 
-            entity.Property(e => e.Apartmentaddonsid).HasColumnName("apartmentaddonsid");
-            entity.Property(e => e.Addonid).HasColumnName("addonid");
             entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
-            entity.Property(e => e.Assignedaddons).HasColumnName("assignedaddons");
-            entity.Property(e => e.Availableaddons).HasColumnName("availableaddons");
+            entity.Property(e => e.Addonid).HasColumnName("addonid");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+            entity.HasOne(d => d.Addon).WithMany(p => p.ApartmentAddons)
+                .HasForeignKey(d => d.Addonid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("apartment_addon_addonid_fkey");
+
+            entity.HasOne(d => d.Apartment).WithMany(p => p.ApartmentAddons)
+                .HasForeignKey(d => d.Apartmentid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("apartment_addon_apartmentid_fkey");
+        });
+
+        modelBuilder.Entity<ApartmentAddonperrequest>(entity =>
+        {
+            entity.HasKey(e => new { e.Apartmentid, e.Addperrequestid }).HasName("apartment_addonperrequest_pkey");
+
+            entity.ToTable("apartment_addonperrequest");
+
+            entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
+            entity.Property(e => e.Addperrequestid).HasColumnName("addperrequestid");
+            entity.Property(e => e.Quantity)
+                .HasDefaultValue(1)
+                .HasColumnName("quantity");
+
+            entity.HasOne(d => d.Addperrequest).WithMany(p => p.ApartmentAddonperrequests)
+                .HasForeignKey(d => d.Addperrequestid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("apartment_addonperrequest_addperrequestid_fkey");
+
+            entity.HasOne(d => d.Apartment).WithMany(p => p.ApartmentAddonperrequests)
+                .HasForeignKey(d => d.Apartmentid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("apartment_addonperrequest_apartmentid_fkey");
+        });
+
+        modelBuilder.Entity<Automation>(entity =>
+        {
+            entity.HasKey(e => e.Automationid).HasName("automation_pkey");
+
+            entity.ToTable("automation");
+
+            entity.Property(e => e.Automationid).HasColumnName("automationid");
+            entity.Property(e => e.Automationname)
+                .HasMaxLength(255)
+                .HasColumnName("automationname");
             entity.Property(e => e.Createdatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdatetime");
-            entity.Property(e => e.Installedamount).HasColumnName("installedamount");
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .HasColumnName("description");
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
-            entity.Property(e => e.Maxavailable).HasColumnName("maxavailable");
+        });
 
-            entity.HasOne(d => d.Addon).WithMany(p => p.Apartmentaddons)
-                .HasForeignKey(d => d.Addonid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("apartmentaddons_addonid_fkey");
+        modelBuilder.Entity<Automationdetail>(entity =>
+        {
+            entity.HasKey(e => e.Automationdetailsid).HasName("automationdetails_pkey");
 
-            entity.HasOne(d => d.Apartment).WithMany(p => p.Apartmentaddons)
-                .HasForeignKey(d => d.Apartmentid)
+            entity.ToTable("automationdetails");
+
+            entity.Property(e => e.Automationdetailsid).HasColumnName("automationdetailsid");
+            entity.Property(e => e.Automationdetailsname)
+                .HasMaxLength(255)
+                .HasColumnName("automationdetailsname");
+            entity.Property(e => e.Automationid).HasColumnName("automationid");
+            entity.Property(e => e.Createdatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdatetime");
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .HasColumnName("description");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+
+            entity.HasOne(d => d.Automation).WithMany(p => p.Automationdetails)
+                .HasForeignKey(d => d.Automationid)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("apartmentaddons_apartmentid_fkey");
+                .HasConstraintName("automationdetails_automationid_fkey");
         });
 
         modelBuilder.Entity<Booking>(entity =>
@@ -156,6 +270,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Paymentmethodid).HasColumnName("paymentmethodid");
             entity.Property(e => e.Totalamount)
                 .HasPrecision(10, 2)
                 .HasColumnName("totalamount");
@@ -170,6 +285,11 @@ public partial class OdaDbContext : DbContext
                 .HasForeignKey(d => d.Customerid)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("booking_customerid_fkey");
+
+            entity.HasOne(d => d.Paymentmethod).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.Paymentmethodid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("booking_paymentmethodid_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.Userid)
@@ -207,6 +327,28 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("phonenumber");
         });
 
+        modelBuilder.Entity<Developer>(entity =>
+        {
+            entity.HasKey(e => e.Developerid).HasName("developer_pkey");
+
+            entity.ToTable("developer");
+
+            entity.Property(e => e.Developerid).HasColumnName("developerid");
+            entity.Property(e => e.Createdatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdatetime");
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .HasColumnName("description");
+            entity.Property(e => e.Developerlogo).HasColumnName("developerlogo");
+            entity.Property(e => e.Developername)
+                .HasMaxLength(255)
+                .HasColumnName("developername");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+        });
+
         modelBuilder.Entity<Invoice>(entity =>
         {
             entity.HasKey(e => e.Invoiceid).HasName("invoices_pkey");
@@ -237,33 +379,28 @@ public partial class OdaDbContext : DbContext
                 .HasConstraintName("invoices_bookingid_fkey");
         });
 
-        modelBuilder.Entity<Package>(entity =>
+        modelBuilder.Entity<Paymentmethod>(entity =>
         {
-            entity.HasKey(e => e.Packageid).HasName("package_pkey");
+            entity.HasKey(e => e.Paymentmethodid).HasName("paymentmethod_pkey");
 
-            entity.ToTable("package");
+            entity.ToTable("paymentmethod");
 
-            entity.Property(e => e.Packageid).HasColumnName("packageid");
-            entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
-            entity.Property(e => e.Assignedpackage).HasColumnName("assignedpackage");
-            entity.Property(e => e.Createdatetime)
+            entity.Property(e => e.Paymentmethodid).HasColumnName("paymentmethodid");
+            entity.Property(e => e.Createddatetime)
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("createdatetime");
+                .HasColumnName("createddatetime");
+            entity.Property(e => e.Depositpercentage)
+                .HasPrecision(10, 2)
+                .HasColumnName("depositpercentage");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
-            entity.Property(e => e.Packagename)
+            entity.Property(e => e.Numberofinstallments).HasColumnName("numberofinstallments");
+            entity.Property(e => e.Paymentmethodname)
                 .HasMaxLength(255)
-                .HasColumnName("packagename");
-            entity.Property(e => e.Price)
-                .HasPrecision(10, 2)
-                .HasColumnName("price");
-
-            entity.HasOne(d => d.Apartment).WithMany(p => p.Packages)
-                .HasForeignKey(d => d.Apartmentid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("package_apartmentid_fkey");
+                .HasColumnName("paymentmethodname");
+            entity.Property(e => e.Paymentmethodphotos).HasColumnName("paymentmethodphotos");
         });
 
         modelBuilder.Entity<Permission>(entity =>
@@ -293,6 +430,61 @@ public partial class OdaDbContext : DbContext
                 .HasConstraintName("permission_roleid_fkey");
         });
 
+        modelBuilder.Entity<Plan>(entity =>
+        {
+            entity.HasKey(e => e.Planid).HasName("plan_pkey");
+
+            entity.ToTable("plan");
+
+            entity.Property(e => e.Planid).HasColumnName("planid");
+            entity.Property(e => e.Createdatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdatetime");
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .HasColumnName("description");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Planname)
+                .HasMaxLength(255)
+                .HasColumnName("planname");
+            entity.Property(e => e.Planphoto).HasColumnName("planphoto");
+            entity.Property(e => e.Pricepermeter)
+                .HasPrecision(10, 2)
+                .HasColumnName("pricepermeter");
+        });
+
+        modelBuilder.Entity<Plandetail>(entity =>
+        {
+            entity.HasKey(e => e.Plandetailsid).HasName("plandetails_pkey");
+
+            entity.ToTable("plandetails");
+
+            entity.Property(e => e.Plandetailsid).HasColumnName("plandetailsid");
+            entity.Property(e => e.Createdatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdatetime");
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .HasColumnName("description");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Plandetailsname)
+                .HasMaxLength(255)
+                .HasColumnName("plandetailsname");
+            entity.Property(e => e.Plandetailstype)
+                .HasMaxLength(255)
+                .HasColumnName("plandetailstype");
+            entity.Property(e => e.Planid).HasColumnName("planid");
+
+            entity.HasOne(d => d.Plan).WithMany(p => p.Plandetails)
+                .HasForeignKey(d => d.Planid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("plandetails_planid_fkey");
+        });
+
         modelBuilder.Entity<Project>(entity =>
         {
             entity.HasKey(e => e.Projectid).HasName("project_pkey");
@@ -304,6 +496,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Createdatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdatetime");
+            entity.Property(e => e.Developerid).HasColumnName("developerid");
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
@@ -315,6 +508,11 @@ public partial class OdaDbContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("projectname");
             entity.Property(e => e.Totalunits).HasColumnName("totalunits");
+
+            entity.HasOne(d => d.Developer).WithMany(p => p.Projects)
+                .HasForeignKey(d => d.Developerid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_developer");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -336,6 +534,31 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Rolename)
                 .HasMaxLength(50)
                 .HasColumnName("rolename");
+        });
+
+        modelBuilder.Entity<Testimonial>(entity =>
+        {
+            entity.HasKey(e => e.Testimonialsid).HasName("testimonials_pkey");
+
+            entity.ToTable("testimonials");
+
+            entity.Property(e => e.Testimonialsid).HasColumnName("testimonialsid");
+            entity.Property(e => e.Createdatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdatetime");
+            entity.Property(e => e.Description)
+                .HasMaxLength(255)
+                .HasColumnName("description");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Testimonialsname)
+                .HasMaxLength(255)
+                .HasColumnName("testimonialsname");
+            entity.Property(e => e.Testimonialsphoto).HasColumnName("testimonialsphoto");
+            entity.Property(e => e.Testimonialstitle)
+                .HasMaxLength(255)
+                .HasColumnName("testimonialstitle");
         });
 
         modelBuilder.Entity<User>(entity =>

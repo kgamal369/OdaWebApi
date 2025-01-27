@@ -1,296 +1,296 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
-using OdaWepApi.Domain.Models;
-using OdaWepApi.Infrastructure;
+﻿//using Microsoft.AspNetCore.Http.HttpResults;
+//using Microsoft.EntityFrameworkCore;
+//using OdaWepApi.Domain.Models;
+//using OdaWepApi.Infrastructure;
 
-namespace OdaWepApi.API.Endpoints
-{
-    public static class BookingEndpoints
-    {
-        public static void MapBookingEndpoints(this IEndpointRouteBuilder routes)
-        {
-            var group = routes.MapGroup("/api/Booking").WithTags(nameof(Booking));
+//namespace OdaWepApi.API.Endpoints
+//{
+//    public static class BookingEndpoints
+//    {
+//        public static void MapBookingEndpoints(this IEndpointRouteBuilder routes)
+//        {
+//            var group = routes.MapGroup("/api/Booking").WithTags(nameof(Booking));
 
-            // Get all Bookings
-            group.MapGet("/", async (OdaDbContext db) =>
-            {
-                return await db.Bookings.ToListAsync();
-            })
-            .WithName("GetAllBookings")
-            .WithOpenApi();
+//            // Get all Bookings
+//            group.MapGet("/", async (OdaDbContext db) =>
+//            {
+//                return await db.Bookings.ToListAsync();
+//            })
+//            .WithName("GetAllBookings")
+//            .WithOpenApi();
 
-            // Get Booking by Id
-            group.MapGet("/{id}", async Task<Results<Ok<Booking>, NotFound>> (int bookingid, OdaDbContext db) =>
-            {
-                return await db.Bookings.AsNoTracking()
-                    .FirstOrDefaultAsync(model => model.Bookingid == bookingid)
-                    is Booking model
-                        ? TypedResults.Ok(model)
-                        : TypedResults.NotFound();
-            })
-            .WithName("GetBookingById")
-            .WithOpenApi();
+//            // Get Booking by Id
+//            group.MapGet("/{id}", async Task<Results<Ok<Booking>, NotFound>> (int bookingid, OdaDbContext db) =>
+//            {
+//                return await db.Bookings.AsNoTracking()
+//                    .FirstOrDefaultAsync(model => model.Bookingid == bookingid)
+//                    is Booking model
+//                        ? TypedResults.Ok(model)
+//                        : TypedResults.NotFound();
+//            })
+//            .WithName("GetBookingById")
+//            .WithOpenApi();
 
-            // Update Booking
-            group.MapPut("/{id}", async Task<IResult> (int bookingid, Booking booking, OdaDbContext db) =>
-            {
-                // Validate Apartment, Customer, and User IDs
-                if (!await db.Apartments.AnyAsync(a => a.Apartmentid == booking.Apartmentid))
-                    return TypedResults.BadRequest("Invalid Apartment ID.");
-                if (!await db.Customers.AnyAsync(c => c.Customerid == booking.Customerid))
-                    return TypedResults.BadRequest("Invalid Customer ID.");
-                if (!await db.Users.AnyAsync(u => u.Userid == booking.Userid))
-                    return TypedResults.BadRequest("Invalid User ID.");
+//            // Update Booking
+//            group.MapPut("/{id}", async Task<IResult> (int bookingid, Booking booking, OdaDbContext db) =>
+//            {
+//                // Validate Apartment, Customer, and User IDs
+//                if (!await db.Apartments.AnyAsync(a => a.Apartmentid == booking.Apartmentid))
+//                    return TypedResults.BadRequest("Invalid Apartment ID.");
+//                if (!await db.Customers.AnyAsync(c => c.Customerid == booking.Customerid))
+//                    return TypedResults.BadRequest("Invalid Customer ID.");
+//                if (!await db.Users.AnyAsync(u => u.Userid == booking.Userid))
+//                    return TypedResults.BadRequest("Invalid User ID.");
 
-                // Ensure Apartment is not booked more than once
-                if (await db.Bookings.AnyAsync(b => b.Apartmentid == booking.Apartmentid && b.Bookingid != bookingid))
-                    return TypedResults.BadRequest("Apartment is already booked.");
+//                // Ensure Apartment is not booked more than once
+//                if (await db.Bookings.AnyAsync(b => b.Apartmentid == booking.Apartmentid && b.Bookingid != bookingid))
+//                    return TypedResults.BadRequest("Apartment is already booked.");
 
-                // Recalculate Total Amount from linked apartment
-                var apartment = await db.Apartments
-                    .Include(a => a.Packages)
-                    .Include(a => a.Apartmentaddons)
-                        .ThenInclude(aa => aa.Addon)
-                    .FirstOrDefaultAsync(a => a.Apartmentid == booking.Apartmentid);
+//                // Recalculate Total Amount from linked apartment
+//                var apartment = await db.Apartments
+//                    .Include(a => a.Packages)
+//                    .Include(a => a.Apartmentaddons)
+//                        .ThenInclude(aa => aa.Addon)
+//                    .FirstOrDefaultAsync(a => a.Apartmentid == booking.Apartmentid);
 
-                if (apartment == null) return TypedResults.BadRequest("Apartment not found.");
+//                if (apartment == null) return TypedResults.BadRequest("Apartment not found.");
 
-                booking.Totalamount = apartment.CalculateApartmentTotalPrice();
-
-
-                // Update LastModifiedDateTime
-                booking.Lastmodifieddatetime = DateTime.UtcNow;
+//                booking.Totalamount = apartment.CalculateApartmentTotalPrice();
 
 
-                var affected = await db.Bookings
-                    .Where(model => model.Bookingid == bookingid)
-                    .ExecuteUpdateAsync(setters => setters
-                      .SetProperty(m => m.Bookingid, booking.Bookingid)
-                      .SetProperty(m => m.Customerid, booking.Customerid)
-                      .SetProperty(m => m.Apartmentid, booking.Apartmentid)
-                      //  .SetProperty(m => m.Createdatetime, booking.Createdatetime)
-                      .SetProperty(m => m.Lastmodifieddatetime, booking.Lastmodifieddatetime)
-                      .SetProperty(m => m.Bookingstatus, booking.Bookingstatus)
-                      .SetProperty(m => m.Userid, booking.Userid)
-                      .SetProperty(m => m.Totalamount, booking.Totalamount)
-                      );
-                return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
-            })
-            .WithName("UpdateBooking")
-            .WithOpenApi();
-
-            // Create Booking
-            group.MapPost("/", async (Booking booking, OdaDbContext db) =>
-            {
-                // Validate Apartment, Customer, and User IDs
-                if (!await db.Apartments.AnyAsync(a => a.Apartmentid == booking.Apartmentid))
-                    return Results.BadRequest("Invalid Apartment ID.");
-                if (!await db.Customers.AnyAsync(c => c.Customerid == booking.Customerid))
-                    return Results.BadRequest("Invalid Customer ID.");
-                if (!await db.Users.AnyAsync(u => u.Userid == booking.Userid))
-                    return Results.BadRequest("Invalid User ID.");
-
-                // Ensure Apartment is not booked more than once
-                if (await db.Bookings.AnyAsync(b => b.Apartmentid == booking.Apartmentid))
-                    return Results.BadRequest("Apartment is already booked.");
-
-                // Set Booking ID to MaxBookingId + 1
-                var maxBookingId = await db.Bookings.MaxAsync(b => (int?)b.Bookingid) ?? 0;
-                booking.Bookingid = maxBookingId + 1;
-
-                // Set CreateDateTime and LastModifiedDateTime
-                booking.Createdatetime = DateTime.UtcNow;
-                booking.Lastmodifieddatetime = booking.Createdatetime;
-
-                // Recalculate Total Amount from linked apartment
-                var apartment = await db.Apartments
-                    .Include(a => a.Packages)
-                    .Include(a => a.Apartmentaddons)
-                        .ThenInclude(aa => aa.Addon)
-                    .FirstOrDefaultAsync(a => a.Apartmentid == booking.Apartmentid);
-
-                if (apartment == null) return Results.BadRequest("Apartment not found.");
-
-                booking.Totalamount = apartment.CalculateApartmentTotalPrice();
+//                // Update LastModifiedDateTime
+//                booking.Lastmodifieddatetime = DateTime.UtcNow;
 
 
-                db.Bookings.Add(booking);
-                await db.SaveChangesAsync();
-                return TypedResults.Created($"/api/Booking/{booking.Bookingid}", booking);
-            })
-            .WithName("CreateBooking")
-            .WithOpenApi();
+//                var affected = await db.Bookings
+//                    .Where(model => model.Bookingid == bookingid)
+//                    .ExecuteUpdateAsync(setters => setters
+//                      .SetProperty(m => m.Bookingid, booking.Bookingid)
+//                      .SetProperty(m => m.Customerid, booking.Customerid)
+//                      .SetProperty(m => m.Apartmentid, booking.Apartmentid)
+//                      //  .SetProperty(m => m.Createdatetime, booking.Createdatetime)
+//                      .SetProperty(m => m.Lastmodifieddatetime, booking.Lastmodifieddatetime)
+//                      .SetProperty(m => m.Bookingstatus, booking.Bookingstatus)
+//                      .SetProperty(m => m.Userid, booking.Userid)
+//                      .SetProperty(m => m.Totalamount, booking.Totalamount)
+//                      );
+//                return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
+//            })
+//            .WithName("UpdateBooking")
+//            .WithOpenApi();
 
-            // Delete Booking
-            group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int bookingid, OdaDbContext db) =>
-            {
-                var affected = await db.Bookings
-                    .Where(model => model.Bookingid == bookingid)
-                    .ExecuteDeleteAsync();
-                return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
-            })
-            .WithName("DeleteBooking")
-            .WithOpenApi();
+//            // Create Booking
+//            group.MapPost("/", async (Booking booking, OdaDbContext db) =>
+//            {
+//                // Validate Apartment, Customer, and User IDs
+//                if (!await db.Apartments.AnyAsync(a => a.Apartmentid == booking.Apartmentid))
+//                    return Results.BadRequest("Invalid Apartment ID.");
+//                if (!await db.Customers.AnyAsync(c => c.Customerid == booking.Customerid))
+//                    return Results.BadRequest("Invalid Customer ID.");
+//                if (!await db.Users.AnyAsync(u => u.Userid == booking.Userid))
+//                    return Results.BadRequest("Invalid User ID.");
 
-            // Get All Bookings for a Customer
-            group.MapGet("/customer/{customerId}", async Task<Results<Ok<IEnumerable<Booking>>, NotFound>> (int customerId, OdaDbContext db) =>
-            {
-                var bookings = await db.Bookings.Where(b => b.Customerid == customerId).ToListAsync();
-                return bookings.Count > 0 ? TypedResults.Ok(bookings.AsEnumerable()) : TypedResults.NotFound();
-            })
-            .WithName("GetBookingsByCustomer")
-            .WithOpenApi();
+//                // Ensure Apartment is not booked more than once
+//                if (await db.Bookings.AnyAsync(b => b.Apartmentid == booking.Apartmentid))
+//                    return Results.BadRequest("Apartment is already booked.");
 
-            // Check if Related Invoice Amount Equals Booking Amount
-            group.MapGet("/{id}/check-invoice-amount", async Task<Results<Ok<bool>, NotFound>> (int bookingid, OdaDbContext db) =>
-            {
-                var booking = await db.Bookings
-                    .Include(b => b.Invoices)
-                    .FirstOrDefaultAsync(b => b.Bookingid == bookingid);
+//                // Set Booking ID to MaxBookingId + 1
+//                var maxBookingId = await db.Bookings.MaxAsync(b => (int?)b.Bookingid) ?? 0;
+//                booking.Bookingid = maxBookingId + 1;
 
-                if (booking == null) return TypedResults.NotFound();
+//                // Set CreateDateTime and LastModifiedDateTime
+//                booking.Createdatetime = DateTime.UtcNow;
+//                booking.Lastmodifieddatetime = booking.Createdatetime;
 
-                var totalInvoiceAmount = booking.Invoices.Sum(i => i.Invoiceamount) ?? 0;
-                var isEqual = totalInvoiceAmount == booking.Totalamount;
+//                // Recalculate Total Amount from linked apartment
+//                var apartment = await db.Apartments
+//                    .Include(a => a.Packages)
+//                    .Include(a => a.Apartmentaddons)
+//                        .ThenInclude(aa => aa.Addon)
+//                    .FirstOrDefaultAsync(a => a.Apartmentid == booking.Apartmentid);
 
-                return TypedResults.Ok(isEqual);
-            })
-            .WithName("CheckBookingInvoiceAmount")
-            .WithOpenApi();
+//                if (apartment == null) return Results.BadRequest("Apartment not found.");
 
-
-            // Booking Workflow - Create and Start Booking Process
-            group.MapPost("/start", async Task<IResult> (int customerid, int apartmentid, OdaDbContext db) =>
-            {
-                // Validate Apartment status ("Template" or "Standalone")
-                var apartment = await db.Apartments
-                    .Include(a => a.Packages)
-                    .Include(a => a.Apartmentaddons)
-                    .FirstOrDefaultAsync(a => a.Apartmentid == apartmentid &&
-                        (a.Apartmentstatus == "Template" || a.Apartmentstatus == "Standalone"));
-
-                if (apartment == null)
-                    return TypedResults.BadRequest("Apartment must have 'Template' or 'Standalone' status to be booked.");
-
-                if (apartment.Packages.Any(p => p.Assignedpackage == true) ||
-                    apartment.Apartmentaddons.Any(aa => aa.Assignedaddons == true))
-                    return TypedResults.BadRequest("Template or Standalone apartments should not have assigned packages or addons.");
-
-                // Clone the apartment directly
-                var clonedApartment = new Apartment
-                {
-                    Apartmentname = $"{apartment.Apartmentname} - Draft",
-                    Apartmenttype = apartment.Apartmenttype,
-                    Apartmentstatus = "Draft",
-                    Apartmentspace = apartment.Apartmentspace,
-                    Description = apartment.Description,
-                    Projectid = apartment.Projectid,
-                    Floornumber = apartment.Floornumber,
-                    Availabilitydate = apartment.Availabilitydate,
-                    Createddatetime = DateTime.UtcNow,
-                    Lastmodifieddatetime = DateTime.UtcNow
-                };
-
-                db.Apartments.Add(clonedApartment);
-                await db.SaveChangesAsync();
-
-                // Clone the available packages
-                foreach (var package in apartment.Packages.Where(p => p.Assignedpackage == false || p.Assignedpackage == null))
-                {
-                    var newPackage = new Package
-                    {
-                        Packagename = package.Packagename,
-                        Price = package.Price,
-                        Description = package.Description,
-                        Assignedpackage = false,
-                        Apartmentid = clonedApartment.Apartmentid,
-                        Createdatetime = DateTime.UtcNow,
-                        Lastmodifieddatetime = DateTime.UtcNow
-                    };
-                    db.Packages.Add(newPackage);
-                }
-
-                // Clone the available addons
-                foreach (var addon in apartment.Apartmentaddons.Where(a => a.Availableaddons == false || a.Availableaddons == null))
-                {
-                    var newAddon = new Apartmentaddon
-                    {
-                        Apartmentid = clonedApartment.Apartmentid,
-                        Addonid = addon.Addonid,
-                        Availableaddons = true,
-                        Assignedaddons = false,
-                        Maxavailable = addon.Maxavailable,
-                        Installedamount = 0,
-                        Createdatetime = DateTime.UtcNow,
-                        Lastmodifieddatetime = DateTime.UtcNow
-                    };
-                    db.Apartmentaddons.Add(newAddon);
-                }
-
-                await db.SaveChangesAsync();
-
-                // Create a new Booking
-                var maxBookingId = await db.Bookings.MaxAsync(b => (int?)b.Bookingid) ?? 0;
-                var booking = new Booking
-                {
-                    Bookingid = maxBookingId + 1,
-                    Customerid = customerid,
-                    Apartmentid = clonedApartment.Apartmentid,
-                    Bookingstatus = "InProgress",
-                    Createdatetime = DateTime.UtcNow,
-                    Lastmodifieddatetime = DateTime.UtcNow,
-                    Totalamount = clonedApartment.CalculateApartmentTotalPrice()
-                };
-
-                db.Bookings.Add(booking);
-                await db.SaveChangesAsync();
-
-                return TypedResults.Ok(booking);
-            })
-            .WithName("StartBooking")
-            .WithOpenApi();
+//                booking.Totalamount = apartment.CalculateApartmentTotalPrice();
 
 
-            // Confirm and Proceed to Payment Workflow
-            group.MapPut("/{id}/confirm", async Task<IResult> (int id, OdaDbContext db) =>
-            {
-                var booking = await db.Bookings.Include(b => b.Apartment).FirstOrDefaultAsync(b => b.Bookingid == id);
+//                db.Bookings.Add(booking);
+//                await db.SaveChangesAsync();
+//                return TypedResults.Created($"/api/Booking/{booking.Bookingid}", booking);
+//            })
+//            .WithName("CreateBooking")
+//            .WithOpenApi();
 
-                if (booking == null)
-                    return TypedResults.NotFound();
+//            // Delete Booking
+//            group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int bookingid, OdaDbContext db) =>
+//            {
+//                var affected = await db.Bookings
+//                    .Where(model => model.Bookingid == bookingid)
+//                    .ExecuteDeleteAsync();
+//                return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
+//            })
+//            .WithName("DeleteBooking")
+//            .WithOpenApi();
 
-                var apartment = booking.Apartment;
-                if (apartment == null)
-                    return TypedResults.BadRequest("Linked apartment not found.");
+//            // Get All Bookings for a Customer
+//            group.MapGet("/customer/{customerId}", async Task<Results<Ok<IEnumerable<Booking>>, NotFound>> (int customerId, OdaDbContext db) =>
+//            {
+//                var bookings = await db.Bookings.Where(b => b.Customerid == customerId).ToListAsync();
+//                return bookings.Count > 0 ? TypedResults.Ok(bookings.AsEnumerable()) : TypedResults.NotFound();
+//            })
+//            .WithName("GetBookingsByCustomer")
+//            .WithOpenApi();
 
-                // Turn Apartment to 'ForSale' and allow customer to assign packages and addons
-                apartment.Apartmentstatus = "ForSale";
-                await db.SaveChangesAsync();
+//            // Check if Related Invoice Amount Equals Booking Amount
+//            group.MapGet("/{id}/check-invoice-amount", async Task<Results<Ok<bool>, NotFound>> (int bookingid, OdaDbContext db) =>
+//            {
+//                var booking = await db.Bookings
+//                    .Include(b => b.Invoices)
+//                    .FirstOrDefaultAsync(b => b.Bookingid == bookingid);
 
-                return TypedResults.Ok();
-            })
-            .WithName("ConfirmBooking")
-            .WithOpenApi();
+//                if (booking == null) return TypedResults.NotFound();
+
+//                var totalInvoiceAmount = booking.Invoices.Sum(i => i.Invoiceamount) ?? 0;
+//                var isEqual = totalInvoiceAmount == booking.Totalamount;
+
+//                return TypedResults.Ok(isEqual);
+//            })
+//            .WithName("CheckBookingInvoiceAmount")
+//            .WithOpenApi();
 
 
-            // Complete Booking and Set Final Statuses
-            group.MapPut("/{id}/complete", async Task<Results<Ok, NotFound>> (int id, OdaDbContext db) =>
-            {
-                var booking = await db.Bookings.Include(b => b.Apartment).FirstOrDefaultAsync(b => b.Bookingid == id);
+//            // Booking Workflow - Create and Start Booking Process
+//            group.MapPost("/start", async Task<IResult> (int customerid, int apartmentid, OdaDbContext db) =>
+//            {
+//                // Validate Apartment status ("Template" or "Standalone")
+//                var apartment = await db.Apartments
+//                    .Include(a => a.Packages)
+//                    .Include(a => a.Apartmentaddons)
+//                    .FirstOrDefaultAsync(a => a.Apartmentid == apartmentid &&
+//                        (a.Apartmentstatus == "Template" || a.Apartmentstatus == "Standalone"));
 
-                if (booking == null)
-                    return TypedResults.NotFound();
+//                if (apartment == null)
+//                    return TypedResults.BadRequest("Apartment must have 'Template' or 'Standalone' status to be booked.");
 
-                // Turn Apartment to 'InReview' and Booking to 'InProgress'
-                booking.Apartment.Apartmentstatus = "InReview";
-                booking.Bookingstatus = "InProgress";
-                booking.Lastmodifieddatetime = DateTime.UtcNow;
+//                if (apartment.Packages.Any(p => p.Assignedpackage == true) ||
+//                    apartment.Apartmentaddons.Any(aa => aa.Assignedaddons == true))
+//                    return TypedResults.BadRequest("Template or Standalone apartments should not have assigned packages or addons.");
 
-                await db.SaveChangesAsync();
-                return TypedResults.Ok();
-            })
-            .WithName("CompleteBooking")
-            .WithOpenApi();
-        }
-    }
-}
+//                // Clone the apartment directly
+//                var clonedApartment = new Apartment
+//                {
+//                    Apartmentname = $"{apartment.Apartmentname} - Draft",
+//                    Apartmenttype = apartment.Apartmenttype,
+//                    Apartmentstatus = "Draft",
+//                    Apartmentspace = apartment.Apartmentspace,
+//                    Description = apartment.Description,
+//                    Projectid = apartment.Projectid,
+//                    Floornumber = apartment.Floornumber,
+//                    Availabilitydate = apartment.Availabilitydate,
+//                    Createddatetime = DateTime.UtcNow,
+//                    Lastmodifieddatetime = DateTime.UtcNow
+//                };
+
+//                db.Apartments.Add(clonedApartment);
+//                await db.SaveChangesAsync();
+
+//                // Clone the available packages
+//                foreach (var package in apartment.Packages.Where(p => p.Assignedpackage == false || p.Assignedpackage == null))
+//                {
+//                    var newPackage = new Package
+//                    {
+//                        Packagename = package.Packagename,
+//                        Price = package.Price,
+//                        Description = package.Description,
+//                        Assignedpackage = false,
+//                        Apartmentid = clonedApartment.Apartmentid,
+//                        Createdatetime = DateTime.UtcNow,
+//                        Lastmodifieddatetime = DateTime.UtcNow
+//                    };
+//                    db.Packages.Add(newPackage);
+//                }
+
+//                // Clone the available addons
+//                foreach (var addon in apartment.Apartmentaddons.Where(a => a.Availableaddons == false || a.Availableaddons == null))
+//                {
+//                    var newAddon = new Apartmentaddon
+//                    {
+//                        Apartmentid = clonedApartment.Apartmentid,
+//                        Addonid = addon.Addonid,
+//                        Availableaddons = true,
+//                        Assignedaddons = false,
+//                        Maxavailable = addon.Maxavailable,
+//                        Installedamount = 0,
+//                        Createdatetime = DateTime.UtcNow,
+//                        Lastmodifieddatetime = DateTime.UtcNow
+//                    };
+//                    db.Apartmentaddons.Add(newAddon);
+//                }
+
+//                await db.SaveChangesAsync();
+
+//                //// Create a new Booking
+//                //var maxBookingId = await db.Bookings.MaxAsync(b => (int?)b.Bookingid) ?? 0;
+//                //var booking = new Booking
+//                //{
+//                //    Bookingid = maxBookingId + 1,
+//                //    Customerid = customerid,
+//                //    Apartmentid = clonedApartment.Apartmentid,
+//                //    Bookingstatus = "InProgress",
+//                //    Createdatetime = DateTime.UtcNow,
+//                //    Lastmodifieddatetime = DateTime.UtcNow,
+//                //    Totalamount = clonedApartment.CalculateApartmentTotalPrice()
+//                //};
+
+//                db.Bookings.Add(booking);
+//                await db.SaveChangesAsync();
+
+//                return TypedResults.Ok(booking);
+//            })
+//            .WithName("StartBooking")
+//            .WithOpenApi();
+
+
+//            // Confirm and Proceed to Payment Workflow
+//            group.MapPut("/{id}/confirm", async Task<IResult> (int id, OdaDbContext db) =>
+//            {
+//                var booking = await db.Bookings.Include(b => b.Apartment).FirstOrDefaultAsync(b => b.Bookingid == id);
+
+//                if (booking == null)
+//                    return TypedResults.NotFound();
+
+//                var apartment = booking.Apartment;
+//                if (apartment == null)
+//                    return TypedResults.BadRequest("Linked apartment not found.");
+
+//                // Turn Apartment to 'ForSale' and allow customer to assign packages and addons
+//                apartment.Apartmentstatus = "ForSale";
+//                await db.SaveChangesAsync();
+
+//                return TypedResults.Ok();
+//            })
+//            .WithName("ConfirmBooking")
+//            .WithOpenApi();
+
+
+//            // Complete Booking and Set Final Statuses
+//            group.MapPut("/{id}/complete", async Task<Results<Ok, NotFound>> (int id, OdaDbContext db) =>
+//            {
+//                var booking = await db.Bookings.Include(b => b.Apartment).FirstOrDefaultAsync(b => b.Bookingid == id);
+
+//                if (booking == null)
+//                    return TypedResults.NotFound();
+
+//                // Turn Apartment to 'InReview' and Booking to 'InProgress'
+//                booking.Apartment.Apartmentstatus = "InReview";
+//                booking.Bookingstatus = "InProgress";
+//                booking.Lastmodifieddatetime = DateTime.UtcNow;
+
+//                await db.SaveChangesAsync();
+//                return TypedResults.Ok();
+//            })
+//            .WithName("CompleteBooking")
+//            .WithOpenApi();
+//        }
+//    }
+//}

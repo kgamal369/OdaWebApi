@@ -1,0 +1,72 @@
+1. Developer 
+   contain list of project 
+   
+   
+
+1. Testimonials 
+    - List :[ Name , photo , title , description ]
+	
+	
+2. Plan = Packages  ( per unit meter) 
+		( Grand / Prime / Signature)
+    - get ( Name , photos , unit price per meter , description)
+	
+	
+3. Adds  in side Plan 
+   list adds  
+   Type Foundation , Type Decoration    
+   Description per Plan(per Packages)
+   
+   
+   3.  Adds out side plan 
+       - Get all AddsOn 
+	   - Type ( fix / per unit / per meter)
+	   Name , price per unit / meter  , description 
+	    - Air  Condition  
+		  Description  , Price per each hp
+		  
+		  - Post installed 
+		  
+		  
+		  
+   3.  addons UponRequest  (Yes . on )
+       Get Name . Description 
+	   
+	   
+	  4. Automatin Adds 
+	     ( Basic , Advandced ) 
+		 
+		 list ( name existing in Basic , or Basic and Adavanced)
+		 installed  in basic or adavanced 
+		 
+		 
+   
+   
+   AparatmentAddons 
+   
+   
+   
+   
+   4. Owner (Project Owner )
+    Name , Phone , Unit Area , Unit Location , Developer , Select Budget 
+	
+	
+	5. Contact Us : 
+	 Name , phone number , email , comment 
+	 
+	
+	
+	5.  in Project 
+	-  Get all unit area per project 
+	
+	
+   Questions :
+   1. Q1 (1 , 2) / Q2 (1 , 2) /
+	  Q3 (1 , 2) / Q4 (1 , 2) /
+	  Q5 (1 , 2) / Q6 (1 , 2) /
+	  
+	  
+	  
+	  Payment Method 
+	  Name , Down Payment Percentage , remain number of months 
+	  

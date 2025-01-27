@@ -51,15 +51,15 @@ app.MapAddonEndpoints();
 
 app.MapApartmentEndpoints();
 
-app.MapApartmentaddonEndpoints();
+app.MapAddperrequestEndpoints();
 
-app.MapBookingEndpoints();
+//app.MapBookingEndpoints();
 
 app.MapCustomerEndpoints();
 
 app.MapInvoiceEndpoints();
 
-app.MapPackageEndpoints();
+//app.MapPackageEndpoints();
 
 app.MapPermissionEndpoints();
 

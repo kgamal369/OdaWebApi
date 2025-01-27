@@ -17,7 +17,6 @@ namespace OdaWepApi.API.Endpoints
                 await db.Projects.ToListAsync()
             ).WithName("GetAllProjects").WithOpenApi();
 
-
             // Get All Project Names
             group.MapGet("/names", async (OdaDbContext db) =>
                 await db.Projects
@@ -25,8 +24,6 @@ namespace OdaWepApi.API.Endpoints
                     .Where(name => name != null)
                     .ToListAsync()
             ).WithName("GetAllProjectNames").WithOpenApi();
-
-
 
 
             // Get All Available Apartment Spaces for a Selected Project Name
@@ -83,9 +80,6 @@ namespace OdaWepApi.API.Endpoints
             }).WithName("GetAvailableApartmentSpacesByProjectId").WithOpenApi();
 
 
-
-
-
             // Get Project by Id
             group.MapGet("/{id}", async Task<Results<Ok<Project>, NotFound>> (int projectid, OdaDbContext db) =>
                 await db.Projects.AsNoTracking()
@@ -94,7 +88,6 @@ namespace OdaWepApi.API.Endpoints
                         ? TypedResults.Ok(project)
                         : TypedResults.NotFound()
             ).WithName("GetProjectById").WithOpenApi();
-
 
 
             // Update Project
@@ -129,6 +122,7 @@ namespace OdaWepApi.API.Endpoints
                 await db.SaveChangesAsync();
                 return TypedResults.Ok();
             }).WithName("UpdateProject").WithOpenApi();
+
 
             // Create Project
             group.MapPost("/", async (HttpRequest request, OdaDbContext db) =>

@@ -1,35 +1,35 @@
-﻿using OdaWepApi.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace OdaWepApi.Domain.Models
+namespace OdaWepApi.Domain.Models;
+
+public partial class Booking
 {
-    public class Booking
-    {
-        [Key]
-        public int Bookingid { get; set; }
+    public int Bookingid { get; set; }
 
-        [Required(ErrorMessage = "Customer Id is required.")]
-        public int? Customerid { get; set; }
+    public int? Customerid { get; set; }
 
-        [Required(ErrorMessage = "Apartment Id is required.")]
-        public int? Apartmentid { get; set; }
+    public int? Apartmentid { get; set; }
 
-        public DateTime? Createdatetime { get; set; }
-        public DateTime? Lastmodifieddatetime { get; set; }
+    public DateTime? Createdatetime { get; set; }
 
-        [Required(ErrorMessage = "Booking Status is required.")]
-        [EnumDataType(typeof(BookingStatus), ErrorMessage = "Invalid Booking Status.")]
-        public string? Bookingstatus { get; set; }
+    public DateTime? Lastmodifieddatetime { get; set; }
 
-        public int? Userid { get; set; }
+    public string? Bookingstatus { get; set; }
 
-        [Required(ErrorMessage = "Total Amount is required.")]
-        [Range(10, 10000000, ErrorMessage = "Total Amount must be between 10 and 10M EGP.")]
-        public decimal? Totalamount { get; set; }
+    public int? Userid { get; set; }
 
-        public virtual Apartment? Apartment { get; set; }
-        public virtual Customer? Customer { get; set; }
-        public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
-        public virtual User? User { get; set; }
-    }
+    public decimal? Totalamount { get; set; }
+
+    public int? Paymentmethodid { get; set; }
+
+    public virtual Apartment? Apartment { get; set; }
+
+    public virtual Customer? Customer { get; set; }
+
+    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+
+    public virtual Paymentmethod? Paymentmethod { get; set; }
+
+    public virtual User? User { get; set; }
 }

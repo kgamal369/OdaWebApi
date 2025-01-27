@@ -1,29 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
-using OdaWepApi.Domain.Enums;
+﻿using System;
+using System.Collections.Generic;
 
-namespace OdaWepApi.Domain.Models
+namespace OdaWepApi.Domain.Models;
+
+public partial class Invoice
 {
-    public partial class Invoice
-    {
-        [Key]
-        public int Invoiceid { get; set; }
+    public int Invoiceid { get; set; }
 
-        [Required]
-        public int? Bookingid { get; set; }
+    public int? Bookingid { get; set; }
 
-        public DateTime? Createdatetime { get; set; }
-        public DateTime? Lastmodifieddatetime { get; set; }
+    public DateTime? Createdatetime { get; set; }
 
-        [Required(ErrorMessage = "Invoice Amount is required.")]
-        [Range(10, 10000000, ErrorMessage = "Invoice amount must be between 10 and 10M EGP.")]
-        public decimal? Invoiceamount { get; set; }
+    public DateTime? Lastmodifieddatetime { get; set; }
 
-        [Required(ErrorMessage = "Invoice Status is required.")]
-        [EnumDataType(typeof(InvoiceStatus), ErrorMessage = "Invalid Invoice Status.")]
-        public string? Invoicestatus { get; set; }
+    public decimal? Invoiceamount { get; set; }
 
-        public DateTime? Invoiceduedate { get; set; }
+    public string? Invoicestatus { get; set; }
 
-        public virtual Booking? Booking { get; set; }
-    }
+    public DateTime? Invoiceduedate { get; set; }
+
+    public virtual Booking? Booking { get; set; }
 }

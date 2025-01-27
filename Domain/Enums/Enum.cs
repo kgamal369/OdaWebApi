@@ -1,75 +1,9 @@
 ﻿namespace OdaWepApi.Domain.Enums
 {
-    public enum PackageType
+    public enum UnitOrMeterType
     {
-        Golden,
-        Silver,
-        Platinum
-    }
-
-    public enum AddOnType
-    {
-        AirConditioning1_5hp,
-        AirConditioning2_5hp,
-        SmartLighting,
-        Boilers,
-        SolarHeating,
-        ShowerTemperedGlass,
-        ShuttersAluminum
-    }
-
-    public enum ApartmentType
-    {
-        Template,
-        Standalone,
-        Project
-    }
-
-    public enum ApartmentStatus
-    {
-        ForSale,
-        Template,
-        Draft,
-        InProgress,
-        InReview,
-        Booked,
-        Completed
-    }
-    public enum InvoiceStatus
-    {
-        Pending,
-        PartiallyPaid,
-        Paid,
-        Overdue,
-        Cancelled
-    }
-
-    public enum PaymentMethod
-    {
-        Card,
-        Cash,
-        Invoice,
-        BankTransfer
-    }
-
-    public enum BookingStatus
-    {
-        Pending,
-        InProgress,
-        UnderReview,
-        Approved,
-        Rejected,
-        Finalized,
-        Cancelled
-    }
-
-    public enum PaymentStatus
-    {
-        Pending,
-        PartiallyPaid,
-        Paid,
-        Overdue,
-        Cancelled
+        Unit,
+        Meter
     }
     public enum RoleType
     {

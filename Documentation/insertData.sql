@@ -1,3 +1,6 @@
+
+
+
 -- Insert data into the Project table
 INSERT INTO Project (ProjectName, Location, Amenities, TotalUnits, ProjectLogo, CreateDateTime, LastModifiedDateTime) 
 VALUES

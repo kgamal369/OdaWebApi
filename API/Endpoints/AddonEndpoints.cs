@@ -11,63 +11,80 @@ namespace OdaWepApi.API.Endpoints
         {
             var group = routes.MapGroup("/api/Addon").WithTags(nameof(Addon));
 
+            // Get all Addons
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                return await db.Addons.ToListAsync();
+                return await db.Addons.AsNoTracking().ToListAsync();
             })
             .WithName("GetAllAddons")
             .WithOpenApi();
 
-            group.MapGet("/{id}", async Task<Results<Ok<Addon>, NotFound>> (int addonid, OdaDbContext db) =>
+            // Get Addon by ID
+            group.MapGet("/{id}", async Task<Results<Ok<Addon>, NotFound>> (int id, OdaDbContext db) =>
             {
-                return await db.Addons.AsNoTracking()
-                    .FirstOrDefaultAsync(model => model.Addonid == addonid)
-                    is Addon model
-                        ? TypedResults.Ok(model)
-                        : TypedResults.NotFound();
+                var addon = await db.Addons.AsNoTracking()
+                    .FirstOrDefaultAsync(a => a.Addonid == id);
+                return addon is not null
+                    ? TypedResults.Ok(addon)
+                    : TypedResults.NotFound();
             })
             .WithName("GetAddonById")
             .WithOpenApi();
 
-            group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int addonid, Addon addon, OdaDbContext db) =>
+            // Update Addon
+            group.MapPut("/{id}", async Task<Results<Ok, NotFound>> (int id, Addon addon, OdaDbContext db) =>
             {
-                addon.Lastmodifieddatetime = DateTime.UtcNow;
+                var existingAddon = await db.Addons.FirstOrDefaultAsync(a => a.Addonid == id);
+                if (existingAddon is null)
+                {
+                    return TypedResults.NotFound();
+                }
 
-                var affected = await db.Addons
-                    .Where(model => model.Addonid == addonid)
-                    .ExecuteUpdateAsync(setters => setters
-                      .SetProperty(m => m.Addonid, addon.Addonid)
-                      .SetProperty(m => m.Addonname, addon.Addonname)
-                      .SetProperty(m => m.Addontype, addon.Addontype)
-                      .SetProperty(m => m.Priceperunit, addon.Priceperunit)
-                      .SetProperty(m => m.Description, addon.Description)
-                      .SetProperty(m => m.Brand, addon.Brand)
-                      .SetProperty(m => m.Lastmodifieddatetime, addon.Lastmodifieddatetime));
-                return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
+                existingAddon.Addonname = addon.Addonname;
+                existingAddon.Addongroup = addon.Addongroup;
+                existingAddon.Price = addon.Price;
+                existingAddon.Description = addon.Description;
+                existingAddon.Brand = addon.Brand;
+                existingAddon.Unitormeter = addon.Unitormeter;
+                existingAddon.Lastmodifieddatetime = DateTime.UtcNow;
+
+                await db.SaveChangesAsync();
+                return TypedResults.Ok();
             })
             .WithName("UpdateAddon")
             .WithOpenApi();
 
-            group.MapPost("/", async (Addon addon, OdaDbContext db) =>
-            {
-                var maxAddonId = await db.Addons.MaxAsync(a => (int?)a.Addonid) ?? 0;
-                addon.Addonid = maxAddonId + 1;
-                addon.Createddatetime = DateTime.UtcNow;
-                addon.Lastmodifieddatetime = addon.Createddatetime;
+            //// Create Addon
+            //group.MapPost("/", async (Addon addon, OdaDbContext db) =>
+            //{
+            //    addon.Createddatetime = DateTime.UtcNow;
+            //    addon.Lastmodifieddatetime = addon.Createddatetime;
 
-                db.Addons.Add(addon);
+            //    // Enum validation: Ensure a valid UnitOrMeterType is passed
+            //    if (!Enum.IsDefined(typeof(UnitOrMeterType), addon.Unitormeter))
+            //    {
+            //        return TypedResults.BadRequest($"Invalid value for UnitOrMeter. Valid values are: {string.Join(", ", Enum.GetNames(typeof(UnitOrMeterType)))}");
+            //    }
+
+            //    db.Addons.Add(addon);
+            //    await db.SaveChangesAsync();
+            //    return TypedResults.Created($"/api/Addon/{addon.Addonid}", addon);
+            //})
+            //.WithName("CreateAddon")
+            //.WithOpenApi();
+
+            // Delete Addon
+            group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int id, OdaDbContext db) =>
+            {
+                var addon = await db.Addons.FirstOrDefaultAsync(a => a.Addonid == id);
+                if (addon is null)
+                {
+                    return TypedResults.NotFound();
+                }
+
+                db.Addons.Remove(addon);
                 await db.SaveChangesAsync();
-                return TypedResults.Created($"/api/Addon/{addon.Addonid}", addon);
-            })
-            .WithName("CreateAddon")
-            .WithOpenApi();
-
-            group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int addonid, OdaDbContext db) =>
-            {
-                var affected = await db.Addons
-                    .Where(model => model.Addonid == addonid)
-                    .ExecuteDeleteAsync();
-                return affected == 1 ? TypedResults.Ok() : TypedResults.NotFound();
+                return TypedResults.Ok();
             })
             .WithName("DeleteAddon")
             .WithOpenApi();
