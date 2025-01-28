@@ -54,11 +54,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapAddonEndpoints();
+
 app.MapAddperrequestEndpoints();
 
 app.MapApartmentEndpoints();
-
-app.MapAddperrequestEndpoints();
 
 //app.MapBookingEndpoints();
 
