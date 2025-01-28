@@ -17,6 +17,12 @@ builder.Services.AddDbContext<OdaDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+// Add Loggigng 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+
 // Configure Kestrel
 if (builder.Environment.IsDevelopment())
 {
