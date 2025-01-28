@@ -372,7 +372,7 @@ namespace OdaWepApi.API.DomainEndpoints
             });
 
 
-           
+
 
             // **AddPerRequest Endpoints**
             // 13. Get All AddPerRequestId Assigned to an Apartment
