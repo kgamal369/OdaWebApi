@@ -11,11 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<OdaDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add Swagger services, etc.
+// Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configure Kestrel to listen on specific URLs
+// Configure Kestrel
 if (builder.Environment.IsDevelopment())
 {
     builder.WebHost.ConfigureKestrel(serverOptions =>
@@ -31,49 +31,35 @@ else
 {
     builder.WebHost.UseUrls("http://*:5188"); // Use HTTP in production (Render handles HTTPS)
 }
+
 var app = builder.Build();
 
-// Enable Swagger middleware in development mode
+// Enable Swagger
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "OdaWepApi v1");
+});
+
+// Only enable HTTPS redirection in development
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "OdaWepApi v1");
-    });
+    app.UseHttpsRedirection();
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-};
-
-app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
+// Map endpoints
 app.MapAddonEndpoints();
-
 app.MapAddperrequestEndpoints();
-
 app.MapApartmentEndpoints();
-
-//app.MapBookingEndpoints();
-
 app.MapCustomerEndpoints();
-
 app.MapDeveloperEndpoints();
-
 app.MapInvoiceEndpoints();
-
-//app.MapPackageEndpoints();
-
 app.MapPermissionEndpoints();
-
 app.MapProjectEndpoints();
-
 app.MapRoleEndpoints();
-
 app.MapUserEndpoints();
+
 app.Run();
