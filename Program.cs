@@ -9,7 +9,9 @@ builder.Services.AddControllers();
 
 // Configure DbContext with connection string
 builder.Services.AddDbContext<OdaDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") ??
+    Environment.GetEnvironmentVariable("DefaultConnection")));
+
 
 // Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
