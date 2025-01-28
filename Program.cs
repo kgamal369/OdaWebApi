@@ -48,6 +48,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapAddonEndpoints();
+app.MapAddperrequestEndpoints();
 
 app.MapApartmentEndpoints();
 

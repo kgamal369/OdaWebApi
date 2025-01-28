@@ -80,7 +80,7 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithOpenApi();
 
             // 6. Get All Project Names for a Developer
-            group.MapGet("/{id}/Projects", async Task<Results<Ok<List<string>>, NotFound>> (int id, OdaDbContext db) =>
+            group.MapGet("/{id}/ProjectsNames", async Task<Results<Ok<List<string>>, NotFound>> (int id, OdaDbContext db) =>
             {
                 var projectNames = await db.Projects
                     .Where(p => p.Developerid == id)
