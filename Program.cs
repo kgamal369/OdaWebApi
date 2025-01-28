@@ -10,8 +10,18 @@ builder.Services.AddControllers();
 // Configure DbContext with connection string
 builder.Services.AddDbContext<OdaDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") ??
-                      Environment.GetEnvironmentVariable("DefaultConnection")));
+     "Host=dpg-cuc1s39opnds738s419g-a.oregon-postgres.render.com;Database=odadb;Username=odadb_user;Password=iwiEqjZ2mwcqFuREbb8U1GNTyfxKbgGw;Port=5432;SslMode=Require;TrustServerCertificate=True"));
 
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrEmpty(connectionString))
+{
+    Console.WriteLine("Connection string is missing or not loaded.");
+}
+else
+{
+    Console.WriteLine($"Loaded connection string: {connectionString}");
+}
 
 // Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
