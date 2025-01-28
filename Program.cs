@@ -16,15 +16,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configure Kestrel to listen on specific URLs
-builder.WebHost.ConfigureKestrel(serverOptions =>
+if (builder.Environment.IsDevelopment())
 {
-    serverOptions.ListenAnyIP(5188); // HTTP
-    serverOptions.ListenAnyIP(7205, listenOptions =>
+    builder.WebHost.ConfigureKestrel(serverOptions =>
     {
-        listenOptions.UseHttps(); // HTTPS
+        serverOptions.ListenAnyIP(5188); // HTTP
+        serverOptions.ListenAnyIP(7205, listenOptions =>
+        {
+            listenOptions.UseHttps(); // HTTPS
+        });
     });
-});
-
+}
+else
+{
+    builder.WebHost.UseUrls("http://*:5188"); // Use HTTP in production (Render handles HTTPS)
+}
 var app = builder.Build();
 
 // Enable Swagger middleware in development mode
