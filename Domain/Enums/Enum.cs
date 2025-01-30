@@ -12,6 +12,24 @@
         Customer
     }
 
+    public enum PlanDetailsType
+    {
+        Foundation,
+        Decoration
+    }
+
+    public enum ApartmentType
+    {
+        Project,
+        Kit
+    }
+
+    public enum Apartmentstatus
+    {
+        ForSale,
+        InProgress,
+        InReview
+    }
     public enum EntitiesNames
     {
         Addon,

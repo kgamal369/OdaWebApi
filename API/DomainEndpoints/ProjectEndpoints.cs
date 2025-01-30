@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
-using OdaWepApi.Infrastructure;
+using OdaWepApi.Domain.Enums;
 using OdaWepApi.Domain.Models;
+using OdaWepApi.Infrastructure;
 
 namespace OdaWepApi.API.DomainEndpoints
 {
@@ -43,11 +44,9 @@ namespace OdaWepApi.API.DomainEndpoints
 
                 // Get available apartment spaces (adjust the status filter as necessary)
                 var availableSpaces = project.Apartments
-                    .Where(a => a.Apartmentstatus == "Available" || a.Apartmentstatus == "ForSale") // Include other statuses if needed
-                    .Select(a => a.Apartmentspace)
-                    .Where(space => space.HasValue)
-                    .Select(space => space.Value)
-                    .ToList();
+                    .Where(a => a.Apartmentstatus == Apartmentstatus.ForSale) // Include other statuses if needed
+                    .Select(a => a.Apartmentspace ?? 0) // Ensure non-null values
+                        .ToList();
 
                 return TypedResults.Ok(availableSpaces);
             }).WithName("GetAvailableApartmentSpacesByProjectName").WithOpenApi();
@@ -70,11 +69,9 @@ namespace OdaWepApi.API.DomainEndpoints
 
                 // Get available apartment spaces (adjust the status filter as necessary)
                 var availableSpaces = project.Apartments
-                    .Where(a => a.Apartmentstatus == "Available" || a.Apartmentstatus == "ForSale") // Include other statuses if needed
-                    .Select(a => a.Apartmentspace)
-                    .Where(space => space.HasValue)
-                    .Select(space => space.Value)
-                    .ToList();
+                   .Where(a => a.Apartmentstatus == Apartmentstatus.ForSale) // Include other statuses if needed
+                   .Select(a => a.Apartmentspace ?? 0) // Ensure non-null values
+                       .ToList();
 
                 return TypedResults.Ok(availableSpaces);
             }).WithName("GetAvailableApartmentSpacesByProjectId").WithOpenApi();
@@ -150,6 +147,7 @@ namespace OdaWepApi.API.DomainEndpoints
                 await db.SaveChangesAsync();
                 return TypedResults.Created($"/api/Project/{project.Projectid}", project);
             }).WithName("CreateProject").WithOpenApi();
+
 
             // Delete Project
             group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int projectid, OdaDbContext db) =>

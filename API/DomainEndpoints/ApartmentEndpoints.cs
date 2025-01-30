@@ -12,10 +12,6 @@ namespace OdaWepApi.API.DomainEndpoints
         {
             var group = routes.MapGroup("/api/Apartment").WithTags(nameof(Apartment));
 
-            // Enum definitions for ApartmentType and ApartmentStatus
-            var validApartmentTypes = new[] { "Project", "BuildKit" };
-            var validApartmentStatuses = new[] { "Template", "ForSale", "InProgress", "InReview", "Booked" };
-
             // Get all Apartments
             group.MapGet("/", async (OdaDbContext db) =>
             {
@@ -51,29 +47,50 @@ namespace OdaWepApi.API.DomainEndpoints
             group.MapPost("/", async Task<Results<Created<Apartment>, BadRequest<string>>> (Apartment apartment, OdaDbContext db) =>
             {
                 // Validate ApartmentType
-                if (!validApartmentTypes.Contains(apartment.Apartmenttype))
+                if (!Enum.IsDefined(typeof(ApartmentType), apartment.Apartmenttype))
                 {
-                    return TypedResults.BadRequest<string>($"Invalid ApartmentType. Valid values are: {string.Join(", ", validApartmentTypes)}");
+                    return TypedResults.BadRequest<string>("Invalid ApartmentType.");
                 }
 
                 // Validate ApartmentStatus
-                if (!validApartmentStatuses.Contains(apartment.Apartmentstatus))
+                if (!Enum.IsDefined(typeof(Apartmentstatus), apartment.Apartmentstatus))
                 {
-                    return TypedResults.BadRequest<string>($"Invalid ApartmentStatus. Valid values are: {string.Join(", ", validApartmentStatuses)}");
+                    return TypedResults.BadRequest<string>("Invalid ApartmentStatus.");
                 }
 
                 // Validate ProjectId
                 if (apartment.Projectid.HasValue && !await db.Projects.AnyAsync(p => p.Projectid == apartment.Projectid))
                 {
-                    return TypedResults.BadRequest<string>($"Invalid ProjectId. No Project exists with ID: {apartment.Projectid}");
+                    return TypedResults.BadRequest<string>($"Invalid ProjectId: {apartment.Projectid}");
                 }
 
                 // Validate PlanId
                 if (apartment.Planid.HasValue && !await db.Plans.AnyAsync(p => p.Planid == apartment.Planid))
                 {
-                    return TypedResults.BadRequest<string>($"Invalid PlanId. No Plan exists with ID: {apartment.Planid}");
+                    return TypedResults.BadRequest<string>($"Invalid PlanId: {apartment.Planid}");
                 }
 
+                // Validate AutomationId
+                if (apartment.Automationid.HasValue && !await db.Automations.AnyAsync(a => a.Automationid == apartment.Automationid))
+                {
+                    return TypedResults.BadRequest<string>($"Invalid AutomationId: {apartment.Automationid}");
+                }
+
+                // Apply validation rules
+                if (apartment.Apartmentstatus == Apartmentstatus.InProgress || apartment.Apartmentstatus == Apartmentstatus.InReview)
+                {
+                    if (!apartment.Planid.HasValue)
+                    {
+                        return TypedResults.BadRequest<string>("PlanId is required when ApartmentStatus is InProgress or InReview.");
+                    }
+                }
+                else if (apartment.Apartmentstatus == Apartmentstatus.ForSale)
+                {
+                    if (apartment.Planid.HasValue || apartment.Automationid.HasValue)
+                    {
+                        return TypedResults.BadRequest<string>("PlanId and AutomationId must be null when ApartmentStatus is ForSale.");
+                    }
+                }
                 apartment.Createddatetime = DateTime.UtcNow;
                 apartment.Lastmodifieddatetime = apartment.Createddatetime;
 
@@ -85,6 +102,55 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithName("CreateApartment")
             .WithOpenApi();
 
+            // Assign a valid PlanId to an ApartmentId
+            group.MapPut("/{id}/AssignPlan", async Task<Results<Ok, NotFound, BadRequest<string>>> (int id, int planId, OdaDbContext db) =>
+            {
+                var apartment = await db.Apartments.FindAsync(id);
+                if (apartment == null)
+                    return TypedResults.NotFound();
+
+                if (!await db.Plans.AnyAsync(p => p.Planid == planId))
+                    return TypedResults.BadRequest<string>($"Invalid PlanId: {planId}");
+
+                // Ensure PlanId can only be assigned when status is InProgress or InReview
+                if (apartment.Apartmentstatus == Apartmentstatus.ForSale)
+                {
+                    return TypedResults.BadRequest<string>("Cannot assign PlanId when ApartmentStatus is ForSale.");
+                }
+
+                apartment.Planid = planId;
+                apartment.Lastmodifieddatetime = DateTime.UtcNow;
+                await db.SaveChangesAsync();
+
+                return TypedResults.Ok();
+            })
+            .WithName("AssignPlan")
+            .WithOpenApi();
+
+            // Assign a valid AutomationId to an ApartmentId
+            group.MapPut("/{id}/AssignAutomation", async Task<Results<Ok, NotFound, BadRequest<string>>> (int id, int automationId, OdaDbContext db) =>
+            {
+                var apartment = await db.Apartments.FindAsync(id);
+                if (apartment == null)
+                    return TypedResults.NotFound();
+
+                if (!await db.Automations.AnyAsync(a => a.Automationid == automationId))
+                    return TypedResults.BadRequest<string>($"Invalid AutomationId: {automationId}");
+
+                // Ensure AutomationId can only be assigned when status is InProgress or InReview
+                if (apartment.Apartmentstatus == Apartmentstatus.ForSale)
+                {
+                    return TypedResults.BadRequest<string>("Cannot assign AutomationId when ApartmentStatus is ForSale.");
+                }
+
+                apartment.Automationid = automationId;
+                apartment.Lastmodifieddatetime = DateTime.UtcNow;
+                await db.SaveChangesAsync();
+
+                return TypedResults.Ok();
+            })
+            .WithName("AssignAutomation")
+            .WithOpenApi();
 
 
             // Update Apartment
@@ -97,27 +163,49 @@ namespace OdaWepApi.API.DomainEndpoints
                 }
 
                 // Validate ApartmentType
-                if (!validApartmentTypes.Contains(updatedApartment.Apartmenttype))
+                if (!Enum.IsDefined(typeof(ApartmentType), updatedApartment.Apartmenttype))
                 {
-                    return TypedResults.BadRequest<string>($"Invalid ApartmentType. Valid values are: {string.Join(", ", validApartmentTypes)}");
+                    return TypedResults.BadRequest<string>("Invalid ApartmentType.");
                 }
 
                 // Validate ApartmentStatus
-                if (!validApartmentStatuses.Contains(updatedApartment.Apartmentstatus))
+                if (!Enum.IsDefined(typeof(Apartmentstatus), updatedApartment.Apartmentstatus))
                 {
-                    return TypedResults.BadRequest<string>($"Invalid ApartmentStatus. Valid values are: {string.Join(", ", validApartmentStatuses)}");
+                    return TypedResults.BadRequest<string>("Invalid ApartmentStatus.");
                 }
 
                 // Validate ProjectId
                 if (updatedApartment.Projectid.HasValue && !await db.Projects.AnyAsync(p => p.Projectid == updatedApartment.Projectid))
                 {
-                    return TypedResults.BadRequest<string>($"Invalid ProjectId. No Project exists with ID: {updatedApartment.Projectid}");
+                    return TypedResults.BadRequest<string>($"Invalid ProjectId: {updatedApartment.Projectid}");
                 }
 
                 // Validate PlanId
                 if (updatedApartment.Planid.HasValue && !await db.Plans.AnyAsync(p => p.Planid == updatedApartment.Planid))
                 {
-                    return TypedResults.BadRequest<string>($"Invalid PlanId. No Plan exists with ID: {updatedApartment.Planid}");
+                    return TypedResults.BadRequest<string>($"Invalid PlanId: {updatedApartment.Planid}");
+                }
+
+                // Validate AutomationId
+                if (updatedApartment.Automationid.HasValue && !await db.Automations.AnyAsync(a => a.Automationid == updatedApartment.Automationid))
+                {
+                    return TypedResults.BadRequest<string>($"Invalid AutomationId: {updatedApartment.Automationid}");
+                }
+
+                // Apply validation rules
+                if (updatedApartment.Apartmentstatus == Apartmentstatus.InProgress || updatedApartment.Apartmentstatus == Apartmentstatus.InReview)
+                {
+                    if (!updatedApartment.Planid.HasValue)
+                    {
+                        return TypedResults.BadRequest<string>("PlanId is required when ApartmentStatus is InProgress or InReview.");
+                    }
+                }
+                else if (updatedApartment.Apartmentstatus == Apartmentstatus.ForSale)
+                {
+                    if (updatedApartment.Planid.HasValue || updatedApartment.Automationid.HasValue)
+                    {
+                        return TypedResults.BadRequest<string>("PlanId and AutomationId must be null when ApartmentStatus is ForSale.");
+                    }
                 }
 
                 // Update the existing apartment

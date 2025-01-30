@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OdaWepApi.Domain.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace OdaWepApi.Domain.Models;
@@ -9,9 +10,9 @@ public partial class Apartment
 
     public string? Apartmentname { get; set; }
 
-    public string? Apartmenttype { get; set; }
+    public ApartmentType Apartmenttype { get; set; }
 
-    public string? Apartmentstatus { get; set; }
+    public Apartmentstatus Apartmentstatus { get; set; }
 
     public decimal? Apartmentspace { get; set; }
 

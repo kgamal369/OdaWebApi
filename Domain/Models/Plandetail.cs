@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OdaWepApi.Domain.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace OdaWepApi.Domain.Models;
@@ -9,7 +10,7 @@ public partial class Plandetail
 
     public string? Plandetailsname { get; set; }
 
-    public string? Plandetailstype { get; set; }
+    public PlanDetailsType Plandetailstype { get; set; }
 
     public int? Planid { get; set; }
 
