@@ -319,17 +319,17 @@ namespace OdaWepApi.API.DomainEndpoints
                 return planName != null ? TypedResults.Ok(planName) : TypedResults.NotFound();
             });
 
-            // 7. Assign PlanId to an Apartment
-            group.MapPost("/{id}/AssignPlan", async Task<Results<Ok, NotFound>> (int id, int planId, OdaDbContext db) =>
-            {
-                var apartment = await db.Apartments.FindAsync(id);
-                if (apartment == null)
-                    return TypedResults.NotFound();
+            // // 7. Assign PlanId to an Apartment
+            // group.MapPost("/{id}/AssignPlan", async Task<Results<Ok, NotFound>> (int id, int planId, OdaDbContext db) =>
+            // {
+            //     var apartment = await db.Apartments.FindAsync(id);
+            //     if (apartment == null)
+            //         return TypedResults.NotFound();
 
-                apartment.Planid = planId;
-                await db.SaveChangesAsync();
-                return TypedResults.Ok();
-            });
+            //     apartment.Planid = planId;
+            //     await db.SaveChangesAsync();
+            //     return TypedResults.Ok();
+            // });
 
             // 8. Update and Modify the Assigned PlanId
             group.MapPut("/{id}/UpdatePlan", async Task<Results<Ok, NotFound>> (int id, int planId, OdaDbContext db) =>

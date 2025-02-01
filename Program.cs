@@ -77,8 +77,6 @@ app.MapCustomerEndpoints();
 app.MapDeveloperEndpoints();
 app.MapInvoiceEndpoints();
 app.MapPlanEndpoints();
-app.MapPlanEndpoints();
-app.MapPlanDetailsEndpoints();
 app.MapPlanDetailsEndpoints();
 app.MapPermissionEndpoints();
 app.MapProjectEndpoints();

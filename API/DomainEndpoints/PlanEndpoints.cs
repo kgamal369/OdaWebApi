@@ -17,7 +17,7 @@ namespace OdaWepApi.API.DomainEndpoints
             {
                 return await db.Plans.AsNoTracking().ToListAsync();
             })
-            .WithName("GetAllPlans")
+            .WithName("GetAllPlansList")
             .WithOpenApi();
 
             // 2. Get Plan by ID
