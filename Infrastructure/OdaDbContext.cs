@@ -128,6 +128,7 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("apartmentstatus");
             entity.Property(e => e.Apartmenttype)
                 .HasMaxLength(50)
+                .HasConversion<string>() // Convert Enum to string
                 .HasColumnName("apartmenttype");
             entity.Property(e => e.Automationid).HasColumnName("automationid");
             entity.Property(e => e.Availabilitydate)
@@ -158,7 +159,7 @@ public partial class OdaDbContext : DbContext
                 .HasForeignKey(d => d.Projectid)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("apartment_projectid_fkey");
-        });  modelBuilder.Entity<Apartment>(entity =>
+        }); modelBuilder.Entity<Apartment>(entity =>
         {
             entity.HasKey(e => e.Apartmentid).HasName("apartment_pkey");
 
