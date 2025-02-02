@@ -158,6 +158,57 @@ public partial class OdaDbContext : DbContext
                 .HasForeignKey(d => d.Projectid)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("apartment_projectid_fkey");
+        });  modelBuilder.Entity<Apartment>(entity =>
+        {
+            entity.HasKey(e => e.Apartmentid).HasName("apartment_pkey");
+
+            entity.ToTable("apartment");
+
+            entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
+            entity.Property(e => e.Apartmentname)
+                .HasMaxLength(255)
+                .HasColumnName("apartmentname");
+            entity.Property(e => e.Apartmentphotos).HasColumnName("apartmentphotos");
+            entity.Property(e => e.Apartmentspace)
+                .HasPrecision(10, 2)
+                .HasColumnName("apartmentspace");
+            entity.Property(e => e.Apartmentstatus)
+                .HasMaxLength(50)
+                .HasConversion<string>() // Convert enum to string
+                .HasColumnName("apartmentstatus");
+            entity.Property(e => e.Apartmenttype)
+                .HasMaxLength(50)
+                .HasConversion<string>() // Convert enum to string
+                .HasColumnName("apartmenttype");
+            entity.Property(e => e.Automationid).HasColumnName("automationid");
+            entity.Property(e => e.Availabilitydate)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("availabilitydate");
+            entity.Property(e => e.Createddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createddatetime");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Floornumber).HasColumnName("floornumber");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Planid).HasColumnName("planid");
+            entity.Property(e => e.Projectid).HasColumnName("projectid");
+
+            entity.HasOne(d => d.Automation).WithMany(p => p.Apartments)
+                .HasForeignKey(d => d.Automationid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("apartment_automationid_fkey");
+
+            entity.HasOne(d => d.Plan).WithMany(p => p.Apartments)
+                .HasForeignKey(d => d.Planid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("apartment_planid_fkey");
+
+            entity.HasOne(d => d.Project).WithMany(p => p.Apartments)
+                .HasForeignKey(d => d.Projectid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("apartment_projectid_fkey");
         });
 
         modelBuilder.Entity<ApartmentAddon>(entity =>
