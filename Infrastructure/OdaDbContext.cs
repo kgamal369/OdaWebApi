@@ -83,7 +83,8 @@ public partial class OdaDbContext : DbContext
                 .HasPrecision(10, 2)
                 .HasColumnName("price");
             entity.Property(e => e.Unitormeter)
-                .HasColumnType("character varying")
+                .HasMaxLength(255)
+                .HasConversion<string>() // Convert enum to string
                 .HasColumnName("unitormeter");
         });
 
