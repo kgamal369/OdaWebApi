@@ -526,6 +526,7 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("plandetailsname");
             entity.Property(e => e.Plandetailstype)
                 .HasMaxLength(255)
+                .HasConversion<string>() // Convert Enum to string
                 .HasColumnName("plandetailstype");
             entity.Property(e => e.Planid).HasColumnName("planid");
 
