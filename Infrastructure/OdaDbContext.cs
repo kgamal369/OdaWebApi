@@ -36,9 +36,13 @@ public partial class OdaDbContext : DbContext
 
     public virtual DbSet<Developer> Developers { get; set; }
 
+    public virtual DbSet<Installmentbreakdown> Installmentbreakdowns { get; set; }
+
     public virtual DbSet<Invoice> Invoices { get; set; }
 
     public virtual DbSet<Paymentmethod> Paymentmethods { get; set; }
+
+    public virtual DbSet<Paymentplan> Paymentplans { get; set; }
 
     public virtual DbSet<Permission> Permissions { get; set; }
 
@@ -315,13 +319,16 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
             entity.Property(e => e.Bookingstatus).HasColumnName("bookingstatus");
             entity.Property(e => e.Createdatetime)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdatetime");
             entity.Property(e => e.Customerid).HasColumnName("customerid");
             entity.Property(e => e.Lastmodifieddatetime)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
             entity.Property(e => e.Paymentmethodid).HasColumnName("paymentmethodid");
+            entity.Property(e => e.Paymentplanid).HasColumnName("paymentplanid");
             entity.Property(e => e.Totalamount)
                 .HasPrecision(10, 2)
                 .HasColumnName("totalamount");
@@ -341,6 +348,11 @@ public partial class OdaDbContext : DbContext
                 .HasForeignKey(d => d.Paymentmethodid)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("booking_paymentmethodid_fkey");
+
+            entity.HasOne(d => d.Paymentplan).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.Paymentplanid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("booking_paymentplanid_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.Userid)
@@ -400,6 +412,30 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("lastmodifieddatetime");
         });
 
+        modelBuilder.Entity<Installmentbreakdown>(entity =>
+        {
+            entity.HasKey(e => e.Breakdownid).HasName("installmentbreakdown_pkey");
+
+            entity.ToTable("installmentbreakdown");
+
+            entity.Property(e => e.Breakdownid).HasColumnName("breakdownid");
+            entity.Property(e => e.Createddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createddatetime");
+            entity.Property(e => e.Installmentmonth).HasColumnName("installmentmonth");
+            entity.Property(e => e.Installmentpercentage)
+                .HasPrecision(10, 2)
+                .HasColumnName("installmentpercentage");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Paymentplanid).HasColumnName("paymentplanid");
+
+            entity.HasOne(d => d.Paymentplan).WithMany(p => p.Installmentbreakdowns)
+                .HasForeignKey(d => d.Paymentplanid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("installmentbreakdown_paymentplanid_fkey");
+        });
         modelBuilder.Entity<Invoice>(entity =>
         {
             entity.HasKey(e => e.Invoiceid).HasName("invoices_pkey");
@@ -424,10 +460,10 @@ public partial class OdaDbContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
 
-            entity.HasOne(d => d.Booking).WithMany(p => p.Invoices)
-                .HasForeignKey(d => d.Bookingid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("invoices_bookingid_fkey");
+            // entity.HasOne(d => d.Booking).WithMany(p => p.Invoices)
+            //     .HasForeignKey(d => d.Bookingid)
+            //     .OnDelete(DeleteBehavior.Cascade)
+            //     .HasConstraintName("invoices_bookingid_fkey");
         });
 
         modelBuilder.Entity<Paymentmethod>(entity =>
@@ -454,6 +490,31 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Paymentmethodphotos).HasColumnName("paymentmethodphotos");
         });
 
+        modelBuilder.Entity<Paymentplan>(entity =>
+        {
+            entity.HasKey(e => e.Paymentplanid).HasName("paymentplans_pkey");
+
+            entity.ToTable("paymentplans");
+
+            entity.Property(e => e.Paymentplanid).HasColumnName("paymentplanid");
+            entity.Property(e => e.Adminfees).HasColumnName("adminfees");
+            entity.Property(e => e.Adminfeespercentage)
+                .HasPrecision(10, 2)
+                .HasColumnName("adminfeespercentage");
+            entity.Property(e => e.Downpayment).HasColumnName("downpayment");
+            entity.Property(e => e.Downpaymentpercentage)
+                .HasPrecision(10, 2)
+                .HasColumnName("downpaymentpercentage");
+            entity.Property(e => e.Interestrate).HasColumnName("interestrate");
+            entity.Property(e => e.Interestrateperyearpercentage)
+                .HasPrecision(5, 2)
+                .HasColumnName("interestrateperyearpercentage");
+            entity.Property(e => e.Numberofinstallmentmonths).HasColumnName("numberofinstallmentmonths");
+            entity.Property(e => e.Paymentplanicon).HasColumnName("paymentplanicon");
+            entity.Property(e => e.Paymentplanname)
+                .HasMaxLength(255)
+                .HasColumnName("paymentplanname");
+        });
         modelBuilder.Entity<Permission>(entity =>
         {
             entity.HasKey(e => e.Permissionid).HasName("permission_pkey");

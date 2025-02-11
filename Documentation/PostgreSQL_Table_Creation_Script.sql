@@ -123,6 +123,21 @@ CREATE TABLE Apartment (
     FOREIGN KEY (AutomationId) REFERENCES Automation(AutomationId) ON DELETE CASCADE
 );
 
+
+-- Create Table
+CREATE TABLE PaymentPlans (
+    PaymentPlanId SERIAL PRIMARY KEY,
+    PaymentPlanName VARCHAR(255) NOT NULL,
+    NumberOfInstallmentMonths INT NOT NULL,
+    PaymentPlanIcon _bytea,
+    DownPayment BOOLEAN NOT NULL,
+    DownPaymentPercentage DECIMAL(10,2),
+    AdminFees BOOLEAN NOT NULL,
+    AdminFeesPercentage DECIMAL(10,2),
+    InterestRate BOOLEAN NOT NULL,
+    InterestRatePerYearPercentage DECIMAL(5,2)
+);
+
 CREATE TABLE Apartment_Addon (
     ApartmentID INT REFERENCES Apartment(ApartmentID),
     AddonID INT REFERENCES AddOns(AddonID),
@@ -154,6 +169,7 @@ CREATE TABLE Booking (
     CustomerId INT,
     ApartmentId INT,
     PaymentMethodID INT,
+    PaymentPlanId INT,
     CreateDateTime TIMESTAMP,
 	LastModifiedDateTime TIMESTAMP,
 	BookingStatus TEXT,
@@ -163,6 +179,7 @@ CREATE TABLE Booking (
     FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
 	FOREIGN KEY (ApartmentId) REFERENCES Apartment(ApartmentId) ON DELETE CASCADE,
     FOREIGN KEY (PaymentMethodID) REFERENCES PaymentMethod(PaymentMethodID) ON DELETE CASCADE,
+    FOREIGN KEY (PaymentPlanId) REFERENCES PaymentPlans(PaymentPlanId) ON DELETE CASCADE,   
 );
 
 -- Customer Table

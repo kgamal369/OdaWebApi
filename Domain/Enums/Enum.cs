@@ -30,6 +30,13 @@
         InProgress,
         InReview
     }
+    public enum Bookingstatus
+    {
+        InProgress,
+        InReview,
+        Cancelled,
+        Done
+    }
     public enum EntitiesNames
     {
         Addon,
