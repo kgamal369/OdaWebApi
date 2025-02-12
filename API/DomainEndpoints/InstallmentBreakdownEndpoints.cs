@@ -14,9 +14,7 @@ namespace OdaWepApi.API.DomainEndpoints
             // 1. Get All Installment Breakdowns
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                return await db.Installmentbreakdowns
-                    .Include(i => i.Paymentplan)
-                    .AsNoTracking()
+                return await db.Installmentbreakdowns.AsNoTracking()
                     .ToListAsync();
             })
             .WithName("GetAllInstallmentBreakdowns")
@@ -25,9 +23,7 @@ namespace OdaWepApi.API.DomainEndpoints
             // 2. Get Installment Breakdown by ID
             group.MapGet("/{id}", async Task<Results<Ok<Installmentbreakdown>, NotFound>> (int id, OdaDbContext db) =>
             {
-                var breakdown = await db.Installmentbreakdowns
-                    .Include(i => i.Paymentplan)
-                    .AsNoTracking()
+                var breakdown = await db.Installmentbreakdowns.AsNoTracking()
                     .FirstOrDefaultAsync(i => i.Breakdownid == id);
 
                 return breakdown is not null
@@ -120,7 +116,7 @@ namespace OdaWepApi.API.DomainEndpoints
                     ? TypedResults.Ok(breakdowns)
                     : TypedResults.NotFound();
             })
-            .WithName("GetInstallmentBreakdownsByPaymentPlan")
+            .WithName("GetInstallmentBreakdownsByPaymentPlanId")
             .WithOpenApi();
         }
     }

@@ -15,10 +15,7 @@ namespace OdaWepApi.API.DomainEndpoints
             // 1. Get All Payment Plans
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                return await db.Paymentplans
-                    .Include(p => p.Installmentbreakdowns)
-                    .AsNoTracking()
-                    .ToListAsync();
+                return await db.Paymentplans.AsNoTracking().ToListAsync();
             })
             .WithName("GetAllPaymentPlans")
             .WithOpenApi();
@@ -26,9 +23,7 @@ namespace OdaWepApi.API.DomainEndpoints
             // 2. Get Payment Plan by ID
             group.MapGet("/{id}", async Task<Results<Ok<Paymentplan>, NotFound>> (int id, OdaDbContext db) =>
             {
-                var paymentPlan = await db.Paymentplans
-                    .Include(p => p.Installmentbreakdowns)
-                    .AsNoTracking()
+                var paymentPlan = await db.Paymentplans.AsNoTracking()
                     .FirstOrDefaultAsync(p => p.Paymentplanid == id);
 
                 return paymentPlan is not null
@@ -38,33 +33,33 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithName("GetPaymentPlanById")
             .WithOpenApi();
 
-            // 3. Create a New Payment Plan
-            group.MapPost("/", async Task<Results<Created<Paymentplan>, BadRequest>> (Paymentplan paymentPlan, HttpContext context, OdaDbContext db) =>
-            {
-                var request = context.Request;
+            //// 3. Create a New Payment Plan
+            //group.MapPost("/", async Task<Results<Created<Paymentplan>, BadRequest>> (Paymentplan paymentPlan, HttpContext context, OdaDbContext db) =>
+            //{
+            //    var request = context.Request;
 
-                if (paymentPlan is null)
-                    return TypedResults.BadRequest();
+            //    if (paymentPlan is null)
+            //        return TypedResults.BadRequest();
 
-                // Handle file upload (icon)
-                if (request.Form.Files.Count > 0)
-                {
-                    var icon = request.Form.Files[0];
-                    if (icon.Length > 0)
-                    {
-                        using var memoryStream = new MemoryStream();
-                        await icon.CopyToAsync(memoryStream);
-                        paymentPlan.Paymentplanicon = new List<byte[]> { memoryStream.ToArray() };
-                    }
-                }
+            //    // Handle file upload (icon)
+            //    if (request.Form.Files.Count > 0)
+            //    {
+            //        var icon = request.Form.Files[0];
+            //        if (icon.Length > 0)
+            //        {
+            //            using var memoryStream = new MemoryStream();
+            //            await icon.CopyToAsync(memoryStream);
+            //            paymentPlan.Paymentplanicon = new List<byte[]> { memoryStream.ToArray() };
+            //        }
+            //    }
 
-                db.Paymentplans.Add(paymentPlan);
-                await db.SaveChangesAsync();
+            //    db.Paymentplans.Add(paymentPlan);
+            //    await db.SaveChangesAsync();
 
-                return TypedResults.Created($"/api/PaymentPlan/{paymentPlan.Paymentplanid}", paymentPlan);
-            })
-  .WithName("CreatePaymentPlan")
-  .WithOpenApi();
+            //    return TypedResults.Created($"/api/PaymentPlan/{paymentPlan.Paymentplanid}", paymentPlan);
+            //})
+            //  .WithName("CreatePaymentPlan")
+            //  .WithOpenApi();
 
             // 4. Update an Existing Payment Plan
             group.MapPut("/{id}", async Task<Results<Ok, NotFound, BadRequest>> (int id, HttpRequest request, OdaDbContext db) =>
@@ -133,7 +128,7 @@ namespace OdaWepApi.API.DomainEndpoints
                     ? TypedResults.Ok(breakdowns)
                     : TypedResults.NotFound();
             })
-            .WithName("GetInstallmentBreakdownsByPaymentPlan")
+            .WithName("GetInstallmentBreakdownsByPaymentPlanRef")
             .WithOpenApi();
         }
     }
