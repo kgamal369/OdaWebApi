@@ -27,6 +27,18 @@ builder.Services.AddDbContext<OdaDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Enable CORS
+var corsPolicy = "_myCorsPolicy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsPolicy, builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 // Add Logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();

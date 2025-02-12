@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Infrastructure;
+using System.Runtime.Intrinsics.X86;
 
 namespace OdaWepApi.API.DomainEndpoints
 {
@@ -80,15 +81,15 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithOpenApi();
 
             // 6. Get All Project Names for a Developer
-            group.MapGet("/{id}/ProjectsNames", async Task<Results<Ok<List<string>>, NotFound>> (int id, OdaDbContext db) =>
+            group.MapGet("/{id}/ProjectsIDAndNames", async Task<Results<Ok<List<object>>, NotFound>> (int id, OdaDbContext db) =>
             {
                 var projectNames = await db.Projects
                     .Where(p => p.Developerid == id)
-                    .Select(p => p.Projectname)
+                    .Select(p => new { p.Projectid, p.Projectname }) 
                     .ToListAsync();
 
                 return projectNames.Any()
-                    ? TypedResults.Ok(projectNames)
+                     ? TypedResults.Ok(projectNames.Cast<object>().ToList()) 
                     : TypedResults.NotFound();
             })
             .WithName("GetProjectsByDeveloper")

@@ -4,6 +4,7 @@ using System.Text.Json;
 using OdaWepApi.Domain.Enums;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Infrastructure;
+using System.Threading;
 
 namespace OdaWepApi.API.DomainEndpoints
 {
@@ -53,7 +54,7 @@ namespace OdaWepApi.API.DomainEndpoints
 
 
             // Get All Available Apartment Spaces for a Selected Project ID
-            group.MapGet("/by-id/{projectId:int}/available-apartment-spaces", async Task<Results<Ok<List<decimal>>, NotFound>> (int projectId, OdaDbContext db) =>
+            group.MapGet("/by-id/{projectId:int}/available-apartment-spaces", async Task<Results<Ok<List<object>>, NotFound>> (int projectId, OdaDbContext db) =>
             {
                 // Find the project by Id
                 var project = await db.Projects
@@ -67,15 +68,18 @@ namespace OdaWepApi.API.DomainEndpoints
                     return TypedResults.NotFound();
                 }
 
-                // Get available apartment spaces (adjust the status filter as necessary)
-                var availableSpaces = project.Apartments
-                   .Where(a => a.Apartmentstatus == Apartmentstatus.ForSale) // Include other statuses if needed
-                   .Select(a => a.Apartmentspace ?? 0) // Ensure non-null values
-                       .ToList();
+                // Get available apartments with space not null and greater than zero
+                var availableApartments = project.Apartments
+                    .Where(a => a.Apartmentstatus == Apartmentstatus.ForSale && a.Apartmentspace.HasValue && a.Apartmentspace.Value > 0) // Filter out null and zero spaces
+                    .Select(a => new { a.Apartmentid, Apartmentspace = a.Apartmentspace.Value }) // Ensure non-null value
+                    .ToList();
 
-                return TypedResults.Ok(availableSpaces);
-            }).WithName("GetAvailableApartmentSpacesByProjectId").WithOpenApi();
-
+                return availableApartments.Any()
+                    ? TypedResults.Ok(availableApartments.Cast<object>().ToList())
+                    : TypedResults.NotFound();
+            })
+            .WithName("GetAvailableApartmentSpacesByProjectId")
+            .WithOpenApi();
 
             // Get Project by Id
             group.MapGet("/{id}", async Task<Results<Ok<Project>, NotFound>> (int projectid, OdaDbContext db) =>
