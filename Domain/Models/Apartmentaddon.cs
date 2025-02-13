@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OdaWepApi.Domain.Models;
+﻿namespace OdaWepApi.Domain.Models;
 
 public partial class ApartmentAddon
 {
@@ -14,4 +11,5 @@ public partial class ApartmentAddon
     public virtual Addon Addon { get; set; } = null!;
 
     public virtual Apartment Apartment { get; set; } = null!;
+
 }

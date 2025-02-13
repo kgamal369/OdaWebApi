@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OdaWepApi.Domain.Models;
+﻿namespace OdaWepApi.Domain.Models;
 
 public partial class User
 {
@@ -28,6 +25,6 @@ public partial class User
     public int? Roleid { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-
     public virtual Role? Role { get; set; }
+
 }

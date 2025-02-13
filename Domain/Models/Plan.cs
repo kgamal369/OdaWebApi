@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OdaWepApi.Domain.Models;
+﻿namespace OdaWepApi.Domain.Models;
 
 public partial class Plan
 {
@@ -22,4 +19,5 @@ public partial class Plan
     public virtual ICollection<Apartment> Apartments { get; set; } = new List<Apartment>();
 
     public virtual ICollection<Plandetail> Plandetails { get; set; } = new List<Plandetail>();
+
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OdaWepApi.Domain.Models;
+﻿namespace OdaWepApi.Domain.Models;
 
 public partial class Automationdetail
 {
@@ -11,11 +8,13 @@ public partial class Automationdetail
 
     public int? Automationid { get; set; }
 
-    public string? Description { get; set; }
+    public bool Description { get; set; }
 
     public DateTime? Createdatetime { get; set; }
 
     public DateTime? Lastmodifieddatetime { get; set; }
 
+    public List<byte[]>? Icon { get; set; }
     public virtual Automation? Automation { get; set; }
+
 }

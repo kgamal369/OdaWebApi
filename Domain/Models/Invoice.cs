@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OdaWepApi.Domain.Models;
+﻿namespace OdaWepApi.Domain.Models;
 
 public partial class Invoice
 {
@@ -18,6 +15,6 @@ public partial class Invoice
     public string? Invoicestatus { get; set; }
 
     public DateTime? Invoiceduedate { get; set; }
-
     public virtual Booking? Booking { get; set; }
+
 }

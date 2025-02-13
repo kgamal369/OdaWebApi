@@ -1,6 +1,4 @@
 ﻿using OdaWepApi.Domain.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace OdaWepApi.Domain.Models;
 
@@ -20,5 +18,8 @@ public partial class Plandetail
 
     public DateTime? Lastmodifieddatetime { get; set; }
 
+    public int? Stars { get; set; }
+
     public virtual Plan? Plan { get; set; }
+
 }

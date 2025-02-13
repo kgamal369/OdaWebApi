@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OdaWepApi.API.DomainEndpoints;
+using OdaWepApi.API.DTOEndpoints;
 using OdaWepApi.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -98,7 +99,8 @@ app.MapPermissionEndpoints();
 app.MapProjectEndpoints();
 app.MapRoleEndpoints();
 app.MapUserEndpoints();
-
+app.MapBookingDataInEndpoints();
+app.MapBookingDataOutEndpoints();
 // Ensure Database is Ready Before App Starts
 try
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OdaWepApi.Domain.Models;
+﻿namespace OdaWepApi.Domain.Models;
 
 public partial class Addperrequest
 {
@@ -16,6 +13,6 @@ public partial class Addperrequest
     public DateTime? Createddatetime { get; set; }
 
     public DateTime? Lastmodifieddatetime { get; set; }
-
     public virtual ICollection<ApartmentAddonperrequest> ApartmentAddonperrequests { get; set; } = new List<ApartmentAddonperrequest>();
+
 }

@@ -1,7 +1,4 @@
 ﻿using OdaWepApi.Domain.Enums;
-using System;
-using System.Collections.Generic;
-
 namespace OdaWepApi.Domain.Models;
 
 public partial class Addon
@@ -25,4 +22,5 @@ public partial class Addon
     public UnitOrMeterType Unitormeter { get; set; }
 
     public virtual ICollection<ApartmentAddon> ApartmentAddons { get; set; } = new List<ApartmentAddon>();
+
 }

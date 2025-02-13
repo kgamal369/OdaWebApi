@@ -1,0 +1,90 @@
+now I had a workflow 1  of my  user experince  of making a booking 
+and it will be one Object DTO post request will happend  will effect
+ in several Post and Update at once 
+so I will told you what will user will select and how the post and update request should be done 
+and Your Task to Create this DTO Object and Create the function which will effect in all my real Domain CRUD Endpoint
+ 
+The User will select a 
+1. select one DeveloperID 
+2. select one ProjectID 
+3. select one ApartmentID 
+4. select one PlanID -
+4.1.  Variable totalPlanPrice = Plan.PricePerMeter*Apartment.ApartmentSpace
+5. select some (AddonsID)  and if the Addon.unitorMeter is Unit the user will select some quantity  
+5.1. if  AddonsId selected is unitorMeter so the user is unit   
+      Variable properites =  
+	 sum of all addon prices 
+	each addon price =	 if addon is unit  each addon.price*select Quantity  +
+					else if addon is Meter addon.price*apartment.ApartmentSpace
+					
+6. the user could select several addperrequest.addperrequestId
+7. the user could select only one of automation. automationId
+8. the user will add his customer Info 
+9. the user will select a paymentplanid 
+
+then the user will per checkout all the those Crud function should called and process with this order 
+10. a cloned instance of this apartmentId will be created 
+11. the new apartmentid will had created and with those values 
+	11.1. apartment.apartmentstatus =InProgress
+	11.2. apartment.projectI = is the projectId selected
+	11.3. apartment.planId = the selected planId
+	11.4. apartment.automation=  the selected automation Id in case something is selected
+	
+12. Create new recoreds in Apartment_addon	each recored will be for for each one of the selected addonId and it's quantity and the new apartmentId
+13. Create new recored in Apartment_addonperrequest	each recored will be for for each one of the selected addperrequestId and it's quantity always 1 and the new apartmentId
+14  Create new recored Customer record for the inserted customer Info from step 8
+15. Create new record for Booking where 
+   15.1.booking.CustomerId = new customer.CustomerId which just inserted in step 14 
+   15.2.booking.apartmentId = the new cloned apartmentId which just inserted in step 11 
+   15.3.booking.paymentplanid = the selected paymentplanid in step 9
+   15.4. insert booking.createdate time = now and booking.last modified date = now 
+   15.5. booking.bookingstatus=enum Bookingstatus.InProgress
+   15.6. booking.totalAmount = sum of all addon prices  from step 5 +totalPlanPrice from step 4.1
+
+I want from you  
+1 . Create a DTO bookingDataIn  object for all the detailes which the user will insert 
+2. Create a  group.MapPost  endpoint for bookingDataIn DTO
+3. Create a work flow functions  which will take  bookingDataIn which will trigger function which effect in all my real Domain group.MapPost  Endpoints for all related tables 
+
+4. Create an other DTO for bookingDataOut
+5. create a  group.MapGet  endpoint for  bookingDataOut DTO
+6. Create A work flow functions  to get and grap and trigger and fetch all  group.MapGet for all my real Domain group.MapPost  Endpoints for all related tables  
+
+
+
+   DTO bookingDataIn 
+	1. DeveloperID
+	2. ProjectID
+	3. ApartmentID
+	4. PlanID
+	5. list < AddonID , Quantity>
+	6. list <AddonPerRequestID >
+	7. automationID 
+	8. CustomerInfo Object (from Domain Model)
+	9. PaymentplanID
+	
+	
+	DTO bookingDataOut 
+	1. bookingID
+	2. DeveloperID
+	2. ProjectID
+	3. New ApartmentID 
+	4. Apartment.ApartmentSpace
+	5. PlanID  
+	6. Plan.Planname  for the selected PlanID
+	7. Total Plan price , totalPlanPrice = Plan.PricePerMeter*Apartment.ApartmentSpace
+	8. list < AddonID , Addon name,  Quantity , Price 
+	if  AddonsId selected is unitorMeter so the user is unit   
+      Variable properites =  
+	 sum of all addon prices 
+	each addon price =	 if addon is unit  each addon.price*select Quantity  +
+					else if addon is Meter addon.price*apartment.ApartmentSpace
+	9. Sum Of Total Addon Prices
+	10. Automation Id Select 
+	11. list < AddonPerRequestID , AddonPerRequestName>
+    12. Object : CustomerID , Customer Name
+    13. PaymentPlanID 
+    14. totalAmount = Sum Of Total Addon Prices + Total Plan price
+	
+	
+   _________________________________________________________________________________________________________________________

@@ -1,6 +1,5 @@
 ﻿using OdaWepApi.Domain.Enums;
-using System;
-using System.Collections.Generic;
+
 
 namespace OdaWepApi.Domain.Models;
 

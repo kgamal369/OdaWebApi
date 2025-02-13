@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OdaWepApi.Domain.Models;
+﻿namespace OdaWepApi.Domain.Models;
 
 public partial class Developer
 {
@@ -16,6 +13,6 @@ public partial class Developer
     public DateTime? Createdatetime { get; set; }
 
     public DateTime? Lastmodifieddatetime { get; set; }
-
     public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+
 }

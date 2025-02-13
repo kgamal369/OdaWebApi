@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OdaWepApi.Domain.Models;
+﻿namespace OdaWepApi.Domain.Models;
 
 public partial class Role
 {
@@ -18,4 +15,5 @@ public partial class Role
     public virtual ICollection<Permission> Permissions { get; set; } = new List<Permission>();
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
+
 }

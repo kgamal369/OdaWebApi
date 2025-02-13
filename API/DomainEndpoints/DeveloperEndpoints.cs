@@ -85,11 +85,11 @@ namespace OdaWepApi.API.DomainEndpoints
             {
                 var projectNames = await db.Projects
                     .Where(p => p.Developerid == id)
-                    .Select(p => new { p.Projectid, p.Projectname }) 
+                    .Select(p => new { p.Projectid, p.Projectname })
                     .ToListAsync();
 
                 return projectNames.Any()
-                     ? TypedResults.Ok(projectNames.Cast<object>().ToList()) 
+                     ? TypedResults.Ok(projectNames.Cast<object>().ToList())
                     : TypedResults.NotFound();
             })
             .WithName("GetProjectsByDeveloper")

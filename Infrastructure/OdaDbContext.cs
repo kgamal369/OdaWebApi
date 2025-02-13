@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OdaWepApi.Domain.Models;
+﻿using OdaWepApi.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace OdaWepApi.Infrastructure;
 
@@ -58,6 +58,7 @@ public partial class OdaDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Host=dpg-cuc1s39opnds738s419g-a.oregon-postgres.render.com;Database=odadb;Username=odadb_user;Password=iwiEqjZ2mwcqFuREbb8U1GNTyfxKbgGw;Port=5432;SslMode=Require;TrustServerCertificate=True");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Addon>(entity =>
@@ -147,72 +148,6 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("lastmodifieddatetime");
             entity.Property(e => e.Planid).HasColumnName("planid");
             entity.Property(e => e.Projectid).HasColumnName("projectid");
-
-            entity.HasOne(d => d.Automation).WithMany(p => p.Apartments)
-                .HasForeignKey(d => d.Automationid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("apartment_automationid_fkey");
-
-            entity.HasOne(d => d.Plan).WithMany(p => p.Apartments)
-                .HasForeignKey(d => d.Planid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("apartment_planid_fkey");
-
-            entity.HasOne(d => d.Project).WithMany(p => p.Apartments)
-                .HasForeignKey(d => d.Projectid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("apartment_projectid_fkey");
-        }); modelBuilder.Entity<Apartment>(entity =>
-        {
-            entity.HasKey(e => e.Apartmentid).HasName("apartment_pkey");
-
-            entity.ToTable("apartment");
-
-            entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
-            entity.Property(e => e.Apartmentname)
-                .HasMaxLength(255)
-                .HasColumnName("apartmentname");
-            entity.Property(e => e.Apartmentphotos).HasColumnName("apartmentphotos");
-            entity.Property(e => e.Apartmentspace)
-                .HasPrecision(10, 2)
-                .HasColumnName("apartmentspace");
-            entity.Property(e => e.Apartmentstatus)
-                .HasMaxLength(50)
-                .HasConversion<string>() // Convert enum to string
-                .HasColumnName("apartmentstatus");
-            entity.Property(e => e.Apartmenttype)
-                .HasMaxLength(50)
-                .HasConversion<string>() // Convert enum to string
-                .HasColumnName("apartmenttype");
-            entity.Property(e => e.Automationid).HasColumnName("automationid");
-            entity.Property(e => e.Availabilitydate)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("availabilitydate");
-            entity.Property(e => e.Createddatetime)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("createddatetime");
-            entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.Floornumber).HasColumnName("floornumber");
-            entity.Property(e => e.Lastmodifieddatetime)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("lastmodifieddatetime");
-            entity.Property(e => e.Planid).HasColumnName("planid");
-            entity.Property(e => e.Projectid).HasColumnName("projectid");
-
-            entity.HasOne(d => d.Automation).WithMany(p => p.Apartments)
-                .HasForeignKey(d => d.Automationid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("apartment_automationid_fkey");
-
-            entity.HasOne(d => d.Plan).WithMany(p => p.Apartments)
-                .HasForeignKey(d => d.Planid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("apartment_planid_fkey");
-
-            entity.HasOne(d => d.Project).WithMany(p => p.Apartments)
-                .HasForeignKey(d => d.Projectid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("apartment_projectid_fkey");
         });
 
         modelBuilder.Entity<ApartmentAddon>(entity =>
@@ -224,16 +159,6 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
             entity.Property(e => e.Addonid).HasColumnName("addonid");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-            entity.HasOne(d => d.Addon).WithMany(p => p.ApartmentAddons)
-                .HasForeignKey(d => d.Addonid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("apartment_addon_addonid_fkey");
-
-            entity.HasOne(d => d.Apartment).WithMany(p => p.ApartmentAddons)
-                .HasForeignKey(d => d.Apartmentid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("apartment_addon_apartmentid_fkey");
         });
 
         modelBuilder.Entity<ApartmentAddonperrequest>(entity =>
@@ -247,16 +172,6 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Quantity)
                 .HasDefaultValue(1)
                 .HasColumnName("quantity");
-
-            entity.HasOne(d => d.Addperrequest).WithMany(p => p.ApartmentAddonperrequests)
-                .HasForeignKey(d => d.Addperrequestid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("apartment_addonperrequest_addperrequestid_fkey");
-
-            entity.HasOne(d => d.Apartment).WithMany(p => p.ApartmentAddonperrequests)
-                .HasForeignKey(d => d.Apartmentid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("apartment_addonperrequest_apartmentid_fkey");
         });
 
         modelBuilder.Entity<Automation>(entity =>
@@ -294,17 +209,11 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Createdatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdatetime");
-            entity.Property(e => e.Description)
-                .HasMaxLength(255)
-                .HasColumnName("description");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Icon).HasColumnName("icon");
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
-
-            entity.HasOne(d => d.Automation).WithMany(p => p.Automationdetails)
-                .HasForeignKey(d => d.Automationid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("automationdetails_automationid_fkey");
         });
 
         modelBuilder.Entity<Booking>(entity =>
@@ -434,6 +343,7 @@ public partial class OdaDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("installmentbreakdown_paymentplanid_fkey");
         });
+
         modelBuilder.Entity<Invoice>(entity =>
         {
             entity.HasKey(e => e.Invoiceid).HasName("invoices_pkey");
@@ -457,11 +367,6 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
-
-            // entity.HasOne(d => d.Booking).WithMany(p => p.Invoices)
-            //     .HasForeignKey(d => d.Bookingid)
-            //     .OnDelete(DeleteBehavior.Cascade)
-            //     .HasConstraintName("invoices_bookingid_fkey");
         });
 
         modelBuilder.Entity<Paymentmethod>(entity =>
@@ -513,6 +418,7 @@ public partial class OdaDbContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("paymentplanname");
         });
+
         modelBuilder.Entity<Permission>(entity =>
         {
             entity.HasKey(e => e.Permissionid).HasName("permission_pkey");
@@ -533,11 +439,6 @@ public partial class OdaDbContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
             entity.Property(e => e.Roleid).HasColumnName("roleid");
-
-            entity.HasOne(d => d.Role).WithMany(p => p.Permissions)
-                .HasForeignKey(d => d.Roleid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("permission_roleid_fkey");
         });
 
         modelBuilder.Entity<Plan>(entity =>
@@ -589,11 +490,7 @@ public partial class OdaDbContext : DbContext
                 .HasConversion<string>() // Convert Enum to string
                 .HasColumnName("plandetailstype");
             entity.Property(e => e.Planid).HasColumnName("planid");
-
-            entity.HasOne(d => d.Plan).WithMany(p => p.Plandetails)
-                .HasForeignKey(d => d.Planid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("plandetails_planid_fkey");
+            entity.Property(e => e.Stars).HasColumnName("stars");
         });
 
         modelBuilder.Entity<Project>(entity =>
@@ -619,11 +516,6 @@ public partial class OdaDbContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("projectname");
             entity.Property(e => e.Totalunits).HasColumnName("totalunits");
-
-            entity.HasOne(d => d.Developer).WithMany(p => p.Projects)
-                .HasForeignKey(d => d.Developerid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("fk_developer");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -705,11 +597,6 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(255)
                 .HasColumnName("username");
-
-            entity.HasOne(d => d.Role).WithMany(p => p.Users)
-                .HasForeignKey(d => d.Roleid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("users_roleid_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);
