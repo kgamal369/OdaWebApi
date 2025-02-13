@@ -11,21 +11,51 @@ namespace OdaWepApi.API.DomainEndpoints
         {
             var group = routes.MapGroup("/api/AutomationDetails").WithTags(nameof(Automationdetail));
 
-            // 1. Get All Automation Details
+         // 1️⃣ **Get All Automation Details - with Base64 Encoding for Image**
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                return await db.Automationdetails.AsNoTracking().ToListAsync();
+                var automationDetails = await db.Automationdetails
+                    .AsNoTracking()
+                    .Select(a => new
+                    {
+                        a.Automationdetailsid,
+                        a.Automationdetailsname,
+                        a.Automationid,
+                        a.Description,
+                        a.Createdatetime,
+                        a.Lastmodifieddatetime,
+
+                        // ✅ Convert bytea to Base64 string
+                        IconBase64 = a.Icon != null ? Convert.ToBase64String(a.Icon) : null
+                    })
+                    .ToListAsync();
+
+                return Results.Ok(automationDetails);
             })
             .WithName("GetAllAutomationDetails")
             .WithOpenApi();
 
-            // 2. Get Automation Detail by ID
-            group.MapGet("/{id}", async Task<Results<Ok<Automationdetail>, NotFound>> (int id, OdaDbContext db) =>
+            // 2️⃣ **Get a Single Automation Detail by ID**
+            group.MapGet("/{id:int}", async (int id, OdaDbContext db) =>
             {
-                var automationDetail = await db.Automationdetails.AsNoTracking()
-                    .FirstOrDefaultAsync(ad => ad.Automationdetailsid == id);
+                var automationDetail = await db.Automationdetails
+                    .AsNoTracking()
+                    .Where(a => a.Automationdetailsid == id)
+                    .Select(a => new
+                    {
+                        a.Automationdetailsid,
+                        a.Automationdetailsname,
+                        a.Automationid,
+                        a.Description,
+                        a.Createdatetime,
+                        a.Lastmodifieddatetime,
 
-                return automationDetail is not null ? TypedResults.Ok(automationDetail) : TypedResults.NotFound();
+                        // ✅ Convert bytea to Base64 for JSON response
+                        IconBase64 = a.Icon != null ? Convert.ToBase64String(a.Icon) : null
+                    })
+                    .FirstOrDefaultAsync();
+
+                return automationDetail != null ? Results.Ok(automationDetail) : Results.NotFound();
             })
             .WithName("GetAutomationDetailById")
             .WithOpenApi();
