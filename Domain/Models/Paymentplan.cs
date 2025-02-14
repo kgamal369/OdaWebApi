@@ -11,7 +11,7 @@ public partial class Paymentplan
 
     public int Numberofinstallmentmonths { get; set; }
 
-    public List<byte[]>? Paymentplanicon { get; set; }
+    public byte[]? Paymentplanicon { get; set; }
 
     public bool Downpayment { get; set; }
 

@@ -15,20 +15,49 @@ namespace OdaWepApi.API.DomainEndpoints
             // 1. Get All Plans
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                return await db.Plans.AsNoTracking().ToListAsync();
+                var plans = await db.Plans
+                .AsNoTracking()
+                .Select(a => new
+                {
+                    a.Planid,
+                    a.Planname,
+                    a.Pricepermeter,
+                    a.Description,
+                    a.Createdatetime,
+                    a.Lastmodifieddatetime,
+
+                    // ✅ Convert bytea to Base64 string
+                    PlanBase64 = a.Planphoto != null ? Convert.ToBase64String(a.Planphoto) : null
+                })
+                .ToListAsync();
+                return Results.Ok(plans);
             })
             .WithName("GetAllPlansList")
             .WithOpenApi();
 
             // 2. Get Plan by ID
-            group.MapGet("/{id}", async Task<Results<Ok<Plan>, NotFound>> (int id, OdaDbContext db) =>
+            group.MapGet("/{id:int}", async (int id, OdaDbContext db) =>
             {
-                var plan = await db.Plans.AsNoTracking()
-                    .FirstOrDefaultAsync(p => p.Planid == id);
+                var plan = await db.Plans
+                .AsNoTracking()
+                .Where(a => a.Planid == id)
+                .Select(a => new
+                {
+                    a.Planid,
+                    a.Planname,
+                    a.Pricepermeter,
+                    a.Description,
+                    a.Createdatetime,
+                    a.Lastmodifieddatetime,
+
+                    // ✅ Convert bytea to Base64 string
+                    PlanBase64 = a.Planphoto != null ? Convert.ToBase64String(a.Planphoto) : null
+                })
+                .FirstOrDefaultAsync();
 
                 return plan is not null
-                    ? TypedResults.Ok(plan)
-                    : TypedResults.NotFound();
+                    ? Results.Ok(plan)
+                    : Results.NotFound();
             })
             .WithName("GetPlanById")
             .WithOpenApi();

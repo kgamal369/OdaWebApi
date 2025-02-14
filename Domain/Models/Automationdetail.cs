@@ -15,6 +15,6 @@ public partial class Automationdetail
     public DateTime? Lastmodifieddatetime { get; set; }
 
     public byte[]? Icon { get; set; }
-    public virtual Automation? Automation { get; set; }
 
+    public virtual Automation? Automation { get; set; }
 }

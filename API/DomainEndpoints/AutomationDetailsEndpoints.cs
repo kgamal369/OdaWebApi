@@ -11,7 +11,7 @@ namespace OdaWepApi.API.DomainEndpoints
         {
             var group = routes.MapGroup("/api/AutomationDetails").WithTags(nameof(Automationdetail));
 
-         // 1️⃣ **Get All Automation Details - with Base64 Encoding for Image**
+            // 1️⃣ **Get All Automation Details - with Base64 Encoding for Image**
             group.MapGet("/", async (OdaDbContext db) =>
             {
                 var automationDetails = await db.Automationdetails

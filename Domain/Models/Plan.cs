@@ -10,7 +10,7 @@ public partial class Plan
 
     public string? Description { get; set; }
 
-    public List<byte[]>? Planphoto { get; set; }
+    public byte[]? Planphoto { get; set; }
 
     public DateTime? Createdatetime { get; set; }
 
