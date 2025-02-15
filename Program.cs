@@ -28,13 +28,13 @@ builder.Services.AddDbContext<OdaDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Enable CORS
+// Enable CORS with specific configuration
 var corsPolicy = "_myCorsPolicy";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicy, builder =>
     {
-        builder.AllowAnyOrigin()
+        builder.AllowAnyOrigin() // Allow all origins (Change to .WithOrigins("https://yourfrontend.com") in production for security)
                .AllowAnyMethod()
                .AllowAnyHeader();
     });
@@ -72,11 +72,14 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "OdaWepApi v1");
 });
 
-// Only enable HTTPS redirection in local development
+// Enable HTTPS redirection only in development
 if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+
+// Apply CORS Middleware (before authorization)
+app.UseCors(corsPolicy);
 
 app.UseAuthorization();
 app.MapControllers();
@@ -101,6 +104,7 @@ app.MapRoleEndpoints();
 app.MapUserEndpoints();
 app.MapBookingDataInEndpoints();
 app.MapBookingDataOutEndpoints();
+
 // Ensure Database is Ready Before App Starts
 try
 {
