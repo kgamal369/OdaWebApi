@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using OdaWepApi.API.DomainEndpoints;
 using OdaWepApi.API.DTOEndpoints;
 using OdaWepApi.Infrastructure;
@@ -6,7 +7,12 @@ using OdaWepApi.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true; // Optional: Pretty-print JSON
+    });
 
 // Load Connection String from Configuration (appsettings.json or Environment Variables)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
