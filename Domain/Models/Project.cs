@@ -1,4 +1,7 @@
-﻿namespace OdaWepApi.Domain.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace OdaWepApi.Domain.Models;
 
 public partial class Project
 {
@@ -12,7 +15,7 @@ public partial class Project
 
     public int? Totalunits { get; set; }
 
-    public List<byte[]>? Projectlogo { get; set; }
+    public byte[]? Projectlogo { get; set; } // Changed from List<byte[]> to byte[]
 
     public DateTime? Createdatetime { get; set; }
 
@@ -20,7 +23,10 @@ public partial class Project
 
     public int? Developerid { get; set; }
 
-    public virtual ICollection<Apartment> Apartments { get; set; } = new List<Apartment>();
-
+    [JsonIgnore]
+    [ForeignKey("Developerid")]
     public virtual Developer? Developer { get; set; }
+
+    [JsonIgnore]
+    public virtual ICollection<Apartment> Apartments { get; set; } = new List<Apartment>();
 }
