@@ -17,18 +17,19 @@ namespace OdaWepApi.API.DomainEndpoints
             {
                 var paymentPlans = await db.Paymentplans
                 .AsNoTracking()
-                .Select ( a => new 
+                .Select(a => new
                 {
                     a.Paymentplanid,
                     a.Paymentplanname,
                     a.Numberofinstallmentmonths,
                     a.Downpayment,
+                    a.Downpaymentpercentage,
                     a.Adminfees,
                     a.Adminfeespercentage,
                     a.Interestrate,
                     a.Interestrateperyearpercentage,
                     // ✅ Convert bytea to Base64 string
-                        IconBase64 = a.Paymentplanicon != null ? Convert.ToBase64String(a.Paymentplanicon) : null
+                    IconBase64 = a.Paymentplanicon != null ? Convert.ToBase64String(a.Paymentplanicon) : null
                 })
                 .ToListAsync();
                 return Results.Ok(paymentPlans);
@@ -43,18 +44,19 @@ namespace OdaWepApi.API.DomainEndpoints
                 var paymentPlan = await db.Paymentplans
                 .AsNoTracking()
                 .Where(a => a.Paymentplanid == id)
-                .Select ( a => new 
+                .Select(a => new
                 {
                     a.Paymentplanid,
                     a.Paymentplanname,
                     a.Numberofinstallmentmonths,
                     a.Downpayment,
+                    a.Downpaymentpercentage,
                     a.Adminfees,
                     a.Adminfeespercentage,
                     a.Interestrate,
                     a.Interestrateperyearpercentage,
                     // ✅ Convert bytea to Base64 string
-                        IconBase64 = a.Paymentplanicon != null ? Convert.ToBase64String(a.Paymentplanicon) : null
+                    IconBase64 = a.Paymentplanicon != null ? Convert.ToBase64String(a.Paymentplanicon) : null
                 })
                 .FirstOrDefaultAsync();
 

@@ -116,7 +116,7 @@ namespace OdaWepApi.API.DomainEndpoints
                     {
                         using var memoryStream = new MemoryStream();
                         await logo.CopyToAsync(memoryStream);
-                    //    existingProject.Projectlogo = new List<byte[]> { memoryStream.ToArray() };
+                        //    existingProject.Projectlogo = new List<byte[]> { memoryStream.ToArray() };
                     }
                 }
 
@@ -143,7 +143,7 @@ namespace OdaWepApi.API.DomainEndpoints
                     {
                         using var memoryStream = new MemoryStream();
                         await logo.CopyToAsync(memoryStream);
-                    //    project.Projectlogo = new List<byte[]> { memoryStream.ToArray() };
+                        //    project.Projectlogo = new List<byte[]> { memoryStream.ToArray() };
                     }
                 }
 

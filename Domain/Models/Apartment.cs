@@ -10,9 +10,9 @@ public partial class Apartment
 
     public string? Apartmentname { get; set; }
 
-    public ApartmentType Apartmenttype { get; set; } 
+    public ApartmentType Apartmenttype { get; set; }
 
-    public Apartmentstatus Apartmentstatus { get; set; } 
+    public Apartmentstatus Apartmentstatus { get; set; }
 
     public decimal? Apartmentspace { get; set; }
 
