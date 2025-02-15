@@ -129,6 +129,7 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("apartmentspace");
             entity.Property(e => e.Apartmentstatus)
                 .HasMaxLength(50)
+                .HasConversion<string>() // Convert Enum to string
                 .HasColumnName("apartmentstatus");
             entity.Property(e => e.Apartmenttype)
                 .HasMaxLength(50)
