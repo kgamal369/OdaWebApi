@@ -17,7 +17,7 @@ namespace OdaWepApi.Domain.DTOs
         public int? AutomationID { get; set; }
         public List<AddonPerRequestDetail> AddonPerRequests { get; set; }
         public Customer CustomerInfo { get; set; }
-        public int PaymentPlanID { get; set; }
+        public PaymentDTO paymentDTO {get;set;}
         public decimal TotalAmount { get; set; }
     }
 }

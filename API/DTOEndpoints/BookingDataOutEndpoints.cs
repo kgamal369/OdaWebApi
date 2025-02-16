@@ -93,7 +93,7 @@ namespace OdaWepApi.API.DTOEndpoints
                     Firstname = booking.Customer.Firstname,
                     Lastname = booking.Customer.Lastname
                 },
-                PaymentPlanID = (int)booking.Paymentplanid,
+                //PaymentPlanID = (int)booking.Paymentplanid,
                 TotalAmount = (decimal)(totalPlanPrice + totalAddonPrice)
             };
         }
