@@ -32,10 +32,11 @@
     }
     public enum Bookingstatus
     {
+        Pending,
         InProgress,
-        InReview,
+        Confirmed,
         Cancelled,
-        Done
+        Completed
     }
     public enum EntitiesNames
     {

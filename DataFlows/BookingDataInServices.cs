@@ -32,8 +32,8 @@ namespace OdaWepApi.DataFlows
                     Projectid = existingApartment.Projectid,
                     Planid = bookingDataIn.PlanID,
                     Automationid = bookingDataIn.AutomationID,
-                    Createddatetime = DateTime.UtcNow,
-                    Lastmodifieddatetime = DateTime.UtcNow
+                    Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                    Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
                 db.Apartments.Add(clonedApartment);
@@ -52,8 +52,8 @@ namespace OdaWepApi.DataFlows
                     Projectid = bookingDataIn.ProjectID,
                     Planid = bookingDataIn.PlanID,
                     Automationid = bookingDataIn.AutomationID,
-                    Createddatetime = DateTime.UtcNow,
-                    Lastmodifieddatetime = DateTime.UtcNow
+                    Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                    Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                 };
 
                 db.Apartments.Add(newApartment);
@@ -89,13 +89,14 @@ namespace OdaWepApi.DataFlows
                 return existingCustomer.Customerid;
             }
 
-            customerInfo.Createdatetime = DateTime.UtcNow;
-            customerInfo.Lastmodifieddatetime = DateTime.UtcNow;
+            customerInfo.Createdatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            customerInfo.Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             db.Customers.Add(customerInfo);
             await db.SaveChangesAsync();
             return customerInfo.Customerid;
         }
-
+        
+            
         private static async Task<int> CreateBookingRecord(OdaDbContext db, int newApartmentId, int customerId, BookingDataIn bookingDataIn)
         {
             var booking = new Booking
@@ -103,8 +104,8 @@ namespace OdaWepApi.DataFlows
                 Customerid = customerId,
                 Apartmentid = newApartmentId,
                 Paymentplanid = bookingDataIn.PaymentPlanID,
-                Createdatetime = DateTime.UtcNow,
-                Lastmodifieddatetime = DateTime.UtcNow,
+                Createdatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                 Bookingstatus = Bookingstatus.InProgress,
                 Totalamount = await CalculateTotalAmount(db, newApartmentId, bookingDataIn)
             };

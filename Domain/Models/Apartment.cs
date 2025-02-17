@@ -18,7 +18,7 @@ public partial class Apartment
 
     public string? Description { get; set; }
 
-    public byte[]? Apartmentphotos { get; set; } // Changed from List<byte[]> to byte[]
+    public List<byte[]>? Apartmentphotos { get; set; }
 
     public int? Projectid { get; set; }
 
