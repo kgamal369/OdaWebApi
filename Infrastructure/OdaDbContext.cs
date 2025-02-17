@@ -130,10 +130,12 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Apartmentstatus)
                 .HasMaxLength(50)
                 .HasConversion<string>() // Convert Enum to string
+                .HasColumnType("text")
                 .HasColumnName("apartmentstatus");
             entity.Property(e => e.Apartmenttype)
                 .HasMaxLength(50)
                 .HasConversion<string>() // Convert Enum to string
+                .HasColumnType("text")
                 .HasColumnName("apartmenttype");
             entity.Property(e => e.Automationid).HasColumnName("automationid");
             entity.Property(e => e.Availabilitydate)
@@ -225,7 +227,10 @@ public partial class OdaDbContext : DbContext
 
             entity.Property(e => e.Bookingid).HasColumnName("bookingid");
             entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
-            entity.Property(e => e.Bookingstatus).HasColumnName("bookingstatus");
+            entity.Property(e => e.Bookingstatus)
+            .HasColumnName("bookingstatus")
+            .HasConversion<string>()
+            .HasColumnType("text");;
             entity.Property(e => e.Createdatetime)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
