@@ -34,8 +34,8 @@ namespace OdaWepApi.DataFlows
                         Projectid = existingApartment.Projectid,
                         Planid = bookingDataIn.PlanID,
                         Automationid = bookingDataIn.AutomationID,
-                        Createddatetime = DateTime.UtcNow,
-                        Lastmodifieddatetime = DateTime.UtcNow
+                        Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                        Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                     };
 
                     db.Apartments.Add(clonedApartment);
@@ -53,8 +53,8 @@ namespace OdaWepApi.DataFlows
                         Projectid = bookingDataIn.ProjectID,
                         Planid = bookingDataIn.PlanID,
                         Automationid = bookingDataIn.AutomationID,
-                        Createddatetime = DateTime.UtcNow,
-                        Lastmodifieddatetime = DateTime.UtcNow
+                        Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                        Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                     };
 
                     db.Apartments.Add(newApartment);
@@ -180,7 +180,7 @@ namespace OdaWepApi.DataFlows
 
             // Update the booking fields
             booking.Paymentplanid = bookingDataIn.PaymentPlanID;
-            booking.Lastmodifieddatetime = DateTime.UtcNow;
+            booking.Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             booking.Totalamount = await CalculateTotalAmount(db, booking.Apartmentid ?? 0, bookingDataIn);
 
             // Update the apartment details if applicable
@@ -190,7 +190,7 @@ namespace OdaWepApi.DataFlows
                 booking.Apartment.Description = bookingDataIn.apartmentDTO.ApartmentAddress;
                 booking.Apartment.Planid = bookingDataIn.PlanID;
                 booking.Apartment.Automationid = bookingDataIn.AutomationID;
-                booking.Apartment.Lastmodifieddatetime = DateTime.UtcNow;
+                booking.Apartment.Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             }
 
             // Update the customer details
@@ -200,7 +200,7 @@ namespace OdaWepApi.DataFlows
                 booking.Customer.Lastname = bookingDataIn.CustomerInfo.Lastname;
                 booking.Customer.Email = bookingDataIn.CustomerInfo.Email;
                 booking.Customer.Phonenumber = bookingDataIn.CustomerInfo.Phonenumber;
-                booking.Customer.Lastmodifieddatetime = DateTime.UtcNow;
+                booking.Customer.Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             }
 
             // Update apartment addons
