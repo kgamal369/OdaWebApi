@@ -18,7 +18,7 @@ public partial class Customer
     public DateTime? Createdatetime { get; set; }
 
     public DateTime? Lastmodifieddatetime { get; set; }
-    
+
     [JsonIgnore]
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }

@@ -10,77 +10,84 @@ namespace OdaWepApi.DataFlows
     {
         public static async Task<int> CreateBookingDataIn(OdaDbContext db, BookingDataIn bookingDataIn)
         {
-            int newApartmentId;
-
-            // Handle apartment creation or cloning based on ApartmentType
-            if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Project)
+            using var transaction = await db.Database.BeginTransactionAsync(); // 🔥 Start transaction
+            try
             {
-                // Clone existing apartment
-                if (bookingDataIn.apartmentDTO.ApartmentId == null)
-                    throw new ArgumentException("ApartmentID must be provided for Project type.");
+                int newApartmentId;
 
-                var existingApartment = await db.Apartments.FindAsync(bookingDataIn.apartmentDTO.ApartmentId);
-                if (existingApartment == null)
-                    throw new Exception("Apartment not found for cloning.");
-
-                var clonedApartment = new Apartment
+                // Handle apartment creation or cloning based on ApartmentType
+                if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Project)
                 {
-                    Apartmenttype = existingApartment.Apartmenttype,
-                    Apartmentstatus = Apartmentstatus.InProgress,
-                    Apartmentspace = existingApartment.Apartmentspace,
-                    Description = existingApartment.Description,
-                    Projectid = existingApartment.Projectid,
-                    Planid = bookingDataIn.PlanID,
-                    Automationid = bookingDataIn.AutomationID,
-                    Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
-                };
+                    if (bookingDataIn.apartmentDTO.ApartmentId == null)
+                        throw new ArgumentException("ApartmentID must be provided for Project type.");
 
-                db.Apartments.Add(clonedApartment);
-                await db.SaveChangesAsync();
-                newApartmentId = clonedApartment.Apartmentid;
-            }
-            else if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Kit)
-            {
-                // Create new apartment
-                var newApartment = new Apartment
+                    var existingApartment = await db.Apartments.FindAsync(bookingDataIn.apartmentDTO.ApartmentId);
+                    if (existingApartment == null)
+                        throw new Exception("Apartment not found for cloning.");
+
+                    var clonedApartment = new Apartment
+                    {
+                        Apartmenttype = existingApartment.Apartmenttype,
+                        Apartmentstatus = Apartmentstatus.InProgress,
+                        Apartmentspace = existingApartment.Apartmentspace,
+                        Description = existingApartment.Description,
+                        Projectid = existingApartment.Projectid,
+                        Planid = bookingDataIn.PlanID,
+                        Automationid = bookingDataIn.AutomationID,
+                        Createddatetime = DateTime.UtcNow,
+                        Lastmodifieddatetime = DateTime.UtcNow
+                    };
+
+                    db.Apartments.Add(clonedApartment);
+                    await db.SaveChangesAsync();
+                    newApartmentId = clonedApartment.Apartmentid;
+                }
+                else if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Kit)
                 {
-                    Apartmenttype = (ApartmentType)bookingDataIn.apartmentDTO.ApartmentType,
-                    Apartmentstatus = Apartmentstatus.InProgress,
-                    Apartmentspace = bookingDataIn.apartmentDTO.ApartmentSpace,
-                    Description = bookingDataIn.apartmentDTO.ApartmentAddress,
-                    Projectid = bookingDataIn.ProjectID,
-                    Planid = bookingDataIn.PlanID,
-                    Automationid = bookingDataIn.AutomationID,
-                    Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
-                };
+                    var newApartment = new Apartment
+                    {
+                        Apartmenttype = (ApartmentType)bookingDataIn.apartmentDTO.ApartmentType,
+                        Apartmentstatus = Apartmentstatus.InProgress,
+                        Apartmentspace = bookingDataIn.apartmentDTO.ApartmentSpace,
+                        Description = bookingDataIn.apartmentDTO.ApartmentAddress,
+                        Projectid = bookingDataIn.ProjectID,
+                        Planid = bookingDataIn.PlanID,
+                        Automationid = bookingDataIn.AutomationID,
+                        Createddatetime = DateTime.UtcNow,
+                        Lastmodifieddatetime = DateTime.UtcNow
+                    };
 
-                db.Apartments.Add(newApartment);
-                await db.SaveChangesAsync();
-                newApartmentId = newApartment.Apartmentid;
+                    db.Apartments.Add(newApartment);
+                    await db.SaveChangesAsync();
+                    newApartmentId = newApartment.Apartmentid;
+                }
+                else
+                {
+                    throw new Exception("Invalid Apartment Type.");
+                }
+
+                // Create or get customer
+                int customerId = await CreateOrGetCustomer(db, bookingDataIn.CustomerInfo);
+
+                // Create booking record
+                int bookingId = await CreateBookingRecord(db, newApartmentId, customerId, bookingDataIn);
+
+                // Create apartment addons
+                await CreateApartmentAddons(db, newApartmentId, bookingDataIn.Addons);
+
+                // Create apartment addon per requests
+                await CreateApartmentAddonPerRequests(db, newApartmentId, bookingDataIn.AddonPerRequestIDs);
+
+                await transaction.CommitAsync(); // 🔥 Commit only if everything succeeds
+
+                return bookingId;
             }
-            else
+            catch (Exception)
             {
-                throw new Exception("Invalid Apartment Type.");
+                await transaction.RollbackAsync(); // 🔥 Rollback on failure
+                throw;
             }
-
-            // Create or get customer
-            int customerId = await CreateOrGetCustomer(db, bookingDataIn.CustomerInfo);
-
-            // Create booking record
-            int bookingId = await CreateBookingRecord(db, newApartmentId, customerId, bookingDataIn);
-
-            // Create apartment addons
-            await CreateApartmentAddons(db, newApartmentId, bookingDataIn.Addons);
-
-            // Create apartment addon per requests
-            await CreateApartmentAddonPerRequests(db, newApartmentId, bookingDataIn.AddonPerRequestIDs);
-
-            // Return the booking ID
-            return bookingId;
         }
-
         private static async Task<int> CreateOrGetCustomer(OdaDbContext db, Customer customerInfo)
         {
             var existingCustomer = await db.Customers.FirstOrDefaultAsync(c => c.Email == customerInfo.Email);
@@ -95,8 +102,8 @@ namespace OdaWepApi.DataFlows
             await db.SaveChangesAsync();
             return customerInfo.Customerid;
         }
-        
-            
+
+
         private static async Task<int> CreateBookingRecord(OdaDbContext db, int newApartmentId, int customerId, BookingDataIn bookingDataIn)
         {
             var booking = new Booking

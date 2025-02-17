@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using OdaWepApi.DataFlows;
 using OdaWepApi.Domain.Enums;
+using OdaWepApi.Domain.DTOs;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Infrastructure;
 
@@ -173,7 +175,41 @@ namespace OdaWepApi.API.DomainEndpoints
             })
             .WithName("GetBookingsByApartment")
             .WithOpenApi();
+
+           // 8. Confirm a Booking (Only if Status is InProgress) and Send Email
+            group.MapPut("/{id}/confirm", async Task<Results<Ok, NotFound, BadRequest<string>>> (int id, OdaDbContext db) =>
+            {
+                var booking = await db.Bookings.FindAsync(id);
+                if (booking is null)
+                    return TypedResults.NotFound();
+
+                // Allow confirmation nly if status is "InProgress"
+                if (booking.Bookingstatus != Bookingstatus.InProgress)
+                    return TypedResults.BadRequest<string>("Booking can only be confirmed if it is in 'InProgress' status.");
+
+                // Update booking status to Confirmed
+                booking.Bookingstatus = Bookingstatus.Confirmed;
+
+                // Fix the UTC DateTime issue
+                booking.Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+
+                await db.SaveChangesAsync();
+
+                // Get booking data for email
+                var bookingDataOut = await BookingDataOutServices.GetBookingDataOut(db, id);
+                if (bookingDataOut != null)
+                {
+                    // Send email notification
+                    string emailBody = EmailService.GenerateEmailBody(bookingDataOut);
+                   await EmailService.SendEmailToAllRecipients("Booking Confirmed!", emailBody);
+                }
+
+                return TypedResults.Ok();
+            })
+            .WithName("ConfirmBooking")
+            .WithOpenApi();
         }
+
 
         // **Helper function to calculate total amount**
         private static async Task<decimal> CalculateTotalAmount(Booking booking, OdaDbContext db)

@@ -230,7 +230,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Bookingstatus)
             .HasColumnName("bookingstatus")
             .HasConversion<string>()
-            .HasColumnType("text");;
+            .HasColumnType("text"); ;
             entity.Property(e => e.Createdatetime)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")

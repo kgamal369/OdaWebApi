@@ -7,7 +7,7 @@ using OdaWepApi.Infrastructure;
 using OdaWepApi.DataFlows;
 
 namespace OdaWepApi.API.DTOEndpoints
-{   
+{
     public static class BookingDataInEndpoints
     {
         public static void MapBookingDataInEndpoints(this IEndpointRouteBuilder routes)
