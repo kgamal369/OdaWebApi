@@ -1,6 +1,5 @@
 ﻿using OdaWepApi.Domain.Enums;
 
-
 namespace OdaWepApi.Domain.Models;
 
 public partial class Booking

@@ -1,4 +1,4 @@
-﻿using  OdaWepApi.Domain.Models;
+﻿using OdaWepApi.Domain.Models;
 
 namespace OdaWepApi.Domain.DTOs
 {

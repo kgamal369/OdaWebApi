@@ -1,0 +1,247 @@
+﻿using OdaWepApi.Infrastructure;
+using OdaWepApi.Domain.Models;
+using OdaWepApi.Domain.DTOs;
+using OdaWepApi.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
+
+namespace OdaWepApi.DataFlows
+{
+    public class BookingDataInServices
+    {
+        public static async Task<int> CreateBookingDataIn(OdaDbContext db, BookingDataIn bookingDataIn)
+        {
+            int newApartmentId;
+
+            // Handle apartment creation or cloning based on ApartmentType
+            if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Project)
+            {
+                // Clone existing apartment
+                if (bookingDataIn.apartmentDTO.ApartmentId == null)
+                    throw new ArgumentException("ApartmentID must be provided for Project type.");
+
+                var existingApartment = await db.Apartments.FindAsync(bookingDataIn.apartmentDTO.ApartmentId);
+                if (existingApartment == null)
+                    throw new Exception("Apartment not found for cloning.");
+
+                var clonedApartment = new Apartment
+                {
+                    Apartmenttype = existingApartment.Apartmenttype,
+                    Apartmentstatus = Apartmentstatus.InProgress,
+                    Apartmentspace = existingApartment.Apartmentspace,
+                    Description = existingApartment.Description,
+                    Projectid = existingApartment.Projectid,
+                    Planid = bookingDataIn.PlanID,
+                    Automationid = bookingDataIn.AutomationID,
+                    Createddatetime = DateTime.UtcNow,
+                    Lastmodifieddatetime = DateTime.UtcNow
+                };
+
+                db.Apartments.Add(clonedApartment);
+                await db.SaveChangesAsync();
+                newApartmentId = clonedApartment.Apartmentid;
+            }
+            else if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Kit)
+            {
+                // Create new apartment
+                var newApartment = new Apartment
+                {
+                    Apartmenttype = (ApartmentType)bookingDataIn.apartmentDTO.ApartmentType,
+                    Apartmentstatus = Apartmentstatus.InProgress,
+                    Apartmentspace = bookingDataIn.apartmentDTO.ApartmentSpace,
+                    Description = bookingDataIn.apartmentDTO.ApartmentAddress,
+                    Projectid = bookingDataIn.ProjectID,
+                    Planid = bookingDataIn.PlanID,
+                    Automationid = bookingDataIn.AutomationID,
+                    Createddatetime = DateTime.UtcNow,
+                    Lastmodifieddatetime = DateTime.UtcNow
+                };
+
+                db.Apartments.Add(newApartment);
+                await db.SaveChangesAsync();
+                newApartmentId = newApartment.Apartmentid;
+            }
+            else
+            {
+                throw new Exception("Invalid Apartment Type.");
+            }
+
+            // Create or get customer
+            int customerId = await CreateOrGetCustomer(db, bookingDataIn.CustomerInfo);
+
+            // Create booking record
+            int bookingId = await CreateBookingRecord(db, newApartmentId, customerId, bookingDataIn);
+
+            // Create apartment addons
+            await CreateApartmentAddons(db, newApartmentId, bookingDataIn.Addons);
+
+            // Create apartment addon per requests
+            await CreateApartmentAddonPerRequests(db, newApartmentId, bookingDataIn.AddonPerRequestIDs);
+
+            // Return the booking ID
+            return bookingId;
+        }
+
+        private static async Task<int> CreateOrGetCustomer(OdaDbContext db, Customer customerInfo)
+        {
+            var existingCustomer = await db.Customers.FirstOrDefaultAsync(c => c.Email == customerInfo.Email);
+            if (existingCustomer != null)
+            {
+                return existingCustomer.Customerid;
+            }
+
+            customerInfo.Createdatetime = DateTime.UtcNow;
+            customerInfo.Lastmodifieddatetime = DateTime.UtcNow;
+            db.Customers.Add(customerInfo);
+            await db.SaveChangesAsync();
+            return customerInfo.Customerid;
+        }
+
+        private static async Task<int> CreateBookingRecord(OdaDbContext db, int newApartmentId, int customerId, BookingDataIn bookingDataIn)
+        {
+            var booking = new Booking
+            {
+                Customerid = customerId,
+                Apartmentid = newApartmentId,
+                Paymentplanid = bookingDataIn.PaymentPlanID,
+                Createdatetime = DateTime.UtcNow,
+                Lastmodifieddatetime = DateTime.UtcNow,
+                Bookingstatus = Bookingstatus.InProgress,
+                Totalamount = await CalculateTotalAmount(db, newApartmentId, bookingDataIn)
+            };
+            db.Bookings.Add(booking);
+            await db.SaveChangesAsync();
+            return booking.Bookingid;
+        }
+
+        private static async Task CreateApartmentAddons(OdaDbContext db, int newApartmentId, List<AddonSelection> addons)
+        {
+            foreach (var addon in addons)
+            {
+                var apartmentAddon = new ApartmentAddon
+                {
+                    Apartmentid = newApartmentId,
+                    Addonid = addon.AddonID,
+                    Quantity = addon.Quantity
+                };
+                db.ApartmentAddons.Add(apartmentAddon);
+            }
+            await db.SaveChangesAsync();
+        }
+
+        private static async Task CreateApartmentAddonPerRequests(OdaDbContext db, int newApartmentId, List<int> addonPerRequestIDs)
+        {
+            foreach (var addonPerRequestId in addonPerRequestIDs)
+            {
+                var apartmentAddonPerRequest = new ApartmentAddonperrequest
+                {
+                    Apartmentid = newApartmentId,
+                    Addperrequestid = addonPerRequestId,
+                    Quantity = 1
+                };
+                db.ApartmentAddonperrequests.Add(apartmentAddonPerRequest);
+            }
+            await db.SaveChangesAsync();
+        }
+
+        private static async Task<decimal> CalculateTotalAmount(OdaDbContext db, int newApartmentId, BookingDataIn bookingDataIn)
+        {
+            var plan = await db.Plans.FindAsync(bookingDataIn.PlanID);
+            var apartment = await db.Apartments.FindAsync(newApartmentId);
+            decimal totalPlanPrice = (decimal)(plan.Pricepermeter * apartment.Apartmentspace);
+            decimal totalAddonPrice = 0;
+            foreach (var addon in bookingDataIn.Addons)
+            {
+                var addonDetails = await db.Addons.FindAsync(addon.AddonID);
+                totalAddonPrice += (decimal)(addonDetails.Unitormeter == UnitOrMeterType.Unit
+                    ? addonDetails.Price * addon.Quantity
+                    : addonDetails.Price * apartment.Apartmentspace);
+            }
+            return totalPlanPrice + totalAddonPrice;
+        }
+
+        public static async Task<int> UpdateBookingDataIn(OdaDbContext db, int bookingID, BookingDataIn bookingDataIn)
+        {
+            // Fetch the existing booking
+            var booking = await db.Bookings
+                .Include(b => b.Apartment)
+                .Include(b => b.Customer)
+                .FirstOrDefaultAsync(b => b.Bookingid == bookingID);
+
+            if (booking == null)
+                throw new Exception("Booking not found.");
+
+            // Update the booking fields
+            booking.Paymentplanid = bookingDataIn.PaymentPlanID;
+            booking.Lastmodifieddatetime = DateTime.UtcNow;
+            booking.Totalamount = await CalculateTotalAmount(db, booking.Apartmentid ?? 0, bookingDataIn);
+
+            // Update the apartment details if applicable
+            if (booking.Apartment != null)
+            {
+                booking.Apartment.Apartmentspace = bookingDataIn.apartmentDTO.ApartmentSpace;
+                booking.Apartment.Description = bookingDataIn.apartmentDTO.ApartmentAddress;
+                booking.Apartment.Planid = bookingDataIn.PlanID;
+                booking.Apartment.Automationid = bookingDataIn.AutomationID;
+                booking.Apartment.Lastmodifieddatetime = DateTime.UtcNow;
+            }
+
+            // Update the customer details
+            if (booking.Customer != null)
+            {
+                booking.Customer.Firstname = bookingDataIn.CustomerInfo.Firstname;
+                booking.Customer.Lastname = bookingDataIn.CustomerInfo.Lastname;
+                booking.Customer.Email = bookingDataIn.CustomerInfo.Email;
+                booking.Customer.Phonenumber = bookingDataIn.CustomerInfo.Phonenumber;
+                booking.Customer.Lastmodifieddatetime = DateTime.UtcNow;
+            }
+
+            // Update apartment addons
+            await UpdateApartmentAddons(db, booking.Apartmentid ?? 0, bookingDataIn.Addons);
+
+            // Update apartment addon per requests
+            await UpdateApartmentAddonPerRequests(db, booking.Apartmentid ?? 0, bookingDataIn.AddonPerRequestIDs);
+
+            // Save changes to the database
+            await db.SaveChangesAsync();
+
+            // Return the booking ID
+            return bookingID;
+        }
+
+        private static async Task UpdateApartmentAddons(OdaDbContext db, int apartmentId, List<AddonSelection> addons)
+        {
+            var existingAddons = db.ApartmentAddons.Where(a => a.Apartmentid == apartmentId);
+            db.ApartmentAddons.RemoveRange(existingAddons);
+
+            foreach (var addon in addons)
+            {
+                var apartmentAddon = new ApartmentAddon
+                {
+                    Apartmentid = apartmentId,
+                    Addonid = addon.AddonID,
+                    Quantity = addon.Quantity
+                };
+                db.ApartmentAddons.Add(apartmentAddon);
+            }
+            await db.SaveChangesAsync();
+        }
+
+        private static async Task UpdateApartmentAddonPerRequests(OdaDbContext db, int apartmentId, List<int> addonPerRequestIDs)
+        {
+            var existingAddonPerRequests = db.ApartmentAddonperrequests.Where(a => a.Apartmentid == apartmentId);
+            db.ApartmentAddonperrequests.RemoveRange(existingAddonPerRequests);
+
+            foreach (var addonPerRequestId in addonPerRequestIDs)
+            {
+                var apartmentAddonPerRequest = new ApartmentAddonperrequest
+                {
+                    Apartmentid = apartmentId,
+                    Addperrequestid = addonPerRequestId,
+                    Quantity = 1
+                };
+                db.ApartmentAddonperrequests.Add(apartmentAddonPerRequest);
+            }
+            await db.SaveChangesAsync();
+        }
+    }
+}

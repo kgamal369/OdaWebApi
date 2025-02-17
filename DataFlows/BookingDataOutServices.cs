@@ -1,0 +1,107 @@
+﻿using System.Runtime.InteropServices;
+using Microsoft.EntityFrameworkCore;
+
+using OdaWepApi.Infrastructure;
+using OdaWepApi.Domain.Models;
+using OdaWepApi.Domain.DTOs;
+using OdaWepApi.Domain.Enums;
+
+namespace OdaWepApi.DataFlows
+{
+    public class BookingDataOutServices
+    {
+        public static async Task<BookingDataOut> GetBookingDataOut(OdaDbContext db, int bookingID)
+        {
+            var booking = await db.Bookings
+                .Include(b => b.Customer)
+                .Include(b => b.Apartment)
+                    .ThenInclude(a => a.Project)
+                .Include(b => b.Apartment)
+                    .ThenInclude(a => a.Plan)
+                .Include(b => b.Apartment)
+                    .ThenInclude(a => a.Automation)
+                .Include(b => b.Paymentplan)
+                    .ThenInclude(p => p.Installmentbreakdowns)
+                .Include(b => b.Customer)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(b => b.Bookingid == bookingID);
+
+            if (booking == null) return null;
+
+            var apartment = booking.Apartment;
+            var plan = apartment?.Plan;
+            var paymentPlan = booking.Paymentplan;
+            var customer = booking.Customer;
+
+            var totalPlanPrice = (plan?.Pricepermeter ?? 0) * (apartment?.Apartmentspace ?? 0);
+
+            var addons = await db.ApartmentAddons
+                .Where(aa => aa.Apartmentid == apartment.Apartmentid)
+                .Include(aa => aa.Addon)
+                .AsNoTracking()
+                .ToListAsync();
+
+            var addonDetails = addons.Select(aa => new AddonDetail
+            {
+                AddonID = aa.Addonid,
+                AddonName = aa.Addon.Addonname,
+                Quantity = aa.Quantity,
+                Price = (decimal)(aa.Addon.Unitormeter == UnitOrMeterType.Unit ? aa.Addon.Price * aa.Quantity : aa.Addon.Price * apartment.Apartmentspace)
+            }).ToList();
+
+            var totalAddonPrice = addonDetails.Sum(a => a.Price);
+
+            var addonPerRequests = await db.ApartmentAddonperrequests
+                .Where(aapr => aapr.Apartmentid == apartment.Apartmentid)
+                .Include(aapr => aapr.Addperrequest)
+                .AsNoTracking()
+                .ToListAsync();
+
+            var addonPerRequestDetails = addonPerRequests.Select(aapr => new AddonPerRequestDetail
+            {
+                AddonPerRequestID = aapr.Addperrequestid,
+                AddonPerRequestName = aapr.Addperrequest.Addperrequestname
+            }).ToList();
+
+
+            var paymentDTO = new PaymentDTO
+            {
+                Paymentplanid = paymentPlan.Paymentplanid,
+                Paymentplanname = paymentPlan.Paymentplanname,
+                Numberofinstallmentmonths = paymentPlan.Numberofinstallmentmonths,
+                Downpayment = paymentPlan.Downpayment,
+                Downpaymentpercentage = paymentPlan.Downpaymentpercentage,
+                Adminfees = paymentPlan.Adminfees,
+                Adminfeespercentage = paymentPlan.Adminfeespercentage,
+                Interestrate = paymentPlan.Interestrate,
+                Interestrateperyearpercentage = paymentPlan.Interestrateperyearpercentage,
+                EqualPayment = paymentPlan.Paymentplanid != 1 && paymentPlan.Paymentplanid != 2,
+                InstallmentDTO = paymentPlan.Installmentbreakdowns.Select(id => new InstallmentDTO
+                {
+                    Installmentmonth = id.Installmentmonth,
+                    Installmentpercentage = id.Installmentpercentage,
+                    Installmentvalue = totalPlanPrice * id.Installmentpercentage / 100
+                }).ToList()
+            };
+
+            return new BookingDataOut
+            {
+                BookingID = booking.Bookingid,
+                DeveloperID = apartment?.Project?.Developerid ?? 0,
+                ProjectID = apartment?.Projectid ?? 0,
+                NewApartmentID = apartment?.Apartmentid ?? 0,
+                ApartmentSpace = apartment?.Apartmentspace ?? 0,
+                PlanID = plan?.Planid ?? 0,
+                PlanName = plan?.Planname ?? "N/A",
+                TotalPlanPrice = totalPlanPrice,
+                Addons = addonDetails,
+                SumOfTotalAddonPrices = totalAddonPrice,
+                AutomationID = apartment.Automationid,
+                AddonPerRequests = addonPerRequestDetails,
+                CustomerInfo = customer ?? new Customer(), // Ensure non-null assignment
+                TotalAmount = totalPlanPrice + totalAddonPrice,
+                paymentDTO = paymentDTO
+            };
+        }
+    }
+}
