@@ -12,7 +12,9 @@ namespace OdaWepApi.Domain.DTOs
         public bool Downpayment { get; set; }
 
         public decimal? Downpaymentpercentage { get; set; }
-
+        public decimal? AdminfeesValue { get; set; }
+        public decimal? DPValue { get; set; }
+        public decimal? InterestrateValue { get; set; }
         public bool Adminfees { get; set; }
 
         public decimal? Adminfeespercentage { get; set; }

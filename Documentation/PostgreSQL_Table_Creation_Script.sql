@@ -78,7 +78,13 @@ CREATE TABLE AutomationDetails (
     FOREIGN KEY (AutomationId) REFERENCES Automation(AutomationId) ON DELETE CASCADE
 );
 
-
+Create Table Questions (
+    QuestionsID INT,
+    Questionname VARCHAR(255),
+    Answer INT,
+    BookingID INT ,
+    FOREIGN KEY (BookingID) REFERENCES Booking(BookingId) ON DELETE CASCADE
+);
 -- AddOns Table
 CREATE TABLE AddOns (
     AddOnId SERIAL PRIMARY KEY,

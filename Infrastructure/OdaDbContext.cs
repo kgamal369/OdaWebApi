@@ -56,6 +56,8 @@ public partial class OdaDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<Question> Questions { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Host=dpg-cuc1s39opnds738s419g-a.oregon-postgres.render.com;Database=odadb;Username=odadb_user;Password=iwiEqjZ2mwcqFuREbb8U1GNTyfxKbgGw;Port=5432;SslMode=Require;TrustServerCertificate=True");
 
@@ -523,7 +525,21 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("projectname");
             entity.Property(e => e.Totalunits).HasColumnName("totalunits");
         });
-
+        modelBuilder.Entity<Question>(entity =>
+        {
+            entity.HasKey(e => e.Questionsid).HasName("questions_pkey");
+            entity.ToTable("questions");
+            entity.Property(e => e.Questionsid).HasColumnName("questionsid");
+            entity.Property(e => e.Answer).HasColumnName("answer");
+            entity.Property(e => e.Bookingid).HasColumnName("bookingid");
+            entity.Property(e => e.Questionname)
+                .HasMaxLength(255)
+                .HasColumnName("questionname");
+            entity.HasOne(d => d.Booking).WithMany(p => p.Questions)
+                .HasForeignKey(d => d.Bookingid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("questions_bookingid_fkey");
+        });
         modelBuilder.Entity<Role>(entity =>
         {
             entity.HasKey(e => e.Roleid).HasName("role_pkey");

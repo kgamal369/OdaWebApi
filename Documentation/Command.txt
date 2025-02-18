@@ -4,6 +4,9 @@
     dotnet ef migrations add InitialCreate
     dotnet ef database update --project OdaWebApi.csproj
 
+    ef dbcontext scaffold "Host=dpg-cuc1s39opnds738s419g-a.oregon-postgres.render.com;Database=odadb;Username=odadb_user;Password=iwiEqjZ2mwcqFuREbb8U1GNTyfxKbgGw;
+    Port=5432;SslMode=Require;TrustServerCertificate=True" Npgsql.EntityFrameworkCore.PostgreSQL -o Domain\Models --context OdaDbContext --force
+
 2.Build and run :
     dotnet clean OdaWepApi.csproj
     dotnet restore OdaWepApi.csproj

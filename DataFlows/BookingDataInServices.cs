@@ -69,8 +69,13 @@ namespace OdaWepApi.DataFlows
                 // Create or get customer
                 int customerId = await CreateOrGetCustomer(db, bookingDataIn.CustomerInfo);
 
+                // Create or get question
+
                 // Create booking record
                 int bookingId = await CreateBookingRecord(db, newApartmentId, customerId, bookingDataIn);
+
+                // Insert questions associated with the booking
+                await CreateOrGetQuestion(db, bookingDataIn.Questions, bookingId);
 
                 // Create apartment addons
                 await CreateApartmentAddons(db, newApartmentId, bookingDataIn.Addons);
@@ -103,7 +108,6 @@ namespace OdaWepApi.DataFlows
             return customerInfo.Customerid;
         }
 
-
         private static async Task<int> CreateBookingRecord(OdaDbContext db, int newApartmentId, int customerId, BookingDataIn bookingDataIn)
         {
             var booking = new Booking
@@ -118,9 +122,26 @@ namespace OdaWepApi.DataFlows
             };
             db.Bookings.Add(booking);
             await db.SaveChangesAsync();
+
             return booking.Bookingid;
         }
 
+
+        private static async Task<int> CreateOrGetQuestion(OdaDbContext db, List<Question> questions, int bookingId)
+        {
+            if (questions == null || questions.Count == 0)
+            {
+                return 0;
+            }
+
+            foreach (var question in questions)
+            {
+                question.Bookingid = bookingId; // Ensure the booking ID is set
+            }
+
+            db.Questions.AddRange(questions); // Add the list of questions to the context
+            return await db.SaveChangesAsync(); // Save changes and return the number of affected rows
+        }
         private static async Task CreateApartmentAddons(OdaDbContext db, int newApartmentId, List<AddonSelection> addons)
         {
             foreach (var addon in addons)
@@ -135,6 +156,8 @@ namespace OdaWepApi.DataFlows
             }
             await db.SaveChangesAsync();
         }
+
+
 
         private static async Task CreateApartmentAddonPerRequests(OdaDbContext db, int newApartmentId, List<int> addonPerRequestIDs)
         {
@@ -208,7 +231,6 @@ namespace OdaWepApi.DataFlows
 
             // Update apartment addon per requests
             await UpdateApartmentAddonPerRequests(db, booking.Apartmentid ?? 0, bookingDataIn.AddonPerRequestIDs);
-
             // Save changes to the database
             await db.SaveChangesAsync();
 

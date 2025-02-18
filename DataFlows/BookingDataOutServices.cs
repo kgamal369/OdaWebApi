@@ -23,6 +23,7 @@ namespace OdaWepApi.DataFlows
                 .Include(b => b.Paymentplan)
                     .ThenInclude(p => p.Installmentbreakdowns)
                 .Include(b => b.Customer)
+                .Include(b => b.Questions)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Bookingid == bookingID);
 
@@ -41,16 +42,18 @@ namespace OdaWepApi.DataFlows
                 .AsNoTracking()
                 .ToListAsync();
 
+
             var addonDetails = addons.Select(aa => new AddonDetail
             {
                 AddonID = aa.Addonid,
                 AddonName = aa.Addon.Addonname,
-                Addongroup =aa.Addon.Addongroup,
-                Unitormeter=aa.Addon.Unitormeter,
-                Description=aa.Addon.Description,
+                Addongroup = aa.Addon.Addongroup,
+                Unitormeter = aa.Addon.Unitormeter,
+                Description = aa.Addon.Description,
                 Quantity = aa.Quantity,
                 Price = (decimal)(aa.Addon.Unitormeter == UnitOrMeterType.Unit ? aa.Addon.Price * aa.Quantity : aa.Addon.Price * apartment.Apartmentspace)
             }).ToList();
+
 
             var totalAddonPrice = addonDetails.Sum(a => a.Price);
 
@@ -66,6 +69,9 @@ namespace OdaWepApi.DataFlows
                 AddonPerRequestName = aapr.Addperrequest.Addperrequestname
             }).ToList();
 
+            var selectedquestions = await db.Questions.AsNoTracking()
+                    .Where(q => q.Bookingid == bookingID)
+                    .ToListAsync();
 
             var paymentDTO = new PaymentDTO
             {
@@ -74,16 +80,21 @@ namespace OdaWepApi.DataFlows
                 Numberofinstallmentmonths = paymentPlan.Numberofinstallmentmonths,
                 Downpayment = paymentPlan.Downpayment,
                 Downpaymentpercentage = paymentPlan.Downpaymentpercentage,
+                DPValue = paymentPlan.Downpaymentpercentage * (totalPlanPrice + totalAddonPrice),
+
                 Adminfees = paymentPlan.Adminfees,
                 Adminfeespercentage = paymentPlan.Adminfeespercentage,
+                AdminfeesValue = paymentPlan.Adminfeespercentage * (totalPlanPrice + totalAddonPrice),
+
                 Interestrate = paymentPlan.Interestrate,
                 Interestrateperyearpercentage = paymentPlan.Interestrateperyearpercentage,
+                InterestrateValue = paymentPlan.Interestrateperyearpercentage * (totalPlanPrice + totalAddonPrice),
                 EqualPayment = paymentPlan.Paymentplanid != 1 && paymentPlan.Paymentplanid != 2,
                 InstallmentDTO = paymentPlan.Installmentbreakdowns.Select(id => new InstallmentDTO
                 {
                     Installmentmonth = id.Installmentmonth,
                     Installmentpercentage = id.Installmentpercentage,
-                    Installmentvalue = totalPlanPrice * id.Installmentpercentage / 100
+                    Installmentvalue = (totalPlanPrice + totalAddonPrice) * id.Installmentpercentage / 100
                 }).ToList()
             };
 
@@ -93,6 +104,7 @@ namespace OdaWepApi.DataFlows
                 DeveloperID = apartment?.Project?.Developerid ?? 0,
                 ProjectID = apartment?.Projectid ?? 0,
                 NewApartmentID = apartment?.Apartmentid ?? 0,
+                ApartmentType = (ApartmentType)(apartment?.Apartmenttype),
                 ApartmentSpace = apartment?.Apartmentspace ?? 0,
                 PlanID = plan?.Planid ?? 0,
                 PlanName = plan?.Planname ?? "N/A",
@@ -102,6 +114,7 @@ namespace OdaWepApi.DataFlows
                 AutomationID = apartment.Automationid,
                 AddonPerRequests = addonPerRequestDetails,
                 CustomerInfo = customer ?? new Customer(), // Ensure non-null assignment
+                questions = selectedquestions,
                 TotalAmount = totalPlanPrice + totalAddonPrice,
                 paymentDTO = paymentDTO
             };

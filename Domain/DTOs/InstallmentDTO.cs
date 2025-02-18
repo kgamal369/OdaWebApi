@@ -5,7 +5,7 @@ namespace OdaWepApi.Domain.DTOs
     {
         public int Installmentmonth { get; set; }
         public decimal Installmentpercentage { get; set; }
-
         public decimal Installmentvalue { get; set; }
+
     }
 }

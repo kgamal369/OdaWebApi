@@ -176,7 +176,7 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithName("GetBookingsByApartment")
             .WithOpenApi();
 
-           // 8. Confirm a Booking (Only if Status is InProgress) and Send Email
+            // 8. Confirm a Booking (Only if Status is InProgress) and Send Email
             group.MapPut("/{id}/confirm", async Task<Results<Ok, NotFound, BadRequest<string>>> (int id, OdaDbContext db) =>
             {
                 var booking = await db.Bookings.FindAsync(id);
@@ -201,7 +201,7 @@ namespace OdaWepApi.API.DomainEndpoints
                 {
                     // Send email notification
                     string emailBody = EmailService.GenerateEmailBody(bookingDataOut);
-                   await EmailService.SendEmailToAllRecipients("Booking Confirmed!", emailBody);
+                    await EmailService.SendEmailToAllRecipients("Booking Confirmed!", emailBody);
                 }
 
                 return TypedResults.Ok();

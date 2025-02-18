@@ -1,4 +1,5 @@
-﻿using OdaWepApi.Domain.Models;
+﻿using OdaWepApi.Domain.Enums;
+using OdaWepApi.Domain.Models;
 
 namespace OdaWepApi.Domain.DTOs
 {
@@ -8,6 +9,7 @@ namespace OdaWepApi.Domain.DTOs
         public int? DeveloperID { get; set; }
         public int? ProjectID { get; set; }
         public int NewApartmentID { get; set; }
+        public ApartmentType ApartmentType { get; set; }
         public decimal ApartmentSpace { get; set; }
         public int PlanID { get; set; }
         public string PlanName { get; set; }
@@ -16,6 +18,8 @@ namespace OdaWepApi.Domain.DTOs
         public decimal SumOfTotalAddonPrices { get; set; }
         public int? AutomationID { get; set; }
         public List<AddonPerRequestDetail>? AddonPerRequests { get; set; }
+
+        public List<Question>? questions { get; set; }
         public Customer CustomerInfo { get; set; }
         public PaymentDTO paymentDTO { get; set; }
         public decimal TotalAmount { get; set; }
