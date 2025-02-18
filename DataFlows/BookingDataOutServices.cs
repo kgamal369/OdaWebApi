@@ -47,6 +47,7 @@ namespace OdaWepApi.DataFlows
                 AddonName = aa.Addon.Addonname,
                 Addongroup =aa.Addon.Addongroup,
                 Unitormeter=aa.Addon.Unitormeter,
+                Description=aa.Addon.Description,
                 Quantity = aa.Quantity,
                 Price = (decimal)(aa.Addon.Unitormeter == UnitOrMeterType.Unit ? aa.Addon.Price * aa.Quantity : aa.Addon.Price * apartment.Apartmentspace)
             }).ToList();
