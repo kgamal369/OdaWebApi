@@ -15,34 +15,7 @@ namespace OdaWepApi.DataFlows
             {
                 int newApartmentId;
 
-                // Handle apartment creation or cloning based on ApartmentType
-                if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Project)
-                {
-                    if (bookingDataIn.apartmentDTO.ApartmentId == null)
-                        throw new ArgumentException("ApartmentID must be provided for Project type.");
-
-                    var existingApartment = await db.Apartments.FindAsync(bookingDataIn.apartmentDTO.ApartmentId);
-                    if (existingApartment == null)
-                        throw new Exception("Apartment not found for cloning.");
-
-                    var clonedApartment = new Apartment
-                    {
-                        Apartmenttype = existingApartment.Apartmenttype,
-                        Apartmentstatus = Apartmentstatus.InProgress,
-                        Apartmentspace = existingApartment.Apartmentspace,
-                        Description = existingApartment.Description,
-                        Projectid = existingApartment.Projectid,
-                        Planid = bookingDataIn.PlanID,
-                        Automationid = bookingDataIn.AutomationID,
-                        Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                        Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
-                    };
-
-                    db.Apartments.Add(clonedApartment);
-                    await db.SaveChangesAsync();
-                    newApartmentId = clonedApartment.Apartmentid;
-                }
-                else if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Kit)
+                if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Kit)
                 {
                     var newApartment = new Apartment
                     {
@@ -156,8 +129,6 @@ namespace OdaWepApi.DataFlows
             }
             await db.SaveChangesAsync();
         }
-
-
 
         private static async Task CreateApartmentAddonPerRequests(OdaDbContext db, int newApartmentId, List<int> addonPerRequestIDs)
         {
