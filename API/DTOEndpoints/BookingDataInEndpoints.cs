@@ -39,7 +39,8 @@ namespace OdaWepApi.API.DTOEndpoints
                 try
                 {
                     int updatedBookingId = await BookingDataInServices.UpdateBookingDataIn(db, bookingID, bookingDataIn);
-                    return Results.Ok(new { BookingID = updatedBookingId });
+                    var bookingDataOut = await BookingDataOutServices.GetBookingDataOut(db, updatedBookingId);
+                    return Results.Ok(bookingDataOut);
                 }
                 catch (Exception ex)
                 {
