@@ -66,7 +66,8 @@ namespace OdaWepApi.DataFlows
             var addonPerRequestDetails = addonPerRequests.Select(aapr => new AddonPerRequestDetail
             {
                 AddonPerRequestID = aapr.Addperrequestid,
-                AddonPerRequestName = aapr.Addperrequest.Addperrequestname
+                AddonPerRequestName = aapr.Addperrequest.Addperrequestname,
+                AddonPerRequestDescription = aapr.Addperrequest.Description
             }).ToList();
 
             var selectedquestions = await db.Questions.AsNoTracking()

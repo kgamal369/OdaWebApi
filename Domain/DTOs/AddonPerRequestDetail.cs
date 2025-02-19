@@ -4,5 +4,6 @@
     {
         public int AddonPerRequestID { get; set; }
         public string AddonPerRequestName { get; set; }
+        public string? AddonPerRequestDescription { get; set; }
     }
 }
