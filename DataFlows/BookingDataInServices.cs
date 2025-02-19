@@ -34,6 +34,10 @@ namespace OdaWepApi.DataFlows
                     await db.SaveChangesAsync();
                     newApartmentId = newApartment.Apartmentid;
                 }
+                else if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Project)
+                {
+                    newApartmentId = (int)bookingDataIn.apartmentDTO.ApartmentId;
+                }
                 else
                 {
                     throw new Exception("Invalid Apartment Type.");
