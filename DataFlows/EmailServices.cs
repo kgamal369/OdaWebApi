@@ -15,7 +15,8 @@ namespace OdaWepApi.DataFlows
         {
             "eng.karim.gamal369@gmail.com",
             "ashawkyh@gmail.com",
-            "mohamed.k.elhawary@gmail.com"
+            "mohamed.k.elhawary@gmail.com",
+            "Info@oda-me.com"
         };
 
         public static async Task SendEmailToAllRecipients(string subject, string body)

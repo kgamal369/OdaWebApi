@@ -1,251 +1,526 @@
--- Developer Table 
-CREATE TABLE Developer (
-    DeveloperId SERIAL PRIMARY KEY,
-    DeveloperName VARCHAR(255),
-    Description VARCHAR(255),
-    DeveloperLogo _bytea,
-    CreateDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP
+-- DROP SCHEMA public;
+
+CREATE SCHEMA public AUTHORIZATION odadb_user;
+
+
+-- Permissions
+
+GRANT ALL ON SCHEMA public TO odadb_user;
+GRANT USAGE ON SCHEMA public TO public;
+
+-- public.addons definition
+
+-- Drop table
+
+-- DROP TABLE public.addons;
+
+CREATE TABLE public.addons (
+	addonid serial4 NOT NULL,
+	addonname varchar(255) NULL,
+	addongroup varchar(50) NULL,
+	price numeric(10, 2) NULL,
+	description text NULL,
+	brand text NULL,
+	createddatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	unitormeter varchar(255) NULL,
+	CONSTRAINT addons_pkey PRIMARY KEY (addonid)
 );
 
--- Testimonials Table 
-CREATE TABLE Testimonials (
-    TestimonialsID SERIAL PRIMARY KEY,
-    TestimonialsName VARCHAR(255),
-    TestimonialsTitle VARCHAR(255),
-    Description VARCHAR(255),
-    TestimonialsPhoto _bytea,
-    CreateDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP
+-- Permissions
+
+ALTER TABLE public.addons OWNER TO odadb_user;
+GRANT ALL ON TABLE public.addons TO odadb_user;
+
+
+-- public.addperrequest definition
+
+-- Drop table
+
+-- DROP TABLE public.addperrequest;
+
+CREATE TABLE public.addperrequest (
+	addperrequestid serial4 NOT NULL,
+	addperrequestname varchar(255) NULL,
+	price numeric(10, 2) NULL,
+	description text NULL,
+	createddatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	CONSTRAINT addperrequest_pkey PRIMARY KEY (addperrequestid)
 );
 
+-- Permissions
 
--- Project Table
-CREATE TABLE Project (
-    ProjectId SERIAL PRIMARY KEY,
-    ProjectName VARCHAR(255),
-    Location VARCHAR(255),
-    DeveloperId INT,
-    Amenities TEXT,
-    TotalUnits INT,
-    ProjectLogo _bytea,
-    CreateDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP,
-    FOREIGN KEY (DeveloperId) REFERENCES Developer(DeveloperId) ON DELETE CASCADE
+ALTER TABLE public.addperrequest OWNER TO odadb_user;
+GRANT ALL ON TABLE public.addperrequest TO odadb_user;
 
-);
--- Plan Table 
-CREATE TABLE Plans (
-    PlanId SERIAL PRIMARY KEY,
-    PlanName VARCHAR(255),
-    PricePerMeter DECIMAL(10,2),
-    Description VARCHAR(255),
-    PlanPhoto _bytea,
-    CreateDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP
-);
 
--- PlanDetails Table 
-CREATE TABLE PlanDetails (
-    PlanDetailsID SERIAL PRIMARY KEY,
-    PlanDetailsName VARCHAR(255),
-    PlanDetailsType  VARCHAR(255),
-    PlanId INT,
-    Description VARCHAR(255),
-    CreateDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP,
-    FOREIGN KEY (PlanId) REFERENCES Plans(PlanId) ON DELETE CASCADE
+-- public.apartment definition
+
+-- Drop table
+
+-- DROP TABLE public.apartment;
+
+CREATE TABLE public.apartment (
+	apartmentid serial4 NOT NULL,
+	apartmentname varchar(255) NULL,
+	apartmenttype varchar(50) NULL,
+	apartmentstatus varchar(50) NULL,
+	apartmentspace numeric(10, 2) NULL,
+	description text NULL,
+	apartmentphotos _bytea NULL,
+	projectid int4 NULL,
+	floornumber int4 NULL,
+	availabilitydate timestamp NULL,
+	createddatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	planid int4 NULL,
+	automationid int4 NULL,
+	apartmentaddress varchar(255) NULL,
+	CONSTRAINT apartment_pkey PRIMARY KEY (apartmentid)
 );
 
+-- Permissions
 
--- Automation Table 
-CREATE TABLE Automation (
-    AutomationId SERIAL PRIMARY KEY,
-    AutomationName VARCHAR(255),
-    Description VARCHAR(255),
-    CreateDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP
+ALTER TABLE public.apartment OWNER TO odadb_user;
+GRANT ALL ON TABLE public.apartment TO odadb_user;
+
+
+-- public.apartment_addon definition
+
+-- Drop table
+
+-- DROP TABLE public.apartment_addon;
+
+CREATE TABLE public.apartment_addon (
+	apartmentid int4 NOT NULL,
+	addonid int4 NOT NULL,
+	quantity int4 NOT NULL,
+	CONSTRAINT apartment_addon_pkey PRIMARY KEY (apartmentid, addonid)
 );
 
--- AutomationDetails Table 
-CREATE TABLE AutomationDetails (
-    AutomationDetailsID SERIAL PRIMARY KEY,
-    AutomationDetailsName VARCHAR(255),
-    AutomationId INT,
-    Description VARCHAR(255),
-    CreateDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP,
-    FOREIGN KEY (AutomationId) REFERENCES Automation(AutomationId) ON DELETE CASCADE
+-- Permissions
+
+ALTER TABLE public.apartment_addon OWNER TO odadb_user;
+GRANT ALL ON TABLE public.apartment_addon TO odadb_user;
+
+
+-- public.apartment_addonperrequest definition
+
+-- Drop table
+
+-- DROP TABLE public.apartment_addonperrequest;
+
+CREATE TABLE public.apartment_addonperrequest (
+	apartmentid int4 NOT NULL,
+	addperrequestid int4 NOT NULL,
+	quantity int4 DEFAULT 1 NULL,
+	CONSTRAINT apartment_addonperrequest_pkey PRIMARY KEY (apartmentid, addperrequestid)
 );
 
-Create Table Questions (
-    QuestionsID INT,
-    Questionname VARCHAR(255),
-    Answer INT,
-    BookingID INT ,
-    FOREIGN KEY (BookingID) REFERENCES Booking(BookingId) ON DELETE CASCADE
-);
--- AddOns Table
-CREATE TABLE AddOns (
-    AddOnId SERIAL PRIMARY KEY,
-    AddOnName VARCHAR(255),
-    AddOnGroup VARCHAR(255),
-    UnitOrMeter VARCHAR(255),
-    Price DECIMAL(10,2),
-	Description TEXT,
-	Brand Text,
-	CreatedDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP
-);
+-- Permissions
 
--- AddPerRequest Table
-CREATE TABLE AddPerRequest (
-    AddPerRequestId SERIAL PRIMARY KEY,
-    AddPerRequestName VARCHAR(255),
-    Price DECIMAL(10,2),
-	Description TEXT,
-	CreatedDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP
+ALTER TABLE public.apartment_addonperrequest OWNER TO odadb_user;
+GRANT ALL ON TABLE public.apartment_addonperrequest TO odadb_user;
+
+
+-- public.automation definition
+
+-- Drop table
+
+-- DROP TABLE public.automation;
+
+CREATE TABLE public.automation (
+	automationid serial4 NOT NULL,
+	automationname varchar(255) NULL,
+	description varchar(255) NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	CONSTRAINT automation_pkey PRIMARY KEY (automationid)
 );
 
--- Apartment Table
-CREATE TABLE Apartment (
-    ApartmentId SERIAL PRIMARY KEY,
-    ApartmentName VARCHAR(255),
-    ApartmentType VARCHAR(50),
-    ApartmentStatus VARCHAR(50),
-    ApartmentSpace DECIMAL(10,2),
-    Description TEXT,
-    ApartmentPhotos _bytea,
-    ProjectId INT,
-    PlanId  INT,
-    AutomationId INT,
-    FloorNumber INT,
-    AvailabilityDate TIMESTAMP,
-    CreatedDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP,
-    FOREIGN KEY (ProjectId) REFERENCES Project(ProjectId) ON DELETE CASCADE,
-    FOREIGN KEY (PlanId) REFERENCES Plans(PlanId) ON DELETE CASCADE,
-    FOREIGN KEY (AutomationId) REFERENCES Automation(AutomationId) ON DELETE CASCADE
+-- Permissions
+
+ALTER TABLE public.automation OWNER TO odadb_user;
+GRANT ALL ON TABLE public.automation TO odadb_user;
+
+
+-- public.automationdetails definition
+
+-- Drop table
+
+-- DROP TABLE public.automationdetails;
+
+CREATE TABLE public.automationdetails (
+	automationdetailsid serial4 NOT NULL,
+	automationdetailsname varchar(255) NULL,
+	automationid int4 NULL,
+	description bool NOT NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	icon bytea NULL,
+	CONSTRAINT automationdetails_pkey PRIMARY KEY (automationdetailsid)
 );
 
+-- Permissions
 
--- Create Table
-CREATE TABLE PaymentPlans (
-    PaymentPlanId SERIAL PRIMARY KEY,
-    PaymentPlanName VARCHAR(255) NOT NULL,
-    NumberOfInstallmentMonths INT NOT NULL,
-    PaymentPlanIcon _bytea,
-    DownPayment BOOLEAN NOT NULL,
-    DownPaymentPercentage DECIMAL(10,2),
-    AdminFees BOOLEAN NOT NULL,
-    AdminFeesPercentage DECIMAL(10,2),
-    InterestRate BOOLEAN NOT NULL,
-    InterestRatePerYearPercentage DECIMAL(5,2)
+ALTER TABLE public.automationdetails OWNER TO odadb_user;
+GRANT ALL ON TABLE public.automationdetails TO odadb_user;
+
+
+-- public.customer definition
+
+-- Drop table
+
+-- DROP TABLE public.customer;
+
+CREATE TABLE public.customer (
+	customerid serial4 NOT NULL,
+	firstname varchar(255) NULL,
+	lastname varchar(255) NULL,
+	email varchar(255) NULL,
+	phonenumber varchar(20) NULL,
+	address varchar(255) NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	CONSTRAINT customer_pkey PRIMARY KEY (customerid)
 );
 
-CREATE TABLE Apartment_Addon (
-    ApartmentID INT REFERENCES Apartment(ApartmentID),
-    AddonID INT REFERENCES AddOns(AddonID),
-    PRIMARY KEY (ApartmentID, AddonID)
+-- Permissions
+
+ALTER TABLE public.customer OWNER TO odadb_user;
+GRANT ALL ON TABLE public.customer TO odadb_user;
+
+
+-- public.developer definition
+
+-- Drop table
+
+-- DROP TABLE public.developer;
+
+CREATE TABLE public.developer (
+	developerid serial4 NOT NULL,
+	developername varchar(255) NULL,
+	description varchar(255) NULL,
+	developerlogo _bytea NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	CONSTRAINT developer_pkey PRIMARY KEY (developerid)
 );
 
-CREATE TABLE Apartment_AddonPerRequest (
-    ApartmentID INT REFERENCES Apartment(ApartmentID),
-    AddPerRequestId INT REFERENCES AddPerRequest(AddPerRequestId),
-    PRIMARY KEY (ApartmentID, AddPerRequestId)
+-- Permissions
+
+ALTER TABLE public.developer OWNER TO odadb_user;
+GRANT ALL ON TABLE public.developer TO odadb_user;
+
+
+-- public.invoices definition
+
+-- Drop table
+
+-- DROP TABLE public.invoices;
+
+CREATE TABLE public.invoices (
+	invoiceid serial4 NOT NULL,
+	bookingid int4 NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	invoiceamount numeric(10, 2) NULL,
+	invoicestatus varchar(50) NULL,
+	invoiceduedate timestamp NULL,
+	CONSTRAINT invoices_pkey PRIMARY KEY (invoiceid)
 );
 
+-- Permissions
 
-Create Table PaymentMethod (
-    PaymentMethodID SERIAL PRIMARY KEY,
-    PaymentMethodName VARCHAR(255),
-    PaymentMethodPhotos _bytea,
-    Description TEXT,
-    DepositPercentage DECIMAL(10,2),
-    NumberOfInstallments INT,
-    CreatedDateTime TIMESTAMP,
-    LastModifiedDateTime TIMESTAMP
+ALTER TABLE public.invoices OWNER TO odadb_user;
+GRANT ALL ON TABLE public.invoices TO odadb_user;
+
+
+-- public.paymentmethod definition
+
+-- Drop table
+
+-- DROP TABLE public.paymentmethod;
+
+CREATE TABLE public.paymentmethod (
+	paymentmethodid serial4 NOT NULL,
+	paymentmethodname varchar(255) NULL,
+	paymentmethodphotos _bytea NULL,
+	description text NULL,
+	depositpercentage numeric(10, 2) NULL,
+	numberofinstallments int4 NULL,
+	createddatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	CONSTRAINT paymentmethod_pkey PRIMARY KEY (paymentmethodid)
 );
 
+-- Permissions
 
--- Booking Table
-CREATE TABLE Booking (
-    BookingId SERIAL PRIMARY KEY,
-    CustomerId INT,
-    ApartmentId INT,
-    PaymentMethodID INT,
-    PaymentPlanId INT,
-    CreateDateTime TIMESTAMP,
-	LastModifiedDateTime TIMESTAMP,
-	BookingStatus TEXT,
-	UserId INT,
-	TotalAmount DECIMAL(10,2),
-    FOREIGN KEY (CustomerId) REFERENCES Customer(CustomerId) ON DELETE CASCADE,
-    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
-	FOREIGN KEY (ApartmentId) REFERENCES Apartment(ApartmentId) ON DELETE CASCADE,
-    FOREIGN KEY (PaymentMethodID) REFERENCES PaymentMethod(PaymentMethodID) ON DELETE CASCADE,
-    FOREIGN KEY (PaymentPlanId) REFERENCES PaymentPlans(PaymentPlanId) ON DELETE CASCADE,   
+ALTER TABLE public.paymentmethod OWNER TO odadb_user;
+GRANT ALL ON TABLE public.paymentmethod TO odadb_user;
+
+
+-- public.paymentplans definition
+
+-- Drop table
+
+-- DROP TABLE public.paymentplans;
+
+CREATE TABLE public.paymentplans (
+	paymentplanid serial4 NOT NULL,
+	paymentplanname varchar(255) NOT NULL,
+	numberofinstallmentmonths int4 NOT NULL,
+	downpayment bool NOT NULL,
+	downpaymentpercentage numeric(10, 2) NULL,
+	adminfees bool NOT NULL,
+	adminfeespercentage numeric(10, 2) NULL,
+	interestrate bool NOT NULL,
+	interestrateperyearpercentage numeric(5, 2) NULL,
+	paymentplanicon bytea NULL,
+	CONSTRAINT paymentplans_pkey PRIMARY KEY (paymentplanid)
 );
 
--- Customer Table
-CREATE TABLE Customer (
-    CustomerId SERIAL PRIMARY KEY,
-    FirstName VARCHAR(255),
-    LastName VARCHAR(255),
-    Email VARCHAR(255),
-    PhoneNumber VARCHAR(20),
-	Address VARCHAR(255),
-	CreateDateTime TIMESTAMP,
-	LastModifiedDateTime TIMESTAMP
+-- Permissions
+
+ALTER TABLE public.paymentplans OWNER TO odadb_user;
+GRANT ALL ON TABLE public.paymentplans TO odadb_user;
+
+
+-- public."permission" definition
+
+-- Drop table
+
+-- DROP TABLE public."permission";
+
+CREATE TABLE public."permission" (
+	permissionid serial4 NOT NULL,
+	entityname varchar(255) NULL,
+	"action" varchar(50) NULL,
+	roleid int4 NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	CONSTRAINT permission_pkey PRIMARY KEY (permissionid)
 );
 
+-- Permissions
 
--- Role Table
-CREATE TABLE Role (
-    RoleId SERIAL PRIMARY KEY,
-    RoleName VARCHAR(50),
-	Description VARCHAR(255),
-	CreateDateTime TIMESTAMP,
-	LastModifiedDateTime TIMESTAMP
+ALTER TABLE public."permission" OWNER TO odadb_user;
+GRANT ALL ON TABLE public."permission" TO odadb_user;
+
+
+-- public.plan definition
+
+-- Drop table
+
+-- DROP TABLE public.plan;
+
+CREATE TABLE public.plan (
+	planid serial4 NOT NULL,
+	planname varchar(255) NULL,
+	pricepermeter numeric(10, 2) NULL,
+	description varchar(255) NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	planphoto bytea NULL,
+	CONSTRAINT plan_pkey PRIMARY KEY (planid)
 );
 
--- User Table
-CREATE TABLE Users (
-    UserId SERIAL PRIMARY KEY,
-    Username VARCHAR(255),
-    PasswordHash TEXT,
-	FirstName VARCHAR(255),
-    LastName VARCHAR(255),
-    Email VARCHAR(255),
-    PhoneNumber VARCHAR(20),
-	CreateDateTime TIMESTAMP,
-	LastModifiedDateTime TIMESTAMP,
-	LastLogin TIMESTAMP,
-    RoleId INT,
-    FOREIGN KEY (RoleId) REFERENCES Role(RoleId) ON DELETE CASCADE
-);
--- Permission Table
-CREATE TABLE Permission (
-    PermissionId SERIAL PRIMARY KEY,
-    EntityName VARCHAR(255),
-	Action VARCHAR(50),
-    RoleId INT,
-	CreateDateTime TIMESTAMP,
-	LastModifiedDateTime TIMESTAMP,
-    FOREIGN KEY (RoleId) REFERENCES Role(RoleId) ON DELETE CASCADE
-);
+-- Permissions
+
+ALTER TABLE public.plan OWNER TO odadb_user;
+GRANT ALL ON TABLE public.plan TO odadb_user;
 
 
+-- public.plandetails definition
 
--- Invoices Table
-CREATE TABLE Invoices (
-    InvoiceId SERIAL PRIMARY KEY,
-    BookingId INT,
-	CreateDateTime TIMESTAMP,
-	LastModifiedDateTime TIMESTAMP,
-    InvoiceAmount DECIMAL(10,2),
-    InvoiceStatus VARCHAR(50),
-    invoiceDueDate TIMESTAMP,
-    FOREIGN KEY (BookingId) REFERENCES Booking(BookingId) ON DELETE CASCADE
+-- Drop table
+
+-- DROP TABLE public.plandetails;
+
+CREATE TABLE public.plandetails (
+	plandetailsid serial4 NOT NULL,
+	plandetailsname varchar(255) NULL,
+	plandetailstype varchar(255) NULL,
+	planid int4 NULL,
+	description varchar(255) NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	stars int4 NULL,
+	CONSTRAINT plandetails_pkey PRIMARY KEY (plandetailsid)
 );
+
+-- Permissions
+
+ALTER TABLE public.plandetails OWNER TO odadb_user;
+GRANT ALL ON TABLE public.plandetails TO odadb_user;
+
+
+-- public.project definition
+
+-- Drop table
+
+-- DROP TABLE public.project;
+
+CREATE TABLE public.project (
+	projectid serial4 NOT NULL,
+	projectname varchar(255) NULL,
+	"location" varchar(255) NULL,
+	amenities text NULL,
+	totalunits int4 NULL,
+	projectlogo _bytea NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	developerid int4 NULL,
+	CONSTRAINT project_pkey PRIMARY KEY (projectid)
+);
+
+-- Permissions
+
+ALTER TABLE public.project OWNER TO odadb_user;
+GRANT ALL ON TABLE public.project TO odadb_user;
+
+
+-- public."role" definition
+
+-- Drop table
+
+-- DROP TABLE public."role";
+
+CREATE TABLE public."role" (
+	roleid serial4 NOT NULL,
+	rolename varchar(50) NULL,
+	description varchar(255) NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	CONSTRAINT role_pkey PRIMARY KEY (roleid)
+);
+
+-- Permissions
+
+ALTER TABLE public."role" OWNER TO odadb_user;
+GRANT ALL ON TABLE public."role" TO odadb_user;
+
+
+-- public.testimonials definition
+
+-- Drop table
+
+-- DROP TABLE public.testimonials;
+
+CREATE TABLE public.testimonials (
+	testimonialsid serial4 NOT NULL,
+	testimonialsname varchar(255) NULL,
+	testimonialstitle varchar(255) NULL,
+	description varchar(255) NULL,
+	testimonialsphoto _bytea NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	CONSTRAINT testimonials_pkey PRIMARY KEY (testimonialsid)
+);
+
+-- Permissions
+
+ALTER TABLE public.testimonials OWNER TO odadb_user;
+GRANT ALL ON TABLE public.testimonials TO odadb_user;
+
+
+-- public.users definition
+
+-- Drop table
+
+-- DROP TABLE public.users;
+
+CREATE TABLE public.users (
+	userid serial4 NOT NULL,
+	username varchar(255) NULL,
+	passwordhash text NULL,
+	firstname varchar(255) NULL,
+	lastname varchar(255) NULL,
+	email varchar(255) NULL,
+	phonenumber varchar(20) NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	lastlogin timestamp NULL,
+	roleid int4 NULL,
+	CONSTRAINT users_pkey PRIMARY KEY (userid)
+);
+
+-- Permissions
+
+ALTER TABLE public.users OWNER TO odadb_user;
+GRANT ALL ON TABLE public.users TO odadb_user;
+
+
+-- public.booking definition
+
+-- Drop table
+
+-- DROP TABLE public.booking;
+
+CREATE TABLE public.booking (
+	bookingid serial4 NOT NULL,
+	customerid int4 NULL,
+	apartmentid int4 NULL,
+	paymentmethodid int4 NULL,
+	paymentplanid int4 NULL,
+	createdatetime timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	lastmodifieddatetime timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	bookingstatus text NULL,
+	userid int4 NULL,
+	totalamount numeric(10, 2) NOT NULL,
+	CONSTRAINT booking_pkey PRIMARY KEY (bookingid),
+	CONSTRAINT booking_apartmentid_fkey FOREIGN KEY (apartmentid) REFERENCES public.apartment(apartmentid) ON DELETE CASCADE,
+	CONSTRAINT booking_customerid_fkey FOREIGN KEY (customerid) REFERENCES public.customer(customerid) ON DELETE CASCADE,
+	CONSTRAINT booking_paymentmethodid_fkey FOREIGN KEY (paymentmethodid) REFERENCES public.paymentmethod(paymentmethodid) ON DELETE CASCADE,
+	CONSTRAINT booking_paymentplanid_fkey FOREIGN KEY (paymentplanid) REFERENCES public.paymentplans(paymentplanid) ON DELETE CASCADE,
+	CONSTRAINT booking_userid_fkey FOREIGN KEY (userid) REFERENCES public.users(userid) ON DELETE CASCADE
+);
+
+-- Permissions
+
+ALTER TABLE public.booking OWNER TO odadb_user;
+GRANT ALL ON TABLE public.booking TO odadb_user;
+
+
+-- public.installmentbreakdown definition
+
+-- Drop table
+
+-- DROP TABLE public.installmentbreakdown;
+
+CREATE TABLE public.installmentbreakdown (
+	breakdownid serial4 NOT NULL,
+	paymentplanid int4 NULL,
+	installmentmonth int4 NOT NULL,
+	installmentpercentage numeric(10, 2) NOT NULL,
+	createddatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	CONSTRAINT installmentbreakdown_pkey PRIMARY KEY (breakdownid),
+	CONSTRAINT installmentbreakdown_paymentplanid_fkey FOREIGN KEY (paymentplanid) REFERENCES public.paymentplans(paymentplanid) ON DELETE CASCADE
+);
+
+-- Permissions
+
+ALTER TABLE public.installmentbreakdown OWNER TO odadb_user;
+GRANT ALL ON TABLE public.installmentbreakdown TO odadb_user;
+
+
+-- public.questions definition
+
+-- Drop table
+
+-- DROP TABLE public.questions;
+
+CREATE TABLE public.questions (
+	questionsid int4 NULL,
+	questionname varchar(255) NULL,
+	answer int4 NULL,
+	bookingid int4 NULL,
+	CONSTRAINT questions_bookingid_fkey FOREIGN KEY (bookingid) REFERENCES public.booking(bookingid) ON DELETE CASCADE
+);
+
+-- Permissions
+
+ALTER TABLE public.questions OWNER TO odadb_user;
+GRANT ALL ON TABLE public.questions TO odadb_user;

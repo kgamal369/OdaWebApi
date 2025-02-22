@@ -124,7 +124,10 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
             entity.Property(e => e.Apartmentname)
                 .HasMaxLength(255)
-                .HasColumnName("apartmentname");
+                .HasColumnName("Apartmentaddress");
+            entity.Property(e => e.Apartmentname)
+                .HasMaxLength(255)
+                .HasColumnName("apartmentaddress");
             entity.Property(e => e.Apartmentphotos).HasColumnName("apartmentphotos");
             entity.Property(e => e.Apartmentspace)
                 .HasPrecision(10, 2)

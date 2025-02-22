@@ -28,3 +28,8 @@
 dotnet dev-certs https --clean
 dotnet dev-certs https --check 
 dotnet dev-certs https --trust
+
+7. publich 
+dotnet publish -c Release -o ./publish
+
+8.

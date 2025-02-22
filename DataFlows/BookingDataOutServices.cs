@@ -106,6 +106,7 @@ namespace OdaWepApi.DataFlows
                 ProjectID = apartment?.Projectid ?? 0,
                 NewApartmentID = apartment?.Apartmentid ?? 0,
                 ApartmentType = (ApartmentType)(apartment?.Apartmenttype),
+                ApartmentAddress= apartment?.Apartmentaddress,
                 ApartmentSpace = apartment?.Apartmentspace ?? 0,
                 PlanID = plan?.Planid ?? 0,
                 PlanName = plan?.Planname ?? "N/A",
