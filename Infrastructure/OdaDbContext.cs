@@ -59,10 +59,12 @@ public partial class OdaDbContext : DbContext
     public virtual DbSet<Question> Questions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Host=dpg-cuc1s39opnds738s419g-a.oregon-postgres.render.com;Database=odadb;Username=odadb_user;Password=iwiEqjZ2mwcqFuREbb8U1GNTyfxKbgGw;Port=5432;SslMode=Require;TrustServerCertificate=True");
+        => optionsBuilder.UseNpgsql("Host=52.169.144.36;Database=odadb;Username=odadb_user;Password=odaadmin;Port=5432;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+    {   
+        modelBuilder.HasDefaultSchema("oda");
+
         modelBuilder.Entity<Addon>(entity =>
         {
             entity.HasKey(e => e.Addonid).HasName("addons_pkey");
@@ -124,8 +126,8 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
             entity.Property(e => e.Apartmentname)
                 .HasMaxLength(255)
-                .HasColumnName("Apartmentaddress");
-            entity.Property(e => e.Apartmentname)
+                .HasColumnName("apartmentname");
+            entity.Property(e => e.Apartmentaddress)
                 .HasMaxLength(255)
                 .HasColumnName("apartmentaddress");
             entity.Property(e => e.Apartmentphotos).HasColumnName("apartmentphotos");
