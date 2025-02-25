@@ -6,6 +6,9 @@ using OdaWepApi.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Detect if running as a Windows Service
+builder.Host.UseWindowsService();
+
 // Add services to the container
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -50,10 +53,8 @@ builder.Services.AddCors(options =>
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-// Configure Kestrel for local development
-if (builder.Environment.IsDevelopment())
-{
-    builder.WebHost.ConfigureKestrel(serverOptions =>
+// Configure Kestrel for https
+  builder.WebHost.ConfigureKestrel(serverOptions =>
     {
         serverOptions.ListenAnyIP(5188); // HTTP for local dev
         serverOptions.ListenAnyIP(7205, listenOptions =>
@@ -61,13 +62,7 @@ if (builder.Environment.IsDevelopment())
             listenOptions.UseHttps(); // HTTPS for local dev
         });
     });
-}
-else
-{
-    // Use only HTTP in production (Render handles HTTPS automatically)
-    var port = Environment.GetEnvironmentVariable("PORT") ?? "5188";
-    builder.WebHost.UseUrls($"http://*:{port}");
-}
+
 
 var app = builder.Build();
 
@@ -78,11 +73,9 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "OdaWepApi v1");
 });
 
-// Enable HTTPS redirection only in development
-if (app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
+
+// Enable HTTPS redirection
+app.UseHttpsRedirection();
 
 // Apply CORS Middleware (before authorization)
 app.UseCors(corsPolicy);
