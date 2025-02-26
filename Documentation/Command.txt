@@ -11,6 +11,7 @@
     dotnet clean OdaWepApi.csproj
     dotnet restore OdaWepApi.csproj
     dotnet build OdaWepApi.csproj 
+    dotnet build -c Release
     dotnet run OdaWepApi.csproj 
 
 3.prettier:
@@ -31,6 +32,11 @@ dotnet dev-certs https --trust
 
 7. publich 
 dotnet publish -c Release -o ./publish
+dotnet publish -c Release -o C:\Workspace\OdaWebApi\bin\Release\net8.0
+sc.exe create OdaWebApiService binPath= "C:\Workspace\OdaWebApi\bin\Release\net8.0\OdaWepApi.exe" start= auto
+net start OdaWebApiService
+sc.exe stop OdaWebApiService
+sc.exe start OdaWebApiService
 
 8. Server 
 IP : 52.169.144.36
