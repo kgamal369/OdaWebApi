@@ -1,13 +1,3 @@
--- DROP SCHEMA public;
-
-CREATE SCHEMA public AUTHORIZATION odadb_user;
-
-
--- Permissions
-
-GRANT ALL ON SCHEMA public TO odadb_user;
-GRANT USAGE ON SCHEMA public TO public;
-
 -- public.addons definition
 
 -- Drop table

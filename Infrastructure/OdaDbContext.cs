@@ -59,7 +59,7 @@ public partial class OdaDbContext : DbContext
     public virtual DbSet<Question> Questions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Host=52.169.144.36;Database=odadb;Username=odadb_user;Password=odaadmin;Port=5432;TrustServerCertificate=True");
+        => optionsBuilder.UseNpgsql("Host=localhost;Database=odadb;Username=postgres;Password=THEspider369;Port=5432;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {   
