@@ -23,9 +23,9 @@ namespace OdaWepApi.API.DomainEndpoints
                     a.Planname,
                     a.Pricepermeter,
                     a.Description,
+                    a.Projecttype,
                     a.Createdatetime,
                     a.Lastmodifieddatetime,
-
                     // ✅ Convert bytea to Base64 string
                     PlanBase64 = a.Planphoto != null ? Convert.ToBase64String(a.Planphoto) : null
                 })
@@ -61,8 +61,55 @@ namespace OdaWepApi.API.DomainEndpoints
             })
             .WithName("GetPlanById")
             .WithOpenApi();
+            //3. Get All Plans Per Project Type Locate your home 
+              group.MapGet("/locate-your-home", async (OdaDbContext db) =>
+            {
+                var plans = await db.Plans
+                .AsNoTracking()
+                 .Where(a => a.Projecttype==true)
+                .Select(a => new
+                {
+                    a.Planid,
+                    a.Planname,
+                    a.Pricepermeter,
+                    a.Description,
+                    a.Projecttype,
+                    a.Createdatetime,
+                    a.Lastmodifieddatetime,
+                    // ✅ Convert bytea to Base64 string
+                    PlanBase64 = a.Planphoto != null ? Convert.ToBase64String(a.Planphoto) : null
+                })
+                .ToListAsync();
+                return Results.Ok(plans);
+            })
+            .WithName("GetAllPlansLocateYourHome")
+            .WithOpenApi();
 
-            // 3. Create a Plan
+             //4. Get All Plans Per Project Type Locate your home 
+              group.MapGet("/build-your-home", async (OdaDbContext db) =>
+            {
+                var plans = await db.Plans
+                .AsNoTracking()
+                 .Where(a => a.Projecttype==false)
+                .Select(a => new
+                {
+                    a.Planid,
+                    a.Planname,
+                    a.Pricepermeter,
+                    a.Description,
+                    a.Projecttype,
+                    a.Createdatetime,
+                    a.Lastmodifieddatetime,
+                    // ✅ Convert bytea to Base64 string
+                    PlanBase64 = a.Planphoto != null ? Convert.ToBase64String(a.Planphoto) : null
+                })
+                .ToListAsync();
+                return Results.Ok(plans);
+            })
+            .WithName("GetAllPlansBuildYourHome")
+            .WithOpenApi();
+
+            // 5. Create a Plan
             group.MapPost("/", async Task<Results<Created<Plan>, BadRequest>> (Plan plan, OdaDbContext db) =>
             {
                 plan.Createdatetime = DateTime.UtcNow;
@@ -96,7 +143,7 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithName("UpdatePlan")
             .WithOpenApi();
 
-            // 5. Delete a Plan
+            // 6. Delete a Plan
             group.MapDelete("/{id}", async Task<Results<Ok, NotFound>> (int id, OdaDbContext db) =>
             {
                 var plan = await db.Plans.FindAsync(id);
@@ -111,7 +158,7 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithName("DeletePlan")
             .WithOpenApi();
 
-            // 6. Get All PlanDetails for a PlanId
+            // 7. Get All PlanDetails for a PlanId
             group.MapGet("/{planid}/PlanDetails", async Task<Results<Ok<List<Plandetail>>, NotFound>> (int planid, OdaDbContext db) =>
             {
                 var planDetails = await db.Plandetails
@@ -125,7 +172,7 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithName("GetAllPlanDetailsForPlan")
             .WithOpenApi();
 
-            // 7. Get PlanDetails for a PlanId where PlanDetailsType = Foundation
+            // 8. Get PlanDetails for a PlanId where PlanDetailsType = Foundation
             group.MapGet("/{planid}/PlanDetails/Foundation", async Task<Results<Ok<List<Plandetail>>, NotFound>> (int planid, OdaDbContext db) =>
             {
                 var foundationDetails = await db.Plandetails
@@ -139,7 +186,7 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithName("GetFoundationPlanDetails")
             .WithOpenApi();
 
-            // 8. Get PlanDetails for a PlanId where PlanDetailsType = Decoration
+            // 9. Get PlanDetails for a PlanId where PlanDetailsType = Decoration
             group.MapGet("/{planid}/PlanDetails/Decoration", async Task<Results<Ok<List<Plandetail>>, NotFound>> (int planid, OdaDbContext db) =>
             {
                 var decorationDetails = await db.Plandetails
