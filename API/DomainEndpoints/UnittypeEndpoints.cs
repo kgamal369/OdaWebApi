@@ -22,14 +22,15 @@ namespace OdaWepApi.API.DomainEndpoints
 
             // 2. Get Unit Types by ID
             group.MapGet("/{id}", async Task<Results<Ok<Unittype>, NotFound>> (int id, OdaDbContext db) =>
-            {
+            {   
+                // Find the project by Id
                 var unittypes = await db.Unittypes.AsNoTracking()
                     .FirstOrDefaultAsync(d => d.Unittypeid == id);
                 return unittypes is not null
                     ? TypedResults.Ok(unittypes)
                     : TypedResults.NotFound();
             })
-            .WithName("GetDeveloperById")
+            .WithName("GetUnittypesById")
             .WithOpenApi();
         }
     }
