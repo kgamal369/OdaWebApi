@@ -44,10 +44,10 @@ public partial class Apartment
 
     [JsonIgnore]
     public virtual ICollection<ApartmentAddonperrequest> ApartmentAddonperrequests { get; set; } = new List<ApartmentAddonperrequest>();
-   [JsonIgnore]   
-   public virtual ICollection<ApartmentAddon> ApartmentAddons { get; set; } = new List<ApartmentAddon>();
     [JsonIgnore]
-    [ForeignKey("Automationid")]    
+    public virtual ICollection<ApartmentAddon> ApartmentAddons { get; set; } = new List<ApartmentAddon>();
+    [JsonIgnore]
+    [ForeignKey("Automationid")]
     public virtual Automation? Automation { get; set; }
     [JsonIgnore]
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();

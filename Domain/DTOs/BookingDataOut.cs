@@ -10,7 +10,7 @@ namespace OdaWepApi.Domain.DTOs
         public int? ProjectID { get; set; }
         public int NewApartmentID { get; set; }
         public ApartmentType ApartmentType { get; set; }
-        public string? ApartmentAddress {get;set;}
+        public string? ApartmentAddress { get; set; }
         public decimal ApartmentSpace { get; set; }
         public int PlanID { get; set; }
         public string PlanName { get; set; }

@@ -61,7 +61,7 @@ public partial class OdaDbContext : DbContext
         => optionsBuilder.UseNpgsql("Host=dpg-cuc1s39opnds738s419g-a.oregon-postgres.render.com;Database=odadb;Username=odadb_user;Password=iwiEqjZ2mwcqFuREbb8U1GNTyfxKbgGw;Port=5432;SslMode=Require;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {   
+    {
         modelBuilder.HasDefaultSchema("oda");
 
         modelBuilder.Entity<Addon>(entity =>
@@ -150,14 +150,14 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Createddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createddatetime");
-             entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.Developerid).HasColumnName("developerid");
             entity.Property(e => e.Floornumber).HasColumnName("floornumber");
-entity.Property(e => e.Lastmodifieddatetime)
-.HasColumnType("timestamp without time zone")
-   .HasColumnName("lastmodifieddatetime");
-     entity.Property(e => e.Projectid).HasColumnName("projectid");
-    entity.Property(e => e.Planid).HasColumnName("planid");
+            entity.Property(e => e.Lastmodifieddatetime)
+            .HasColumnType("timestamp without time zone")
+               .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Projectid).HasColumnName("projectid");
+            entity.Property(e => e.Planid).HasColumnName("planid");
             entity.Property(e => e.Unittypeid).HasColumnName("unittypeid");
             entity.HasOne(d => d.Automation).WithMany(p => p.Apartments)
                 .HasForeignKey(d => d.Automationid)
@@ -256,10 +256,10 @@ entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
 
-                 entity.HasOne(d => d.Automation).WithMany(p => p.Automationdetails)
-                .HasForeignKey(d => d.Automationid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("automationdetails_automationid_fkey");
+            entity.HasOne(d => d.Automation).WithMany(p => p.Automationdetails)
+           .HasForeignKey(d => d.Automationid)
+           .OnDelete(DeleteBehavior.Cascade)
+           .HasConstraintName("automationdetails_automationid_fkey");
         });
 
         modelBuilder.Entity<Booking>(entity =>
@@ -579,9 +579,9 @@ entity.Property(e => e.Lastmodifieddatetime)
         });
         modelBuilder.Entity<Question>(entity =>
         {
-           entity
-                .HasNoKey()
-                .ToTable("questions");
+            entity
+                 .HasNoKey()
+                 .ToTable("questions");
             entity.Property(e => e.Answer).HasColumnName("answer");
             entity.Property(e => e.Bookingid).HasColumnName("bookingid");
             entity.Property(e => e.Questionname)

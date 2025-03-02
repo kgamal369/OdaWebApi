@@ -1,4 +1,4 @@
-﻿﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using OdaWepApi.DataFlows;
 using OdaWepApi.Domain.Enums;
@@ -194,9 +194,9 @@ namespace OdaWepApi.API.DomainEndpoints
                 booking.Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
 
                 // Handle apartment creation or cloning based on ApartmentType
-                booking.Apartment.Apartmentstatus=Apartmentstatus.InProgress;
-                
-                if(booking.Apartment.Apartmenttype== (int)ApartmentType.Project)
+                booking.Apartment.Apartmentstatus = Apartmentstatus.InProgress;
+
+                if (booking.Apartment.Apartmenttype == (int)ApartmentType.Project)
                 {
                     if (booking.Apartmentid == null)
                         throw new ArgumentException("ApartmentID must be provided for Project type.");

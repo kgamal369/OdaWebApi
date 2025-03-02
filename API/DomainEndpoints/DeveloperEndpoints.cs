@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Infrastructure;
-using System.Runtime.Intrinsics.X86;
 
 namespace OdaWepApi.API.DomainEndpoints
 {
