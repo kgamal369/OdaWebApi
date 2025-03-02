@@ -579,15 +579,14 @@ public partial class OdaDbContext : DbContext
         });
         modelBuilder.Entity<Question>(entity =>
         {
-            entity
-                 .HasNoKey()
-                 .ToTable("questions");
+            entity.HasKey(e => e.Questionsid).HasName("questions_pkey");
+            entity.ToTable("questions");
+            entity.Property(e => e.Questionsid).HasColumnName("questionsid");
             entity.Property(e => e.Answer).HasColumnName("answer");
             entity.Property(e => e.Bookingid).HasColumnName("bookingid");
             entity.Property(e => e.Questionname)
                 .HasMaxLength(255)
                 .HasColumnName("questionname");
-            entity.Property(e => e.Questionsid).HasColumnName("questionsid");
             entity.HasOne(d => d.Booking).WithMany(p => p.Questions)
                 .HasForeignKey(d => d.Bookingid)
                 .OnDelete(DeleteBehavior.Cascade)
