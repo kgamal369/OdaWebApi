@@ -16,7 +16,6 @@ namespace OdaWepApi.API.DomainEndpoints
             group.MapGet("/", async (OdaDbContext db) =>
             {
                 return await db.Apartments
-                    .Include(a => a.Project)
                     .Include(a => a.Plan)
                     .Include(a => a.Automation)
                     .AsNoTracking()
@@ -29,7 +28,6 @@ namespace OdaWepApi.API.DomainEndpoints
             group.MapGet("/{id}", async Task<Results<Ok<Apartment>, NotFound>> (int id, OdaDbContext db) =>
             {
                 var apartment = await db.Apartments
-                    .Include(a => a.Project)
                     .Include(a => a.Plan)
                     .Include(a => a.Automation)
                     .AsNoTracking()

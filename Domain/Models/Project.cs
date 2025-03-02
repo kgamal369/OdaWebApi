@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OdaWepApi.Domain.Models;
 
@@ -22,11 +22,4 @@ public partial class Project
     public DateTime? Lastmodifieddatetime { get; set; }
 
     public int? Developerid { get; set; }
-
-    [JsonIgnore]
-    [ForeignKey("Developerid")]
-    public virtual Developer? Developer { get; set; }
-
-    [JsonIgnore]
-    public virtual ICollection<Apartment> Apartments { get; set; } = new List<Apartment>();
 }

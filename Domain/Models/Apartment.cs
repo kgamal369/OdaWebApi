@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using OdaWepApi.Domain.Enums;
 
@@ -9,7 +11,7 @@ public partial class Apartment
     public int Apartmentid { get; set; }
 
     public string? Apartmentname { get; set; }
-    public string? Apartmentaddress { get; set; }
+
     public ApartmentType Apartmenttype { get; set; }
 
     public Apartmentstatus Apartmentstatus { get; set; }
@@ -34,24 +36,26 @@ public partial class Apartment
 
     public int? Automationid { get; set; }
 
+    public string? Apartmentaddress { get; set; }
+
+    public int? Developerid { get; set; }
+
+    public int? Unittypeid { get; set; }
+
     [JsonIgnore]
     public virtual ICollection<ApartmentAddonperrequest> ApartmentAddonperrequests { get; set; } = new List<ApartmentAddonperrequest>();
-
+   [JsonIgnore]   
+   public virtual ICollection<ApartmentAddon> ApartmentAddons { get; set; } = new List<ApartmentAddon>();
     [JsonIgnore]
-    public virtual ICollection<ApartmentAddon> ApartmentAddons { get; set; } = new List<ApartmentAddon>();
-
-    [JsonIgnore]
-    [ForeignKey("Automationid")]
+    [ForeignKey("Automationid")]    
     public virtual Automation? Automation { get; set; }
-
     [JsonIgnore]
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
+    public virtual Developer? Developer { get; set; }
     [JsonIgnore]
     [ForeignKey("Planid")]
     public virtual Plan? Plan { get; set; }
 
-    [JsonIgnore]
-    [ForeignKey("Projectid")]
-    public virtual Project? Project { get; set; }
+    public virtual Unittype? Unittype { get; set; }
 }

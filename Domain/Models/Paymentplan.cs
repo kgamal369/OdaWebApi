@@ -1,4 +1,7 @@
-﻿namespace OdaWepApi.Domain.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace OdaWepApi.Domain.Models;
 
 public partial class Paymentplan
 {
@@ -7,8 +10,6 @@ public partial class Paymentplan
     public string Paymentplanname { get; set; } = null!;
 
     public int Numberofinstallmentmonths { get; set; }
-
-    public byte[]? Paymentplanicon { get; set; }
 
     public bool Downpayment { get; set; }
 
@@ -21,6 +22,10 @@ public partial class Paymentplan
     public bool Interestrate { get; set; }
 
     public decimal? Interestrateperyearpercentage { get; set; }
+
+    public byte[]? Paymentplanicon { get; set; }
+
+    public string? Description { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

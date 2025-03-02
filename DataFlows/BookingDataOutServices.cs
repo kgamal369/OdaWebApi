@@ -15,7 +15,7 @@ namespace OdaWepApi.DataFlows
             var booking = await db.Bookings
                 .Include(b => b.Customer)
                 .Include(b => b.Apartment)
-                    .ThenInclude(a => a.Project)
+                    // .ThenInclude(a => a.Project)
                 .Include(b => b.Apartment)
                     .ThenInclude(a => a.Plan)
                 .Include(b => b.Apartment)
@@ -102,7 +102,7 @@ namespace OdaWepApi.DataFlows
             return new BookingDataOut
             {
                 BookingID = booking.Bookingid,
-                DeveloperID = apartment?.Project?.Developerid ?? 0,
+                DeveloperID = apartment?.Developerid ?? 0,
                 ProjectID = apartment?.Projectid ?? 0,
                 NewApartmentID = apartment?.Apartmentid ?? 0,
                 ApartmentType = (ApartmentType)(apartment?.Apartmenttype),

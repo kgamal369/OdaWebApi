@@ -88,13 +88,13 @@ namespace OdaWepApi.API.DomainEndpoints
             }).WithName("DeleteInvoice").WithOpenApi();
 
             // Get Bookings Related to an Invoice
-            group.MapGet("/{id}/booking", async Task<Results<Ok<Booking>, NotFound>> (int invoiceid, OdaDbContext db) =>
-            {
-                var invoice = await db.Invoices.Include(i => i.Booking).FirstOrDefaultAsync(i => i.Invoiceid == invoiceid);
-                return invoice?.Booking != null
-                    ? TypedResults.Ok(invoice.Booking)
-                    : TypedResults.NotFound();
-            }).WithName("GetInvoiceBooking").WithOpenApi();
+            // group.MapGet("/{id}/booking", async Task<Results<Ok<Booking>, NotFound>> (int invoiceid, OdaDbContext db) =>
+            // {
+            //     var invoice = await db.Invoices.Include(i => i.Booking).FirstOrDefaultAsync(i => i.Invoiceid == invoiceid);
+            //     return invoice?.Booking != null
+            //         ? TypedResults.Ok(invoice.Booking)
+            //         : TypedResults.NotFound();
+            // }).WithName("GetInvoiceBooking").WithOpenApi();
 
             // Update Invoice Status
             group.MapPut("/{id}/status", async Task<IResult> (int invoiceid, string newStatus, OdaDbContext db) =>
