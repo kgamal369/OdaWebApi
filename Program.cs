@@ -56,11 +56,35 @@ builder.Logging.AddConsole();
 // Configure Kestrel for https
   builder.WebHost.ConfigureKestrel(serverOptions =>
     {
-        serverOptions.ListenAnyIP(5188); // HTTP for local dev
+     serverOptions.ListenAnyIP(5188); // HTTP for local dev
+
+    if (builder.Environment.IsDevelopment())
+    {
+        // Use default dev cert in development
         serverOptions.ListenAnyIP(7205, listenOptions =>
         {
-            listenOptions.UseHttps(); // HTTPS for local dev
+            listenOptions.UseHttps();
         });
+    }
+    else
+    {
+        // Production environment requires a valid certificate
+        var certPath = Environment.GetEnvironmentVariable("CERT_PATH");
+        var certPassword = Environment.GetEnvironmentVariable("CERT_PASSWORD");
+
+        if (!string.IsNullOrEmpty(certPath) && !string.IsNullOrEmpty(certPassword))
+        {
+            serverOptions.ListenAnyIP(7205, listenOptions =>
+            {
+                listenOptions.UseHttps(certPath, certPassword);
+            });
+        }
+        else
+        {
+            Console.WriteLine("❌ HTTPS certificate path or password is missing!");
+            // Consider logging or handling this scenario appropriately
+        }
+    }
     });
 
 
