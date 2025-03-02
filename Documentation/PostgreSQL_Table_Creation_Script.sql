@@ -1,3 +1,13 @@
+-- DROP SCHEMA public;
+
+CREATE SCHEMA public AUTHORIZATION odadb_user;
+
+
+-- Permissions
+
+GRANT ALL ON SCHEMA public TO odadb_user;
+GRANT USAGE ON SCHEMA public TO public;
+
 -- public.addons definition
 
 -- Drop table
@@ -67,7 +77,9 @@ CREATE TABLE public.apartment (
 	planid int4 NULL,
 	automationid int4 NULL,
 	apartmentaddress varchar(255) NULL,
-	CONSTRAINT apartment_pkey PRIMARY KEY (apartmentid)
+	CONSTRAINT apartment_pkey PRIMARY KEY (apartmentid),
+	CONSTRAINT apartment_planid_fkey FOREIGN KEY (planid) REFERENCES public.plan(planid) ON DELETE CASCADE,
+	CONSTRAINT apartment_automationid_fkey FOREIGN KEY (automationid) REFERENCES public.automation(automationid) ON DELETE CASCADE
 );
 
 -- Permissions
@@ -86,7 +98,9 @@ CREATE TABLE public.apartment_addon (
 	apartmentid int4 NOT NULL,
 	addonid int4 NOT NULL,
 	quantity int4 NOT NULL,
-	CONSTRAINT apartment_addon_pkey PRIMARY KEY (apartmentid, addonid)
+	CONSTRAINT apartment_addon_pkey PRIMARY KEY (apartmentid, addonid),
+	CONSTRAINT apartment_addon_addonid_fkey FOREIGN KEY (addonid) REFERENCES public.addons(addonid) ON DELETE CASCADE,
+	CONSTRAINT apartment_addon_apartmentid_fkey FOREIGN KEY (apartmentid) REFERENCES public.apartment(apartmentid) ON DELETE CASCADE
 );
 
 -- Permissions
@@ -105,7 +119,9 @@ CREATE TABLE public.apartment_addonperrequest (
 	apartmentid int4 NOT NULL,
 	addperrequestid int4 NOT NULL,
 	quantity int4 DEFAULT 1 NULL,
-	CONSTRAINT apartment_addonperrequest_pkey PRIMARY KEY (apartmentid, addperrequestid)
+	CONSTRAINT apartment_addonperrequest_pkey PRIMARY KEY (apartmentid, addperrequestid),
+	CONSTRAINT apartment_addonperrequest_addperrequestid_fkey FOREIGN KEY (addperrequestid) REFERENCES public.addperrequest(addperrequestid) ON DELETE CASCADE,
+	CONSTRAINT apartment_addon_apartmentid_fkey FOREIGN KEY (apartmentid) REFERENCES public.apartment(apartmentid) ON DELETE CASCADE
 );
 
 -- Permissions
@@ -149,7 +165,9 @@ CREATE TABLE public.automationdetails (
 	createdatetime timestamp NULL,
 	lastmodifieddatetime timestamp NULL,
 	icon bytea NULL,
-	CONSTRAINT automationdetails_pkey PRIMARY KEY (automationdetailsid)
+	CONSTRAINT automationdetails_pkey PRIMARY KEY (automationdetailsid),
+	CONSTRAINT automationdetails_automationid_fkey FOREIGN KEY (automationid) REFERENCES public.automation(automationid) ON DELETE CASCADE,
+
 );
 
 -- Permissions
@@ -337,7 +355,9 @@ CREATE TABLE public.plandetails (
 	createdatetime timestamp NULL,
 	lastmodifieddatetime timestamp NULL,
 	stars int4 NULL,
-	CONSTRAINT plandetails_pkey PRIMARY KEY (plandetailsid)
+	CONSTRAINT plandetails_pkey PRIMARY KEY (plandetailsid),
+	CONSTRAINT plandetails_planid_fkey FOREIGN KEY (planid) REFERENCES public.plan(planid) ON DELETE CASCADE,
+
 );
 
 -- Permissions

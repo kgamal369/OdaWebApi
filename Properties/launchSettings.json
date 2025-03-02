@@ -27,7 +27,7 @@
       "applicationUrl": "https://localhost:7205;http://localhost:5188",
       "environmentVariables": {
          "ASPNETCORE_ENVIRONMENT": "Development",
-        "DefaultConnection":"Host=localhost;Database=odadb;Username=postgres;Password=THEspider369;Port=5432;TrustServerCertificate=True"
+        "DefaultConnection":"Host=dpg-cuc1s39opnds738s419g-a.oregon-postgres.render.com;Database=odadb;Username=odadb_user;Password=iwiEqjZ2mwcqFuREbb8U1GNTyfxKbgGw;Port=5432;SslMode=Require;TrustServerCertificate=True"
       }
     },
     "IIS Express": {
