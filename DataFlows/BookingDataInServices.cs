@@ -15,8 +15,7 @@ namespace OdaWepApi.DataFlows
             {
                 int newApartmentId;
 
-                if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Kit)
-                {
+              
                     var newApartment = new Apartment
                     {
                         Apartmenttype = (ApartmentType)bookingDataIn.apartmentDTO.ApartmentType,
@@ -24,9 +23,9 @@ namespace OdaWepApi.DataFlows
                         Apartmentspace = bookingDataIn.apartmentDTO.ApartmentSpace,
                         Apartmentaddress = bookingDataIn.apartmentDTO.ApartmentAddress,
                         Description = bookingDataIn.apartmentDTO.ApartmentAddress,
-                        Projectid = bookingDataIn.ProjectID,
                         Planid = bookingDataIn.PlanID,
                         Automationid = bookingDataIn.AutomationID,
+                        Unittypeid= bookingDataIn.apartmentDTO.Unittypeid,
                         Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                         Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
                     };
@@ -34,15 +33,6 @@ namespace OdaWepApi.DataFlows
                     db.Apartments.Add(newApartment);
                     await db.SaveChangesAsync();
                     newApartmentId = newApartment.Apartmentid;
-                }
-                else if (bookingDataIn.apartmentDTO.ApartmentType == (int)ApartmentType.Project)
-                {
-                    newApartmentId = (int)bookingDataIn.apartmentDTO.ApartmentId;
-                }
-                else
-                {
-                    throw new Exception("Invalid Apartment Type.");
-                }
 
                 // Create or get customer
                 int customerId = await CreateOrGetCustomer(db, bookingDataIn.CustomerInfo);

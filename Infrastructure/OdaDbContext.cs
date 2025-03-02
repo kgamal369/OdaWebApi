@@ -62,7 +62,7 @@ public partial class OdaDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("oda");
+        modelBuilder.HasDefaultSchema("public");
 
         modelBuilder.Entity<Addon>(entity =>
         {

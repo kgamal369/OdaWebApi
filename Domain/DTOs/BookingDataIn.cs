@@ -5,7 +5,6 @@ namespace OdaWepApi.Domain.DTOs
     public class BookingDataIn
     {
         public int? DeveloperID { get; set; }
-        public int? ProjectID { get; set; }
         public ApartmentDTO apartmentDTO { get; set; }
         public int PlanID { get; set; }
         public List<AddonSelection> Addons { get; set; }
