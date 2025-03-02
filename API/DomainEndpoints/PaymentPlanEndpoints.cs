@@ -28,6 +28,7 @@ namespace OdaWepApi.API.DomainEndpoints
                     a.Adminfeespercentage,
                     a.Interestrate,
                     a.Interestrateperyearpercentage,
+                    a.Description,
                     // ✅ Convert bytea to Base64 string
                     IconBase64 = a.Paymentplanicon != null ? Convert.ToBase64String(a.Paymentplanicon) : null
                 })
@@ -55,6 +56,7 @@ namespace OdaWepApi.API.DomainEndpoints
                     a.Adminfeespercentage,
                     a.Interestrate,
                     a.Interestrateperyearpercentage,
+                    a.Description,
                     // ✅ Convert bytea to Base64 string
                     IconBase64 = a.Paymentplanicon != null ? Convert.ToBase64String(a.Paymentplanicon) : null
                 })
@@ -117,6 +119,7 @@ namespace OdaWepApi.API.DomainEndpoints
                 existingPaymentPlan.Adminfeespercentage = updatedPaymentPlan.Adminfeespercentage;
                 existingPaymentPlan.Interestrate = updatedPaymentPlan.Interestrate;
                 existingPaymentPlan.Interestrateperyearpercentage = updatedPaymentPlan.Interestrateperyearpercentage;
+                existingPaymentPlan.Description=updatedPaymentPlan.Description;
 
                 // // Handle file upload (icon update)
                 // if (request.Form.Files.Count > 0)

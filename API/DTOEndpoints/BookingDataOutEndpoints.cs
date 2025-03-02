@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OdaWepApi.Domain.DTOs;
-using OdaWepApi.Domain.Enums;
-using OdaWepApi.Domain.Models;
+﻿using OdaWepApi.Domain.DTOs;
 using OdaWepApi.Infrastructure;
 using OdaWepApi.DataFlows;
 

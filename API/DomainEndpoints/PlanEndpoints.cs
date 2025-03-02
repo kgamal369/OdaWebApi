@@ -176,7 +176,7 @@ namespace OdaWepApi.API.DomainEndpoints
             group.MapGet("/{planid}/PlanDetails/Foundation", async Task<Results<Ok<List<Plandetail>>, NotFound>> (int planid, OdaDbContext db) =>
             {
                 var foundationDetails = await db.Plandetails
-                    .Where(pd => pd.Planid == planid && pd.Plandetailstype == PlanDetailsType.Foundation)
+                    .Where(pd => pd.Planid == planid && pd.Plandetailstype == PlanDetailsType.Foundation) 
                     .ToListAsync();
 
                 return foundationDetails.Any()
