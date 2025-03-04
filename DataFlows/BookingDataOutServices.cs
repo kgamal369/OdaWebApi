@@ -74,6 +74,9 @@ namespace OdaWepApi.DataFlows
                     .Where(q => q.Bookingid == bookingID)
                     .ToListAsync();
 
+            var UnittypeName =  apartment?.Unittypeid!=null ? await db.Unittypes.AsNoTracking()
+                    .Where(k => k.Unittypeid == apartment.Unittypeid ).ToListAsync():null;
+
             var paymentDTO = new PaymentDTO
             {
                 Paymentplanid = paymentPlan.Paymentplanid,
@@ -108,6 +111,7 @@ namespace OdaWepApi.DataFlows
                 ApartmentType = (ApartmentType)(apartment?.Apartmenttype),
                 ApartmentAddress = apartment?.Apartmentaddress,
                 ApartmentSpace = apartment?.Apartmentspace ?? 0,
+                Unittypeid = apartment?.Unittypeid??0,
                 PlanID = plan?.Planid ?? 0,
                 PlanName = plan?.Planname ?? "N/A",
                 TotalPlanPrice = totalPlanPrice,

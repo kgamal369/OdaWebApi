@@ -119,7 +119,7 @@ namespace OdaWepApi.API.DomainEndpoints
                 existingPaymentPlan.Adminfeespercentage = updatedPaymentPlan.Adminfeespercentage;
                 existingPaymentPlan.Interestrate = updatedPaymentPlan.Interestrate;
                 existingPaymentPlan.Interestrateperyearpercentage = updatedPaymentPlan.Interestrateperyearpercentage;
-                existingPaymentPlan.Description=updatedPaymentPlan.Description;
+                existingPaymentPlan.Description = updatedPaymentPlan.Description;
 
                 // // Handle file upload (icon update)
                 // if (request.Form.Files.Count > 0)

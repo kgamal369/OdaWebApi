@@ -15,24 +15,24 @@ namespace OdaWepApi.DataFlows
             {
                 int newApartmentId;
 
-              
-                    var newApartment = new Apartment
-                    {
-                        Apartmenttype = (ApartmentType)bookingDataIn.apartmentDTO.ApartmentType,
-                        Apartmentstatus = Apartmentstatus.InProgress,
-                        Apartmentspace = bookingDataIn.apartmentDTO.ApartmentSpace,
-                        Apartmentaddress = bookingDataIn.apartmentDTO.ApartmentAddress,
-                        Description = bookingDataIn.apartmentDTO.ApartmentAddress,
-                        Planid = bookingDataIn.PlanID,
-                        Automationid = bookingDataIn.AutomationID,
-                        Unittypeid= bookingDataIn.apartmentDTO.Unittypeid,
-                        Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                        Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
-                    };
 
-                    db.Apartments.Add(newApartment);
-                    await db.SaveChangesAsync();
-                    newApartmentId = newApartment.Apartmentid;
+                var newApartment = new Apartment
+                {
+                    Apartmenttype = (ApartmentType)bookingDataIn.apartmentDTO.ApartmentType,
+                    Apartmentstatus = Apartmentstatus.InProgress,
+                    Apartmentspace = bookingDataIn.apartmentDTO.ApartmentSpace,
+                    Apartmentaddress = bookingDataIn.apartmentDTO.ApartmentAddress,
+                    Description = bookingDataIn.apartmentDTO.ApartmentAddress,
+                    Planid = bookingDataIn.PlanID,
+                    Automationid = bookingDataIn.AutomationID,
+                    Unittypeid = bookingDataIn.apartmentDTO.Unittypeid,
+                    Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                    Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
+                };
+
+                db.Apartments.Add(newApartment);
+                await db.SaveChangesAsync();
+                newApartmentId = newApartment.Apartmentid;
 
                 // Create or get customer
                 int customerId = await CreateOrGetCustomer(db, bookingDataIn.CustomerInfo);

@@ -62,52 +62,52 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithName("GetPlanById")
             .WithOpenApi();
             //3. Get All Plans Per Project Type Locate your home 
-              group.MapGet("/locate-your-home", async (OdaDbContext db) =>
-            {
-                var plans = await db.Plans
-                .AsNoTracking()
-                 .Where(a => a.Projecttype==true)
-                .Select(a => new
-                {
-                    a.Planid,
-                    a.Planname,
-                    a.Pricepermeter,
-                    a.Description,
-                    a.Projecttype,
-                    a.Createdatetime,
-                    a.Lastmodifieddatetime,
-                    // ✅ Convert bytea to Base64 string
-                    PlanBase64 = a.Planphoto != null ? Convert.ToBase64String(a.Planphoto) : null
-                })
-                .ToListAsync();
-                return Results.Ok(plans);
-            })
-            .WithName("GetAllPlansLocateYourHome")
-            .WithOpenApi();
+            group.MapGet("/locate-your-home", async (OdaDbContext db) =>
+          {
+              var plans = await db.Plans
+              .AsNoTracking()
+               .Where(a => a.Projecttype == true)
+              .Select(a => new
+              {
+                  a.Planid,
+                  a.Planname,
+                  a.Pricepermeter,
+                  a.Description,
+                  a.Projecttype,
+                  a.Createdatetime,
+                  a.Lastmodifieddatetime,
+                  // ✅ Convert bytea to Base64 string
+                  PlanBase64 = a.Planphoto != null ? Convert.ToBase64String(a.Planphoto) : null
+              })
+              .ToListAsync();
+              return Results.Ok(plans);
+          })
+          .WithName("GetAllPlansLocateYourHome")
+          .WithOpenApi();
 
-             //4. Get All Plans Per Project Type Locate your home 
-              group.MapGet("/build-your-home", async (OdaDbContext db) =>
-            {
-                var plans = await db.Plans
-                .AsNoTracking()
-                 .Where(a => a.Projecttype==false)
-                .Select(a => new
-                {
-                    a.Planid,
-                    a.Planname,
-                    a.Pricepermeter,
-                    a.Description,
-                    a.Projecttype,
-                    a.Createdatetime,
-                    a.Lastmodifieddatetime,
-                    // ✅ Convert bytea to Base64 string
-                    PlanBase64 = a.Planphoto != null ? Convert.ToBase64String(a.Planphoto) : null
-                })
-                .ToListAsync();
-                return Results.Ok(plans);
-            })
-            .WithName("GetAllPlansBuildYourHome")
-            .WithOpenApi();
+            //4. Get All Plans Per Project Type Locate your home 
+            group.MapGet("/build-your-home", async (OdaDbContext db) =>
+          {
+              var plans = await db.Plans
+              .AsNoTracking()
+               .Where(a => a.Projecttype == false)
+              .Select(a => new
+              {
+                  a.Planid,
+                  a.Planname,
+                  a.Pricepermeter,
+                  a.Description,
+                  a.Projecttype,
+                  a.Createdatetime,
+                  a.Lastmodifieddatetime,
+                  // ✅ Convert bytea to Base64 string
+                  PlanBase64 = a.Planphoto != null ? Convert.ToBase64String(a.Planphoto) : null
+              })
+              .ToListAsync();
+              return Results.Ok(plans);
+          })
+          .WithName("GetAllPlansBuildYourHome")
+          .WithOpenApi();
 
             // 5. Create a Plan
             group.MapPost("/", async Task<Results<Created<Plan>, BadRequest>> (Plan plan, OdaDbContext db) =>
@@ -176,7 +176,7 @@ namespace OdaWepApi.API.DomainEndpoints
             group.MapGet("/{planid}/PlanDetails/Foundation", async Task<Results<Ok<List<Plandetail>>, NotFound>> (int planid, OdaDbContext db) =>
             {
                 var foundationDetails = await db.Plandetails
-                    .Where(pd => pd.Planid == planid && pd.Plandetailstype == PlanDetailsType.Foundation) 
+                    .Where(pd => pd.Planid == planid && pd.Plandetailstype == PlanDetailsType.Foundation)
                     .ToListAsync();
 
                 return foundationDetails.Any()

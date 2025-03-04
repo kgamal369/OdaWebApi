@@ -12,7 +12,8 @@ namespace OdaWepApi.Domain.DTOs
         public ApartmentType ApartmentType { get; set; }
         public string? ApartmentAddress { get; set; }
         public decimal ApartmentSpace { get; set; }
-        public string ? UnittypeName {get;set;}
+        public int? Unittypeid { get; set; }
+        public string? UnittypeName { get; set; }
         public int PlanID { get; set; }
         public string PlanName { get; set; }
         public decimal TotalPlanPrice { get; set; }
