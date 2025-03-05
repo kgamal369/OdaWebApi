@@ -29,7 +29,7 @@ public partial class OdaDbContext : DbContext
     public virtual DbSet<Automationdetail> Automationdetails { get; set; }
 
     public virtual DbSet<Booking> Bookings { get; set; }
-
+    public virtual DbSet<Contactus> Contactus { get; set; }
     public virtual DbSet<Customer> Customers { get; set; }
 
     public virtual DbSet<Developer> Developers { get; set; }
@@ -37,6 +37,7 @@ public partial class OdaDbContext : DbContext
     public virtual DbSet<Installmentbreakdown> Installmentbreakdowns { get; set; }
 
     public virtual DbSet<Invoice> Invoices { get; set; }
+    public virtual DbSet<Odaambassador> Odaambassadors { get; set; }
 
     public virtual DbSet<Paymentmethod> Paymentmethods { get; set; }
 
@@ -56,6 +57,8 @@ public partial class OdaDbContext : DbContext
     public virtual DbSet<Unittype> Unittypes { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Host=dpg-cuc1s39opnds738s419g-a.oregon-postgres.render.com;Database=odadb;Username=odadb_user;Password=iwiEqjZ2mwcqFuREbb8U1GNTyfxKbgGw;Port=5432;SslMode=Require;TrustServerCertificate=True");
@@ -316,6 +319,30 @@ public partial class OdaDbContext : DbContext
                 .HasConstraintName("booking_userid_fkey");
         });
 
+          modelBuilder.Entity<Contactus>(entity =>
+        {
+            entity.HasKey(e => e.Contactusid).HasName("contactus_pkey");
+
+            entity.ToTable("contactus");
+
+            entity.Property(e => e.Contactusid).HasColumnName("contactusid");
+            entity.Property(e => e.Comments)
+                .HasMaxLength(255)
+                .HasColumnName("comments");
+            entity.Property(e => e.Email)
+                .HasColumnType("character varying")
+                .HasColumnName("email");
+            entity.Property(e => e.Firstname)
+                .HasColumnType("character varying")
+                .HasColumnName("firstname");
+            entity.Property(e => e.Lastname)
+                .HasColumnType("character varying")
+                .HasColumnName("lastname");
+            entity.Property(e => e.Phonenumber)
+                .HasColumnType("character varying")
+                .HasColumnName("phonenumber");
+        });
+
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.HasKey(e => e.Customerid).HasName("customer_pkey");
@@ -416,6 +443,41 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
+        });
+
+             modelBuilder.Entity<Odaambassador>(entity =>
+        {
+            entity.HasKey(e => e.Odaambassadorid).HasName("oda_pkey");
+
+            entity.ToTable("odaambassador");
+
+            entity.Property(e => e.Odaambassadorid).HasColumnName("odaambassadorid");
+            entity.Property(e => e.Ownerdeveloper)
+                .HasColumnType("character varying")
+                .HasColumnName("ownerdeveloper");
+            entity.Property(e => e.Ownername)
+                .HasColumnType("character varying")
+                .HasColumnName("ownername");
+            entity.Property(e => e.Ownerphonenumber)
+                .HasColumnType("character varying")
+                .HasColumnName("ownerphonenumber");
+            entity.Property(e => e.Ownerselectbudget).HasColumnName("ownerselectbudget");
+            entity.Property(e => e.Ownerunitarea).HasColumnName("ownerunitarea");
+            entity.Property(e => e.Ownerunitlocation)
+                .HasColumnType("character varying")
+                .HasColumnName("ownerunitlocation");
+            entity.Property(e => e.Referralclientstatue)
+                .HasColumnType("character varying")
+                .HasColumnName("referralclientstatue");
+            entity.Property(e => e.Referralemail)
+                .HasColumnType("character varying")
+                .HasColumnName("referralemail");
+            entity.Property(e => e.Referralname)
+                .HasColumnType("character varying")
+                .HasColumnName("referralname");
+            entity.Property(e => e.Referralphonenumber)
+                .HasColumnType("character varying")
+                .HasColumnName("referralphonenumber");
         });
 
         modelBuilder.Entity<Paymentmethod>(entity =>
@@ -637,6 +699,7 @@ public partial class OdaDbContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("testimonialstitle");
         });
+
 
         modelBuilder.Entity<Unittype>(entity =>
         {

@@ -128,7 +128,8 @@ app.MapUserEndpoints();
 app.MapBookingDataInEndpoints();
 app.MapBookingDataOutEndpoints();
 app.MapUnittypeEndpoints();
-
+app.MapOdaAmbassadorEndpoints();
+app.MapContactUsEndpoints();
 // Ensure Database is Ready Before App Starts
 try
 {
