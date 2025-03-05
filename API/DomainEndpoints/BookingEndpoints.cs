@@ -179,9 +179,20 @@ namespace OdaWepApi.API.DomainEndpoints
             // 8. Confirm a Booking (Only if Status is InProgress) and Send Email
             group.MapPut("/{id}/confirm", async Task<Results<Ok, NotFound, BadRequest<string>>> (int id, OdaDbContext db) =>
             {
-                var booking = await db.Bookings.FindAsync(id);
-                if (booking is null)
+                var booking = await db.Bookings
+                    .Include(b => b.Apartment)
+                    .FirstOrDefaultAsync(b => b.Bookingid == id);
+
+                if (booking == null)
+                {
                     return TypedResults.NotFound();
+                }
+
+                if (booking.Apartment == null)
+                {
+                    // Log the issue or handle it appropriately
+                    return TypedResults.BadRequest<string>("Apartment details are missing for this booking.");
+                }
 
                 // Allow confirmation nly if status is "InProgress"
                 if (booking.Bookingstatus != Bookingstatus.InProgress)
