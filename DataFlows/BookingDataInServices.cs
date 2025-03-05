@@ -25,7 +25,7 @@ namespace OdaWepApi.DataFlows
                     Description = bookingDataIn.apartmentDTO.ApartmentAddress,
                     Planid = bookingDataIn.PlanID,
                     Automationid = bookingDataIn.AutomationID,
-                    Developerid=bookingDataIn.DeveloperID,
+                    Developerid = bookingDataIn.DeveloperID,
                     Unittypeid = bookingDataIn.apartmentDTO.Unittypeid,
                     Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)

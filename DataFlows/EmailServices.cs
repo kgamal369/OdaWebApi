@@ -59,16 +59,19 @@ namespace OdaWepApi.DataFlows
             return $@"
                     <h2>Booking Confirmed!</h2>
                     <p><strong>Booking ID:</strong> {bookingDataOut.BookingID}</p>
-                    <p><strong>Project ID:</strong> {bookingDataOut.ProjectID}</p>
-                    <p><strong>Apartment ID:</strong> {bookingDataOut.NewApartmentID}</p>
-                    <p><strong>Customer:</strong> {bookingDataOut.CustomerInfo?.Firstname ?? "N/A"} {bookingDataOut.CustomerInfo?.Lastname ?? "N/A"}</p>
+                    <p><strong>Order Type:</strong> {bookingDataOut.ApartmentType}</p>
+                    <p><strong>Unit type name:</strong> {bookingDataOut.UnittypeName}</p>
+                    <p><strong>Apartment Space:</strong> {bookingDataOut.ApartmentSpace}</p>
+                    <p><strong>Customer:</strong> {bookingDataOut.CustomerInfo?.Firstname ?? "N/A"}</p>
+                    <p><strong>Customer Email:</strong> {bookingDataOut.CustomerInfo?.Email ?? "N/A"} </p>
+                    <p><strong>Customer Phone number:</strong> {bookingDataOut.CustomerInfo?.Phonenumber ?? "N/A"} </p>
                     <p><strong>Payment Plan:</strong> {bookingDataOut.PlanName}</p>
+                    <p><strong>Payment Plan:</strong> {bookingDataOut.paymentDTO.Paymentplanname}</p>
                     <p><strong>Total Amount:</strong> ${bookingDataOut.TotalAmount}</p>
                     <p><strong>Status:</strong> Confirmed</p>
                     <hr>
                     <p>Thank you for your booking!</p>
                 ";
         }
-
     }
 }
