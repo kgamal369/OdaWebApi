@@ -30,8 +30,12 @@ namespace OdaWepApi.DataFlows
             if (booking == null) return null;
 
             var apartment = booking.Apartment;
+            if (apartment == null) return null; // Additional null check
+
             var plan = apartment?.Plan;
             var paymentPlan = booking.Paymentplan;
+            if (paymentPlan == null) return null;
+
             var customer = booking.Customer;
 
             var totalPlanPrice = (plan?.Pricepermeter ?? 0) * (apartment?.Apartmentspace ?? 0);
