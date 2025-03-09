@@ -1,13 +1,3 @@
--- DROP SCHEMA public;
-
-CREATE SCHEMA public AUTHORIZATION odadb_user;
-
-
--- Permissions
-
-GRANT ALL ON SCHEMA public TO odadb_user;
-GRANT USAGE ON SCHEMA public TO public;
-
 -- public.addons definition
 
 -- Drop table
@@ -55,81 +45,6 @@ ALTER TABLE public.addperrequest OWNER TO odadb_user;
 GRANT ALL ON TABLE public.addperrequest TO odadb_user;
 
 
--- public.apartment definition
-
--- Drop table
-
--- DROP TABLE public.apartment;
-
-CREATE TABLE public.apartment (
-	apartmentid serial4 NOT NULL,
-	apartmentname varchar(255) NULL,
-	apartmenttype varchar(50) NULL,
-	apartmentstatus varchar(50) NULL,
-	apartmentspace numeric(10, 2) NULL,
-	description text NULL,
-	apartmentphotos _bytea NULL,
-	projectid int4 NULL,
-	floornumber int4 NULL,
-	availabilitydate timestamp NULL,
-	createddatetime timestamp NULL,
-	lastmodifieddatetime timestamp NULL,
-	planid int4 NULL,
-	automationid int4 NULL,
-	apartmentaddress varchar(255) NULL,
-	CONSTRAINT apartment_pkey PRIMARY KEY (apartmentid),
-	CONSTRAINT apartment_planid_fkey FOREIGN KEY (planid) REFERENCES public.plan(planid) ON DELETE CASCADE,
-	CONSTRAINT apartment_automationid_fkey FOREIGN KEY (automationid) REFERENCES public.automation(automationid) ON DELETE CASCADE
-);
-
--- Permissions
-
-ALTER TABLE public.apartment OWNER TO odadb_user;
-GRANT ALL ON TABLE public.apartment TO odadb_user;
-
-
--- public.apartment_addon definition
-
--- Drop table
-
--- DROP TABLE public.apartment_addon;
-
-CREATE TABLE public.apartment_addon (
-	apartmentid int4 NOT NULL,
-	addonid int4 NOT NULL,
-	quantity int4 NOT NULL,
-	CONSTRAINT apartment_addon_pkey PRIMARY KEY (apartmentid, addonid),
-	CONSTRAINT apartment_addon_addonid_fkey FOREIGN KEY (addonid) REFERENCES public.addons(addonid) ON DELETE CASCADE,
-	CONSTRAINT apartment_addon_apartmentid_fkey FOREIGN KEY (apartmentid) REFERENCES public.apartment(apartmentid) ON DELETE CASCADE
-);
-
--- Permissions
-
-ALTER TABLE public.apartment_addon OWNER TO odadb_user;
-GRANT ALL ON TABLE public.apartment_addon TO odadb_user;
-
-
--- public.apartment_addonperrequest definition
-
--- Drop table
-
--- DROP TABLE public.apartment_addonperrequest;
-
-CREATE TABLE public.apartment_addonperrequest (
-	apartmentid int4 NOT NULL,
-	addperrequestid int4 NOT NULL,
-	quantity int4 DEFAULT 1 NULL,
-	CONSTRAINT apartment_addonperrequest_pkey PRIMARY KEY (apartmentid, addperrequestid),
-	CONSTRAINT apartment_addonperrequest_addperrequestid_fkey FOREIGN KEY (addperrequestid) REFERENCES public.addperrequest(addperrequestid) ON DELETE CASCADE,
-	CONSTRAINT apartment_addon_apartmentid_fkey FOREIGN KEY (apartmentid) REFERENCES public.apartment(apartmentid) ON DELETE CASCADE
-);
-
--- Permissions
-
-ALTER TABLE public.apartment_addonperrequest OWNER TO odadb_user;
-GRANT ALL ON TABLE public.apartment_addonperrequest TO odadb_user;
-
-
 -- public.automation definition
 
 -- Drop table
@@ -151,29 +66,26 @@ ALTER TABLE public.automation OWNER TO odadb_user;
 GRANT ALL ON TABLE public.automation TO odadb_user;
 
 
--- public.automationdetails definition
+-- public.contactus definition
 
 -- Drop table
 
--- DROP TABLE public.automationdetails;
+-- DROP TABLE public.contactus;
 
-CREATE TABLE public.automationdetails (
-	automationdetailsid serial4 NOT NULL,
-	automationdetailsname varchar(255) NULL,
-	automationid int4 NULL,
-	description bool NOT NULL,
-	createdatetime timestamp NULL,
-	lastmodifieddatetime timestamp NULL,
-	icon bytea NULL,
-	CONSTRAINT automationdetails_pkey PRIMARY KEY (automationdetailsid),
-	CONSTRAINT automationdetails_automationid_fkey FOREIGN KEY (automationid) REFERENCES public.automation(automationid) ON DELETE CASCADE,
-
+CREATE TABLE public.contactus (
+	firstname varchar NOT NULL,
+	lastname varchar NOT NULL,
+	phonenumber varchar NOT NULL,
+	email varchar NULL,
+	"comments" varchar(255) NOT NULL,
+	contactusid serial4 NOT NULL,
+	CONSTRAINT contactus_pkey PRIMARY KEY (contactusid)
 );
 
 -- Permissions
 
-ALTER TABLE public.automationdetails OWNER TO odadb_user;
-GRANT ALL ON TABLE public.automationdetails TO odadb_user;
+ALTER TABLE public.contactus OWNER TO odadb_user;
+GRANT ALL ON TABLE public.contactus TO odadb_user;
 
 
 -- public.customer definition
@@ -245,6 +157,33 @@ ALTER TABLE public.invoices OWNER TO odadb_user;
 GRANT ALL ON TABLE public.invoices TO odadb_user;
 
 
+-- public.odaambassador definition
+
+-- Drop table
+
+-- DROP TABLE public.odaambassador;
+
+CREATE TABLE public.odaambassador (
+	ownername varchar NOT NULL,
+	ownerphonenumber varchar NULL,
+	ownerunitarea numeric NULL,
+	ownerunitlocation varchar NULL,
+	ownerdeveloper varchar NULL,
+	ownerselectbudget numeric NULL,
+	referralname varchar NOT NULL,
+	referralphonenumber varchar NULL,
+	referralemail varchar NULL,
+	referralclientstatue varchar NULL,
+	odaambassadorid serial4 NOT NULL,
+	CONSTRAINT oda_pkey PRIMARY KEY (odaambassadorid)
+);
+
+-- Permissions
+
+ALTER TABLE public.odaambassador OWNER TO odadb_user;
+GRANT ALL ON TABLE public.odaambassador TO odadb_user;
+
+
 -- public.paymentmethod definition
 
 -- Drop table
@@ -286,6 +225,7 @@ CREATE TABLE public.paymentplans (
 	interestrate bool NOT NULL,
 	interestrateperyearpercentage numeric(5, 2) NULL,
 	paymentplanicon bytea NULL,
+	description varchar(255) NULL,
 	CONSTRAINT paymentplans_pkey PRIMARY KEY (paymentplanid)
 );
 
@@ -331,6 +271,7 @@ CREATE TABLE public.plan (
 	createdatetime timestamp NULL,
 	lastmodifieddatetime timestamp NULL,
 	planphoto bytea NULL,
+	projecttype bool NULL,
 	CONSTRAINT plan_pkey PRIMARY KEY (planid)
 );
 
@@ -338,32 +279,6 @@ CREATE TABLE public.plan (
 
 ALTER TABLE public.plan OWNER TO odadb_user;
 GRANT ALL ON TABLE public.plan TO odadb_user;
-
-
--- public.plandetails definition
-
--- Drop table
-
--- DROP TABLE public.plandetails;
-
-CREATE TABLE public.plandetails (
-	plandetailsid serial4 NOT NULL,
-	plandetailsname varchar(255) NULL,
-	plandetailstype varchar(255) NULL,
-	planid int4 NULL,
-	description varchar(255) NULL,
-	createdatetime timestamp NULL,
-	lastmodifieddatetime timestamp NULL,
-	stars int4 NULL,
-	CONSTRAINT plandetails_pkey PRIMARY KEY (plandetailsid),
-	CONSTRAINT plandetails_planid_fkey FOREIGN KEY (planid) REFERENCES public.plan(planid) ON DELETE CASCADE,
-
-);
-
--- Permissions
-
-ALTER TABLE public.plandetails OWNER TO odadb_user;
-GRANT ALL ON TABLE public.plandetails TO odadb_user;
 
 
 -- public.project definition
@@ -435,6 +350,24 @@ ALTER TABLE public.testimonials OWNER TO odadb_user;
 GRANT ALL ON TABLE public.testimonials TO odadb_user;
 
 
+-- public.unittype definition
+
+-- Drop table
+
+-- DROP TABLE public.unittype;
+
+CREATE TABLE public.unittype (
+	unittypeid serial4 NOT NULL,
+	unittype_name varchar(50) NOT NULL,
+	CONSTRAINT unittype_pkey PRIMARY KEY (unittypeid)
+);
+
+-- Permissions
+
+ALTER TABLE public.unittype OWNER TO odadb_user;
+GRANT ALL ON TABLE public.unittype TO odadb_user;
+
+
 -- public.users definition
 
 -- Drop table
@@ -460,6 +393,109 @@ CREATE TABLE public.users (
 
 ALTER TABLE public.users OWNER TO odadb_user;
 GRANT ALL ON TABLE public.users TO odadb_user;
+
+
+-- public.apartment definition
+
+-- Drop table
+
+-- DROP TABLE public.apartment;
+
+CREATE TABLE public.apartment (
+	apartmentid serial4 NOT NULL,
+	apartmentname varchar(255) NULL,
+	apartmenttype varchar(50) NULL,
+	apartmentstatus varchar(50) NULL,
+	apartmentspace numeric(10, 2) NULL,
+	description text NULL,
+	apartmentphotos _bytea NULL,
+	projectid int4 NULL,
+	floornumber int4 NULL,
+	availabilitydate timestamp NULL,
+	createddatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	planid int4 NULL,
+	automationid int4 NULL,
+	apartmentaddress varchar(255) NULL,
+	developerid int4 NULL,
+	unittypeid int4 NULL,
+	CONSTRAINT apartment_pkey PRIMARY KEY (apartmentid),
+	CONSTRAINT apartment_automationid_fkey FOREIGN KEY (automationid) REFERENCES public.automation(automationid) ON DELETE CASCADE,
+	CONSTRAINT apartment_developerid_fkey FOREIGN KEY (developerid) REFERENCES public.developer(developerid) ON DELETE CASCADE,
+	CONSTRAINT apartment_planid_fkey FOREIGN KEY (planid) REFERENCES public.plan(planid) ON DELETE CASCADE,
+	CONSTRAINT apartment_unittypeid_fkey FOREIGN KEY (unittypeid) REFERENCES public.unittype(unittypeid) ON DELETE CASCADE
+);
+
+-- Permissions
+
+ALTER TABLE public.apartment OWNER TO odadb_user;
+GRANT ALL ON TABLE public.apartment TO odadb_user;
+
+
+-- public.apartment_addon definition
+
+-- Drop table
+
+-- DROP TABLE public.apartment_addon;
+
+CREATE TABLE public.apartment_addon (
+	apartmentid int4 NOT NULL,
+	addonid int4 NOT NULL,
+	quantity int4 NOT NULL,
+	CONSTRAINT apartment_addon_pkey PRIMARY KEY (apartmentid, addonid),
+	CONSTRAINT apartment_addon_apartmentid_fkey FOREIGN KEY (apartmentid) REFERENCES public.apartment(apartmentid) ON DELETE CASCADE,
+	CONSTRAINT apartment_addons_addonid_fkey FOREIGN KEY (addonid) REFERENCES public.addons(addonid) ON DELETE CASCADE
+);
+
+-- Permissions
+
+ALTER TABLE public.apartment_addon OWNER TO odadb_user;
+GRANT ALL ON TABLE public.apartment_addon TO odadb_user;
+
+
+-- public.apartment_addonperrequest definition
+
+-- Drop table
+
+-- DROP TABLE public.apartment_addonperrequest;
+
+CREATE TABLE public.apartment_addonperrequest (
+	apartmentid int4 NOT NULL,
+	addperrequestid int4 NOT NULL,
+	quantity int4 DEFAULT 1 NULL,
+	CONSTRAINT apartment_addonperrequest_pkey PRIMARY KEY (apartmentid, addperrequestid),
+	CONSTRAINT apartment_addon_apartmentid_fkey FOREIGN KEY (apartmentid) REFERENCES public.apartment(apartmentid) ON DELETE CASCADE,
+	CONSTRAINT apartment_addonperrequest_addperrequestid_fkey FOREIGN KEY (addperrequestid) REFERENCES public.addperrequest(addperrequestid) ON DELETE CASCADE
+);
+
+-- Permissions
+
+ALTER TABLE public.apartment_addonperrequest OWNER TO odadb_user;
+GRANT ALL ON TABLE public.apartment_addonperrequest TO odadb_user;
+
+
+-- public.automationdetails definition
+
+-- Drop table
+
+-- DROP TABLE public.automationdetails;
+
+CREATE TABLE public.automationdetails (
+	automationdetailsid serial4 NOT NULL,
+	automationdetailsname varchar(255) NULL,
+	automationid int4 NULL,
+	description bool NOT NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	icon bytea NULL,
+	CONSTRAINT automationdetails_pkey PRIMARY KEY (automationdetailsid),
+	CONSTRAINT automationdetails_automationid_fkey FOREIGN KEY (automationid) REFERENCES public.automation(automationid) ON DELETE CASCADE
+);
+
+-- Permissions
+
+ALTER TABLE public.automationdetails OWNER TO odadb_user;
+GRANT ALL ON TABLE public.automationdetails TO odadb_user;
 
 
 -- public.booking definition
@@ -506,6 +542,8 @@ CREATE TABLE public.installmentbreakdown (
 	installmentpercentage numeric(10, 2) NOT NULL,
 	createddatetime timestamp NULL,
 	lastmodifieddatetime timestamp NULL,
+	"�z)[��у��K�R�z" varchar(512) NULL,
+	installmentmont int4 NULL,
 	CONSTRAINT installmentbreakdown_pkey PRIMARY KEY (breakdownid),
 	CONSTRAINT installmentbreakdown_paymentplanid_fkey FOREIGN KEY (paymentplanid) REFERENCES public.paymentplans(paymentplanid) ON DELETE CASCADE
 );
@@ -514,6 +552,31 @@ CREATE TABLE public.installmentbreakdown (
 
 ALTER TABLE public.installmentbreakdown OWNER TO odadb_user;
 GRANT ALL ON TABLE public.installmentbreakdown TO odadb_user;
+
+
+-- public.plandetails definition
+
+-- Drop table
+
+-- DROP TABLE public.plandetails;
+
+CREATE TABLE public.plandetails (
+	plandetailsid serial4 NOT NULL,
+	plandetailsname varchar(255) NULL,
+	plandetailstype varchar(255) NULL,
+	planid int4 NULL,
+	description varchar(255) NULL,
+	createdatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	stars int4 NULL,
+	CONSTRAINT plandetails_pkey PRIMARY KEY (plandetailsid),
+	CONSTRAINT plandetails_plan_plandetailsid_fkey FOREIGN KEY (planid) REFERENCES public.plan(planid) ON DELETE CASCADE
+);
+
+-- Permissions
+
+ALTER TABLE public.plandetails OWNER TO odadb_user;
+GRANT ALL ON TABLE public.plandetails TO odadb_user;
 
 
 -- public.questions definition
