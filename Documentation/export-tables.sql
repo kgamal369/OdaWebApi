@@ -597,3 +597,5 @@ CREATE TABLE public.questions (
 
 ALTER TABLE public.questions OWNER TO odadb_user;
 GRANT ALL ON TABLE public.questions TO odadb_user;
+
+

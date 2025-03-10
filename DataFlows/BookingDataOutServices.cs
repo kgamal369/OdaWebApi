@@ -91,15 +91,16 @@ namespace OdaWepApi.DataFlows
                 Numberofinstallmentmonths = paymentPlan.Numberofinstallmentmonths,
                 Downpayment = paymentPlan.Downpayment,
                 Downpaymentpercentage = paymentPlan.Downpaymentpercentage,
-                DPValue = paymentPlan.Downpaymentpercentage * (totalPlanPrice + totalAddonPrice),
+                DPValue =  paymentPlan.Downpaymentpercentage /100  * (totalPlanPrice + totalAddonPrice),
 
                 Adminfees = paymentPlan.Adminfees,
                 Adminfeespercentage = paymentPlan.Adminfeespercentage,
-                AdminfeesValue = paymentPlan.Adminfeespercentage * (totalPlanPrice + totalAddonPrice),
+                AdminfeesValue = paymentPlan.Adminfeespercentage/100 * (totalPlanPrice + totalAddonPrice),
 
                 Interestrate = paymentPlan.Interestrate,
                 Interestrateperyearpercentage = paymentPlan.Interestrateperyearpercentage,
-                InterestrateValue = paymentPlan.Interestrateperyearpercentage * (totalPlanPrice + totalAddonPrice),
+                InterestrateValue = paymentPlan.Interestrateperyearpercentage/100 * (totalPlanPrice + totalAddonPrice),
+                
                 EqualPayment = paymentPlan.Paymentplanid != 1 && paymentPlan.Paymentplanid != 2,
                 InstallmentDTO = paymentPlan.Installmentbreakdowns.Select(id => new InstallmentDTO
                 {
