@@ -1,15 +1,36 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using OdaWepApi.API.DomainEndpoints;
 using OdaWepApi.API.DTOEndpoints;
 using OdaWepApi.Infrastructure;
 
+// Create Host Builder
 var builder = WebApplication.CreateBuilder(args);
 
 // Detect if running as a Windows Service
 builder.Host.UseWindowsService();
 
-// Add services to the container
+// ✅ Setup Serilog for File Logging
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/OdaWebApi.log", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+// ✅ Configure Logging
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.ClearProviders();
+    loggingBuilder.AddSerilog();
+});
+
+// ✅ Add Controllers & JSON Options
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -17,97 +38,93 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.WriteIndented = true;
     });
 
-// Load Connection String from Configuration (appsettings.json or Environment Variables)
+// ✅ Load Connection String from Configuration
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrEmpty(connectionString))
 {
-    Console.WriteLine("❌ Connection string is missing! App will not start.");
+    Log.Fatal("❌ Connection string is missing! App will not start.");
     throw new Exception("Connection string is missing.");
 }
 else
 {
-    Console.WriteLine($"✅ Loaded connection string: {connectionString}");
+    Log.Information($"✅ Loaded connection string: {connectionString}");
 }
 
-// Configure DbContext
+// ✅ Configure Database Context
 builder.Services.AddDbContext<OdaDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// Add Swagger services
+// ✅ Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Enable CORS with specific configuration
+// ✅ Configure CORS
 var corsPolicy = "_myCorsPolicy";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicy, builder =>
     {
-        builder.AllowAnyOrigin() // Allow all origins (Change to .WithOrigins("https://yourfrontend.com") in production for security)
+        builder.AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader();
     });
 });
 
-// Add Logging
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-
-// Configure Kestrel for https
+// ✅ Configure Kestrel Server
 builder.WebHost.ConfigureKestrel(serverOptions =>
-  {
-      serverOptions.ListenAnyIP(5188); // HTTP for local dev
+{
+    serverOptions.ListenAnyIP(5188); // HTTP Port
 
-      if (builder.Environment.IsDevelopment())
-      {
-          // Use default dev cert in development
-          serverOptions.ListenAnyIP(7205, listenOptions =>
+    if (builder.Environment.IsDevelopment())
+    {
+        serverOptions.ListenAnyIP(7205, listenOptions =>
+        {
+            listenOptions.UseHttps();
+        });
+    }
+    else
+    {    
+        var certPath = Environment.GetEnvironmentVariable("CERT_PATH");
+        var certPassword = Environment.GetEnvironmentVariable("CERT_PASSWORD");
+
+        if (!string.IsNullOrEmpty(certPath) && !string.IsNullOrEmpty(certPassword) && File.Exists(certPath))
+        {
+            var certificate = new X509Certificate2(certPath, certPassword);
+            serverOptions.ListenAnyIP(7205, listenOptions =>
             {
-                listenOptions.UseHttps();
+                listenOptions.UseHttps(certificate);
             });
-      }
-      else
-      {
-          // Production environment requires a valid certificate
-          var certPath = Environment.GetEnvironmentVariable("CERT_PATH");
-          var certPassword = Environment.GetEnvironmentVariable("CERT_PASSWORD");
-
-          if (!string.IsNullOrEmpty(certPath) && !string.IsNullOrEmpty(certPassword))
-          {
-              serverOptions.ListenAnyIP(7205, listenOptions =>
-                {
-                    listenOptions.UseHttps(certPath, certPassword);
-                });
-          }
-          else
-          {
-              Console.WriteLine("❌ HTTPS certificate path or password is missing!");
-              // Consider logging or handling this scenario appropriately
-          }
-      }
-  });
-
+            Log.Information($"✅ Loaded SSL certificate from: {certPath}");
+        }
+        else
+        {
+            Log.Warning("❌ HTTPS certificate path or password is missing, or the file does not exist!");
+        }
+    }
+});
 
 var app = builder.Build();
 
-// Enable Swagger
+// ✅ Enable Serilog Request Logging
+app.UseSerilogRequestLogging();
+
+// ✅ Enable Swagger
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "OdaWepApi v1");
 });
 
-
-// Enable HTTPS redirection
+// ✅ Enable HTTPS Redirection
 app.UseHttpsRedirection();
 
-// Apply CORS Middleware (before authorization)
+// ✅ Apply CORS Middleware
 app.UseCors(corsPolicy);
 
 app.UseAuthorization();
 app.MapControllers();
 
-// Map endpoints
+// ✅ Map Additional Endpoints
 app.MapAddonEndpoints();
 app.MapAddperrequestEndpoints();
 app.MapApartmentEndpoints();
@@ -130,22 +147,22 @@ app.MapBookingDataOutEndpoints();
 app.MapUnittypeEndpoints();
 app.MapOdaAmbassadorEndpoints();
 app.MapContactUsEndpoints();
-// Ensure Database is Ready Before App Starts
+
+// ✅ Ensure Database is Ready
 try
 {
     using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<OdaDbContext>();
-        Console.WriteLine("🔄 Ensuring database is available...");
         dbContext.Database.EnsureCreated();
-        Console.WriteLine("✅ Database is ready!");
+        Log.Information("✅ Database is ready!");
     }
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"❌ Database initialization failed: {ex.Message}");
+    Log.Fatal($"❌ Database initialization failed: {ex.Message}");
     throw;
 }
 
-// Start the application
+// ✅ Run as a Windows Service
 app.Run();

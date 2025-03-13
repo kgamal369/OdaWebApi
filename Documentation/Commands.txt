@@ -38,6 +38,12 @@ net start OdaWebApiService
 sc.exe stop OdaWebApiService
 sc.exe start OdaWebApiService
 
+publish :dotnet publish -c Release -o C:\OdaWebApi
+
+Enable Automatic Restart on Service Failure :
+sc failure OdaWebApiService reset= 60 actions= restart/60000/restart/60000
+
+
 8. Server 
 IP : 52.169.144.36
 Username : odaadmin
