@@ -599,3 +599,61 @@ ALTER TABLE public.questions OWNER TO odadb_user;
 GRANT ALL ON TABLE public.questions TO odadb_user;
 
 
+
+
+
+
+
+
+CREATE TABLE public.FaceLiftaddons (
+	addonid serial4 NOT NULL,
+	addonname varchar(255) NULL,
+	addongroup varchar(50) NULL,
+	price numeric(10, 2) NULL,
+	description text NULL,
+	brand text NULL,
+	createddatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	unitormeter varchar(255) NULL,
+	CONSTRAINT addons_pkey PRIMARY KEY (addonid)
+);
+
+CREATE TABLE public.FaceLiftaddperrequest (
+	addperrequestid serial4 NOT NULL,
+	addperrequestname varchar(255) NULL,
+	price numeric(10, 2) NULL,
+	description text NULL,
+	createddatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	CONSTRAINT addperrequest_pkey PRIMARY KEY (addperrequestid)
+);
+
+CREATE TABLE public.FaceLiftRoom (
+	roomid serial4 NOT NULL,
+	roomtype varchar(255) NOT NULL,
+	automationid int4 NULL,
+	createddatetime timestamp NULL,
+	lastmodifieddatetime timestamp NULL,
+	bookingid int4 NULL,
+	CONSTRAINT faceliftroom_pkey PRIMARY KEY (roomid),
+	CONSTRAINT faceliftroom_automationid_fkey FOREIGN KEY (automationid) REFERENCES public.automation(automationid) ON DELETE CASCADE,
+	CONSTRAINT faceliftroom_bookingid_fkey FOREIGN KEY (bookingid) REFERENCES public.booking(bookingid) ON DELETE CASCADE
+)
+
+CREATE Table public.FaceLiftRoom_addon (
+	roomid int4 NOT NULL,
+	addonid int4 NOT NULL,
+	quantity int4 NOT NULL,
+	CONSTRAINT faceliftroomaddon_pkey PRIMARY KEY (roomid, addonid),
+	CONSTRAINT faceliftroomaddon_roomid_fkey FOREIGN KEY (roomid) REFERENCES public.FaceLiftRoom(roomid) ON DELETE CASCADE,
+	CONSTRAINT faceliftroomaddon_addonid_fkey FOREIGN KEY (addonid) REFERENCES public.FaceLiftaddons(addonid) ON DELETE CASCADE
+)
+
+CREATE TABLE public.FaceLiftRoom_addonperrequest (
+	roomid int4 NOT NULL,
+	addperrequestid int4 NOT NULL,
+	quantity int4 DEFAULT 1 NULL,
+	CONSTRAINT room_addonperrequest_pkey PRIMARY KEY (roomid, addperrequestid),
+	CONSTRAINT room_addon_apartmentid_fkey FOREIGN KEY (roomid) REFERENCES public.FaceLiftRoom(roomid) ON DELETE CASCADE,
+	CONSTRAINT apartment_addonperrequest_addperrequestid_fkey FOREIGN KEY (addperrequestid) REFERENCES public.FaceLiftaddperrequest(addperrequestid) ON DELETE CASCADE
+);

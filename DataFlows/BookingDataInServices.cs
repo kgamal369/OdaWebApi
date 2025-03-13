@@ -14,8 +14,6 @@ namespace OdaWepApi.DataFlows
             try
             {
                 int newApartmentId;
-
-
                 var newApartment = new Apartment
                 {
                     Apartmenttype = (ApartmentType)bookingDataIn.apartmentDTO.ApartmentType,
@@ -76,7 +74,6 @@ namespace OdaWepApi.DataFlows
             await db.SaveChangesAsync();
             return customerInfo.Customerid;
         }
-
         private static async Task<int> CreateBookingRecord(OdaDbContext db, int newApartmentId, int customerId, BookingDataIn bookingDataIn)
         {
             var booking = new Booking
@@ -94,8 +91,6 @@ namespace OdaWepApi.DataFlows
 
             return booking.Bookingid;
         }
-
-
         private static async Task<int> CreateOrGetQuestion(OdaDbContext db, List<Question> questions, int bookingId)
         {
             if (questions == null || questions.Count == 0)
@@ -125,7 +120,6 @@ namespace OdaWepApi.DataFlows
             }
             await db.SaveChangesAsync();
         }
-
         private static async Task CreateApartmentAddonPerRequests(OdaDbContext db, int newApartmentId, List<int> addonPerRequestIDs)
         {
             foreach (var addonPerRequestId in addonPerRequestIDs)
@@ -140,7 +134,6 @@ namespace OdaWepApi.DataFlows
             }
             await db.SaveChangesAsync();
         }
-
         private static async Task<decimal> CalculateTotalAmount(OdaDbContext db, int newApartmentId, BookingDataIn bookingDataIn)
         {
             var plan = await db.Plans.FindAsync(bookingDataIn.PlanID);
@@ -156,7 +149,6 @@ namespace OdaWepApi.DataFlows
             }
             return totalPlanPrice + totalAddonPrice;
         }
-
         public static async Task<int> UpdateBookingDataIn(OdaDbContext db, int bookingID, BookingDataIn bookingDataIn)
         {
             // Fetch the existing booking
@@ -204,7 +196,6 @@ namespace OdaWepApi.DataFlows
             // Return the booking ID
             return bookingID;
         }
-
         private static async Task UpdateApartmentAddons(OdaDbContext db, int apartmentId, List<AddonSelection> addons)
         {
             var existingAddons = db.ApartmentAddons.Where(a => a.Apartmentid == apartmentId);
@@ -222,7 +213,6 @@ namespace OdaWepApi.DataFlows
             }
             await db.SaveChangesAsync();
         }
-
         private static async Task UpdateApartmentAddonPerRequests(OdaDbContext db, int apartmentId, List<int> addonPerRequestIDs)
         {
             var existingAddonPerRequests = db.ApartmentAddonperrequests.Where(a => a.Apartmentid == apartmentId);

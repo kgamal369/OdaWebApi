@@ -1,6 +1,7 @@
-﻿using OdaWepApi.Domain.Models;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-
+using OdaWepApi.Domain.Models;
 namespace OdaWepApi.Infrastructure;
 
 public partial class OdaDbContext : DbContext
@@ -29,14 +30,27 @@ public partial class OdaDbContext : DbContext
     public virtual DbSet<Automationdetail> Automationdetails { get; set; }
 
     public virtual DbSet<Booking> Bookings { get; set; }
+
     public virtual DbSet<Contactus> Contactus { get; set; }
+
     public virtual DbSet<Customer> Customers { get; set; }
 
     public virtual DbSet<Developer> Developers { get; set; }
 
+    public virtual DbSet<Faceliftaddon> Faceliftaddons { get; set; }
+
+    public virtual DbSet<Faceliftaddperrequest> Faceliftaddperrequests { get; set; }
+
+    public virtual DbSet<Faceliftroom> Faceliftrooms { get; set; }
+
+    public virtual DbSet<FaceliftroomAddon> FaceliftroomAddons { get; set; }
+
+    public virtual DbSet<FaceliftroomAddonperrequest> FaceliftroomAddonperrequests { get; set; }
+
     public virtual DbSet<Installmentbreakdown> Installmentbreakdowns { get; set; }
 
     public virtual DbSet<Invoice> Invoices { get; set; }
+
     public virtual DbSet<Odaambassador> Odaambassadors { get; set; }
 
     public virtual DbSet<Paymentmethod> Paymentmethods { get; set; }
@@ -50,15 +64,18 @@ public partial class OdaDbContext : DbContext
     public virtual DbSet<Plandetail> Plandetails { get; set; }
 
     public virtual DbSet<Project> Projects { get; set; }
+
+    public virtual DbSet<Projecttype> Projecttypes { get; set; }
+
     public virtual DbSet<Question> Questions { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<Testimonial> Testimonials { get; set; }
+
     public virtual DbSet<Unittype> Unittypes { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-
-
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Host=dpg-cuc1s39opnds738s419g-a.oregon-postgres.render.com;Database=odadb;Username=odadb_user;Password=iwiEqjZ2mwcqFuREbb8U1GNTyfxKbgGw;Port=5432;SslMode=Require;TrustServerCertificate=True");
@@ -319,29 +336,29 @@ public partial class OdaDbContext : DbContext
                 .HasConstraintName("booking_userid_fkey");
         });
 
-          modelBuilder.Entity<Contactus>(entity =>
-        {
-            entity.HasKey(e => e.Contactusid).HasName("contactus_pkey");
+        modelBuilder.Entity<Contactus>(entity =>
+      {
+          entity.HasKey(e => e.Contactusid).HasName("contactus_pkey");
 
-            entity.ToTable("contactus");
+          entity.ToTable("contactus");
 
-            entity.Property(e => e.Contactusid).HasColumnName("contactusid");
-            entity.Property(e => e.Comments)
-                .HasMaxLength(255)
-                .HasColumnName("comments");
-            entity.Property(e => e.Email)
-                .HasColumnType("character varying")
-                .HasColumnName("email");
-            entity.Property(e => e.Firstname)
-                .HasColumnType("character varying")
-                .HasColumnName("firstname");
-            entity.Property(e => e.Lastname)
-                .HasColumnType("character varying")
-                .HasColumnName("lastname");
-            entity.Property(e => e.Phonenumber)
-                .HasColumnType("character varying")
-                .HasColumnName("phonenumber");
-        });
+          entity.Property(e => e.Contactusid).HasColumnName("contactusid");
+          entity.Property(e => e.Comments)
+              .HasMaxLength(255)
+              .HasColumnName("comments");
+          entity.Property(e => e.Email)
+              .HasColumnType("character varying")
+              .HasColumnName("email");
+          entity.Property(e => e.Firstname)
+              .HasColumnType("character varying")
+              .HasColumnName("firstname");
+          entity.Property(e => e.Lastname)
+              .HasColumnType("character varying")
+              .HasColumnName("lastname");
+          entity.Property(e => e.Phonenumber)
+              .HasColumnType("character varying")
+              .HasColumnName("phonenumber");
+      });
 
         modelBuilder.Entity<Customer>(entity =>
         {
@@ -395,6 +412,136 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("lastmodifieddatetime");
         });
 
+        modelBuilder.Entity<Faceliftaddon>(entity =>
+        {
+            entity.HasKey(e => e.Addonid).HasName("faceliftaddons_pkey");
+
+            entity.ToTable("faceliftaddons");
+
+            entity.Property(e => e.Addonid).HasColumnName("addonid");
+            entity.Property(e => e.Addongroup)
+                .HasMaxLength(50)
+                .HasColumnName("addongroup");
+            entity.Property(e => e.Addonname)
+                .HasMaxLength(255)
+                .HasColumnName("addonname");
+            entity.Property(e => e.Brand).HasColumnName("brand");
+            entity.Property(e => e.FaceLiftRoomType)
+                .HasMaxLength(255)
+                .HasConversion<string>() // Convert Enum to string
+                .HasColumnType("text")
+                .HasColumnName("faceliftroomtype");
+            entity.Property(e => e.Createddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createddatetime");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Price)
+                .HasPrecision(10, 2)
+                .HasColumnName("price");
+            entity.Property(e => e.Unitormeter)
+                .HasMaxLength(255)
+                .HasColumnName("unitormeter");
+        });
+
+        modelBuilder.Entity<Faceliftaddperrequest>(entity =>
+        {
+            entity.HasKey(e => e.Addperrequestid).HasName("faceliftaddperrequest_pkey");
+
+            entity.ToTable("faceliftaddperrequest");
+
+            entity.Property(e => e.Addperrequestid).HasColumnName("addperrequestid");
+            entity.Property(e => e.Addperrequestname)
+                .HasMaxLength(255)
+                .HasColumnName("addperrequestname");
+            entity.Property(e => e.Createddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createddatetime");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Price)
+                .HasPrecision(10, 2)
+                .HasColumnName("price");
+        });
+
+        modelBuilder.Entity<Faceliftroom>(entity =>
+        {
+            entity.HasKey(e => e.Roomid).HasName("faceliftroom_pkey");
+
+            entity.ToTable("faceliftroom");
+
+            entity.Property(e => e.Roomid).HasColumnName("roomid");
+            entity.Property(e => e.Automationid).HasColumnName("automationid");
+            entity.Property(e => e.Bookingid).HasColumnName("bookingid");
+            entity.Property(e => e.Createddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createddatetime");
+            entity.Property(e => e.Lastmodifieddatetime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("lastmodifieddatetime");
+            entity.Property(e => e.Roomtype)
+                .HasMaxLength(255)
+                .HasConversion<string>() // Convert Enum to string
+                .HasColumnType("text")
+                .HasColumnName("roomtype");
+
+            // Update navigation property names to match the domain models
+            entity.HasOne(d => d.Automation).WithMany(p => p.FaceLiftRooms) // Corrected to match Automation.FaceLiftRooms
+                .HasForeignKey(d => d.Automationid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("faceliftroom_automationid_fkey");
+
+            entity.HasOne(d => d.Booking).WithMany(p => p.FaceliftRooms) // Corrected to match Booking.FaceliftRooms
+                .HasForeignKey(d => d.Bookingid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("faceliftroom_bookingid_fkey");
+        });
+
+
+        modelBuilder.Entity<FaceliftroomAddon>(entity =>
+        {
+            entity.HasKey(e => new { e.Roomid, e.Addonid }).HasName("faceliftroomaddon_pkey");
+
+            entity.ToTable("faceliftroom_addon");
+
+            entity.Property(e => e.Roomid).HasColumnName("roomid");
+            entity.Property(e => e.Addonid).HasColumnName("addonid");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+            entity.HasOne(d => d.Addon).WithMany(p => p.FaceliftroomAddons)
+                .HasForeignKey(d => d.Addonid)
+                .HasConstraintName("faceliftroomaddon_addonid_fkey");
+
+            entity.HasOne(d => d.Room).WithMany(p => p.FaceliftroomAddons)
+                .HasForeignKey(d => d.Roomid)
+                .HasConstraintName("faceliftroomaddon_roomid_fkey");
+        });
+
+        modelBuilder.Entity<FaceliftroomAddonperrequest>(entity =>
+        {
+            entity.HasKey(e => new { e.Roomid, e.Addperrequestid }).HasName("room_addonperrequest_pkey");
+
+            entity.ToTable("faceliftroom_addonperrequest");
+
+            entity.Property(e => e.Roomid).HasColumnName("roomid");
+            entity.Property(e => e.Addperrequestid).HasColumnName("addperrequestid");
+            entity.Property(e => e.Quantity)
+                .HasDefaultValue(1)
+                .HasColumnName("quantity");
+
+            entity.HasOne(d => d.Addperrequest).WithMany(p => p.FaceliftroomAddonperrequests)
+                .HasForeignKey(d => d.Addperrequestid)
+                .HasConstraintName("apartment_addonperrequest_addperrequestid_fkey");
+
+            entity.HasOne(d => d.Room).WithMany(p => p.FaceliftroomAddonperrequests)
+                .HasForeignKey(d => d.Roomid)
+                .HasConstraintName("room_addon_apartmentid_fkey");
+        });
+
         modelBuilder.Entity<Installmentbreakdown>(entity =>
         {
             entity.HasKey(e => e.Breakdownid).HasName("installmentbreakdown_pkey");
@@ -445,40 +592,40 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("lastmodifieddatetime");
         });
 
-             modelBuilder.Entity<Odaambassador>(entity =>
-        {
-            entity.HasKey(e => e.Odaambassadorid).HasName("oda_pkey");
+        modelBuilder.Entity<Odaambassador>(entity =>
+   {
+       entity.HasKey(e => e.Odaambassadorid).HasName("oda_pkey");
 
-            entity.ToTable("odaambassador");
+       entity.ToTable("odaambassador");
 
-            entity.Property(e => e.Odaambassadorid).HasColumnName("odaambassadorid");
-            entity.Property(e => e.Ownerdeveloper)
-                .HasColumnType("character varying")
-                .HasColumnName("ownerdeveloper");
-            entity.Property(e => e.Ownername)
-                .HasColumnType("character varying")
-                .HasColumnName("ownername");
-            entity.Property(e => e.Ownerphonenumber)
-                .HasColumnType("character varying")
-                .HasColumnName("ownerphonenumber");
-            entity.Property(e => e.Ownerselectbudget).HasColumnName("ownerselectbudget");
-            entity.Property(e => e.Ownerunitarea).HasColumnName("ownerunitarea");
-            entity.Property(e => e.Ownerunitlocation)
-                .HasColumnType("character varying")
-                .HasColumnName("ownerunitlocation");
-            entity.Property(e => e.Referralclientstatue)
-                .HasColumnType("character varying")
-                .HasColumnName("referralclientstatue");
-            entity.Property(e => e.Referralemail)
-                .HasColumnType("character varying")
-                .HasColumnName("referralemail");
-            entity.Property(e => e.Referralname)
-                .HasColumnType("character varying")
-                .HasColumnName("referralname");
-            entity.Property(e => e.Referralphonenumber)
-                .HasColumnType("character varying")
-                .HasColumnName("referralphonenumber");
-        });
+       entity.Property(e => e.Odaambassadorid).HasColumnName("odaambassadorid");
+       entity.Property(e => e.Ownerdeveloper)
+           .HasColumnType("character varying")
+           .HasColumnName("ownerdeveloper");
+       entity.Property(e => e.Ownername)
+           .HasColumnType("character varying")
+           .HasColumnName("ownername");
+       entity.Property(e => e.Ownerphonenumber)
+           .HasColumnType("character varying")
+           .HasColumnName("ownerphonenumber");
+       entity.Property(e => e.Ownerselectbudget).HasColumnName("ownerselectbudget");
+       entity.Property(e => e.Ownerunitarea).HasColumnName("ownerunitarea");
+       entity.Property(e => e.Ownerunitlocation)
+           .HasColumnType("character varying")
+           .HasColumnName("ownerunitlocation");
+       entity.Property(e => e.Referralclientstatue)
+           .HasColumnType("character varying")
+           .HasColumnName("referralclientstatue");
+       entity.Property(e => e.Referralemail)
+           .HasColumnType("character varying")
+           .HasColumnName("referralemail");
+       entity.Property(e => e.Referralname)
+           .HasColumnType("character varying")
+           .HasColumnName("referralname");
+       entity.Property(e => e.Referralphonenumber)
+           .HasColumnType("character varying")
+           .HasColumnName("referralphonenumber");
+   });
 
         modelBuilder.Entity<Paymentmethod>(entity =>
         {
@@ -639,6 +786,20 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("projectname");
             entity.Property(e => e.Totalunits).HasColumnName("totalunits");
         });
+
+        modelBuilder.Entity<Projecttype>(entity =>
+        {
+            entity.HasKey(e => e.Projecttypeid).HasName("projecttype_pkey");
+            entity.ToTable("projecttype");
+            entity.Property(e => e.Projecttypeid).HasColumnName("projecttypeid");
+            entity.Property(e => e.Projecttypedetail)
+                .HasMaxLength(255)
+                .HasColumnName("projecttypedetail");
+            entity.Property(e => e.Projecttypename)
+                .HasMaxLength(255)
+                .HasColumnName("projecttypename");
+        });
+
         modelBuilder.Entity<Question>(entity =>
         {
             entity.HasKey(e => e.Questionsid).HasName("questions_pkey");

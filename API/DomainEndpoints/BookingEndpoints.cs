@@ -236,12 +236,12 @@ namespace OdaWepApi.API.DomainEndpoints
                     // Send email notification
                     string emailBody = EmailService.GenerateEmailBody(bookingDataOut);
                     await EmailService.SendEmailToAllRecipients("Booking Confirmed!", emailBody);
-                    if(bookingDataOut.CustomerInfo.Email != null)
+                    if (bookingDataOut.CustomerInfo.Email != null)
                     {
-                    // send email to customer 
-                    string customerEmail = bookingDataOut.CustomerInfo.Email;
-                    string customerEmailBody = EmailService.GenerateCustomerEmailBody(bookingDataOut);
-                    await EmailService.SendCustomerEmail("Booking Confirmed!", customerEmailBody,customerEmail);
+                        // send email to customer 
+                        string customerEmail = bookingDataOut.CustomerInfo.Email;
+                        string customerEmailBody = EmailService.GenerateCustomerEmailBody(bookingDataOut);
+                        await EmailService.SendCustomerEmail("Booking Confirmed!", customerEmailBody, customerEmail);
                     }
                 }
 

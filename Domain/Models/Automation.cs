@@ -14,8 +14,9 @@ public partial class Automation
     public DateTime? Createdatetime { get; set; }
 
     public DateTime? Lastmodifieddatetime { get; set; }
-    public virtual ICollection<Apartment> Apartments { get; set; } = new List<Apartment>();
 
+    public virtual ICollection<Apartment> Apartments { get; set; } = new List<Apartment>();
+    public virtual ICollection<Faceliftroom> FaceLiftRooms { get; set; } = new List<Faceliftroom>();
     public virtual ICollection<Automationdetail> Automationdetails { get; set; } = new List<Automationdetail>();
 
 }

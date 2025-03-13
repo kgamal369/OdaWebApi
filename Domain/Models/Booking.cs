@@ -42,4 +42,6 @@ public partial class Booking
 
     [JsonIgnore]
     public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+    [JsonIgnore]
+    public virtual ICollection<Faceliftroom> FaceliftRooms { get; set; } = new List<Faceliftroom>();
 }

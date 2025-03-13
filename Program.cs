@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using OdaWepApi.API.DomainEndpoints;
 using OdaWepApi.API.DTOEndpoints;
+using OdaWepApi.API.FaceLiftEndpoints;
 using OdaWepApi.Infrastructure;
 
 // Create Host Builder
@@ -83,7 +84,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
         });
     }
     else
-    {    
+    {
         var certPath = Environment.GetEnvironmentVariable("CERT_PATH");
         var certPassword = Environment.GetEnvironmentVariable("CERT_PASSWORD");
 
@@ -147,6 +148,12 @@ app.MapBookingDataOutEndpoints();
 app.MapUnittypeEndpoints();
 app.MapOdaAmbassadorEndpoints();
 app.MapContactUsEndpoints();
+
+app.MapFaceLiftAddonEndpoints();
+app.MapFaceLiftAddperrequestEndpoints();
+app.MapFaceLiftApartmentDTOEndpoints();
+app.MapFaceLiftBookingDataOutDTOEndpoints();
+app.MapFaceLiftBookingDataInDTOEndpoints();
 
 // ✅ Ensure Database is Ready
 try

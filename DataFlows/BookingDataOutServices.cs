@@ -1,6 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
-
 using OdaWepApi.Infrastructure;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Domain.DTOs;
@@ -91,16 +90,16 @@ namespace OdaWepApi.DataFlows
                 Numberofinstallmentmonths = paymentPlan.Numberofinstallmentmonths,
                 Downpayment = paymentPlan.Downpayment,
                 Downpaymentpercentage = paymentPlan.Downpaymentpercentage,
-                DPValue =  paymentPlan.Downpaymentpercentage /100  * (totalPlanPrice + totalAddonPrice),
+                DPValue = paymentPlan.Downpaymentpercentage / 100 * (totalPlanPrice + totalAddonPrice),
 
                 Adminfees = paymentPlan.Adminfees,
                 Adminfeespercentage = paymentPlan.Adminfeespercentage,
-                AdminfeesValue = paymentPlan.Adminfeespercentage/100 * (totalPlanPrice + totalAddonPrice),
+                AdminfeesValue = paymentPlan.Adminfeespercentage / 100 * (totalPlanPrice + totalAddonPrice),
 
                 Interestrate = paymentPlan.Interestrate,
                 Interestrateperyearpercentage = paymentPlan.Interestrateperyearpercentage,
-                InterestrateValue = paymentPlan.Interestrateperyearpercentage/100 * (totalPlanPrice + totalAddonPrice),
-                
+                InterestrateValue = paymentPlan.Interestrateperyearpercentage / 100 * (totalPlanPrice + totalAddonPrice),
+
                 EqualPayment = paymentPlan.Paymentplanid != 1 && paymentPlan.Paymentplanid != 2,
                 InstallmentDTO = paymentPlan.Installmentbreakdowns.Select(id => new InstallmentDTO
                 {

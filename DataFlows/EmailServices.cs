@@ -54,7 +54,7 @@ namespace OdaWepApi.DataFlows
             }
         }
 
-          public static async Task SendCustomerEmail(string subject, string body , string CustomerEmail)
+        public static async Task SendCustomerEmail(string subject, string body, string CustomerEmail)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace OdaWepApi.DataFlows
                         mailMessage.Body = body;
                         mailMessage.IsBodyHtml = true;
                         mailMessage.To.Add(CustomerEmail);
-                      
+
                         await client.SendMailAsync(mailMessage);
                         Console.WriteLine($"✅ Email successfully sent to Customer {CustomerEmail} recipients.");
                     }
@@ -85,7 +85,7 @@ namespace OdaWepApi.DataFlows
         }
 
         public static string GenerateEmailBody(BookingDataOut bookingDataOut)
-        {   
+        {
             string addonsDetails = string.Empty;
             if (bookingDataOut.Addons != null && bookingDataOut.Addons.Count > 0)
             {
@@ -127,8 +127,8 @@ namespace OdaWepApi.DataFlows
                 ";
         }
 
-         public static string GenerateCustomerEmailBody(BookingDataOut bookingDataOut)
-        {   
+        public static string GenerateCustomerEmailBody(BookingDataOut bookingDataOut)
+        {
             string addonsDetails = string.Empty;
             if (bookingDataOut.Addons != null && bookingDataOut.Addons.Count > 0)
             {
@@ -150,7 +150,7 @@ namespace OdaWepApi.DataFlows
             {
                 addonsDetails = "<p>No addons available.</p>";
             }
-                
+
             return $@"
                     <h2>Dear Customer Booking Confirmed!</h2>
                     <p><strong>Booking ID:</strong> {bookingDataOut.BookingID}</p>
@@ -167,6 +167,6 @@ namespace OdaWepApi.DataFlows
                     <hr>
                     <p>Thank you for your booking!</p> :
                 ";
-        }        
+        }
     }
 }
