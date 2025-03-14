@@ -192,7 +192,7 @@ namespace OdaWepApi.API.DomainEndpoints
             group.MapGet("/{planid}/PlanDetails/Decoration", async Task<Results<Ok<List<Plandetail>>, NotFound>> (int planid, OdaDbContext db) =>
             {
                 var decorationDetails = await db.Plandetails
-                    .Where(pd => pd.Planid == planid && pd.Plandetailstype == PlanDetailsType.Decoration)        
+                    .Where(pd => pd.Planid == planid && pd.Plandetailstype == PlanDetailsType.Decoration)
                     .OrderBy(pd => pd.Plandetailsid) // Sorting by Plandetailsid
                     .ToListAsync();
 

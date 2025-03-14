@@ -25,5 +25,6 @@ namespace OdaWepApi.Domain.DTOs
         public Customer CustomerInfo { get; set; }
         public PaymentDTO paymentDTO { get; set; }
         public decimal TotalAmount { get; set; }
+        public decimal TotalAmount_Addons_plan { get; set; }
     }
 }

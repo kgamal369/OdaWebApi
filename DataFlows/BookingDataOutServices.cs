@@ -136,6 +136,7 @@ namespace OdaWepApi.DataFlows
                 CustomerInfo = customer ?? new Customer(), // Ensure non-null assignment
                 questions = selectedquestions,
                 TotalAmount = (decimal)(totalPrice + interestrateValue),
+                TotalAmount_Addons_plan = totalPrice,
                 paymentDTO = paymentDTO
             };
         }
