@@ -163,6 +163,7 @@ namespace OdaWepApi.API.DomainEndpoints
             {
                 var planDetails = await db.Plandetails
                     .Where(pd => pd.Planid == planid)
+                    .OrderBy(pd => pd.Plandetailsid) // Sorting by Plandetailsid
                     .ToListAsync();
 
                 return planDetails.Any()
@@ -177,6 +178,7 @@ namespace OdaWepApi.API.DomainEndpoints
             {
                 var foundationDetails = await db.Plandetails
                     .Where(pd => pd.Planid == planid && pd.Plandetailstype == PlanDetailsType.Foundation)
+                    .OrderBy(pd => pd.Plandetailsid) // Sorting by Plandetailsid
                     .ToListAsync();
 
                 return foundationDetails.Any()
@@ -190,7 +192,8 @@ namespace OdaWepApi.API.DomainEndpoints
             group.MapGet("/{planid}/PlanDetails/Decoration", async Task<Results<Ok<List<Plandetail>>, NotFound>> (int planid, OdaDbContext db) =>
             {
                 var decorationDetails = await db.Plandetails
-                    .Where(pd => pd.Planid == planid && pd.Plandetailstype == PlanDetailsType.Decoration)
+                    .Where(pd => pd.Planid == planid && pd.Plandetailstype == PlanDetailsType.Decoration)        
+                    .OrderBy(pd => pd.Plandetailsid) // Sorting by Plandetailsid
                     .ToListAsync();
 
                 return decorationDetails.Any()

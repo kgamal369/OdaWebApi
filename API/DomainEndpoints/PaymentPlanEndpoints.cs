@@ -32,6 +32,7 @@ namespace OdaWepApi.API.DomainEndpoints
                     // ✅ Convert bytea to Base64 string
                     IconBase64 = a.Paymentplanicon != null ? Convert.ToBase64String(a.Paymentplanicon) : null
                 })
+                .OrderBy(a => a.Paymentplanid) // Sorting by Paymentplanid
                 .ToListAsync();
                 return Results.Ok(paymentPlans);
             })
