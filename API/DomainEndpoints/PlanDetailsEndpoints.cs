@@ -15,7 +15,12 @@ namespace OdaWepApi.API.DomainEndpoints
             // 1. Get All PlanDetails
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                return await db.Plandetails.AsNoTracking().ToListAsync();
+               var planDetails = await db.Plandetails
+                    .AsNoTracking()
+                    .OrderBy(pd => pd.Plandetailsid) // Sorting by Plandetailsid
+                    .ToListAsync();
+
+                return planDetails;
             })
             .WithName("GetAllPlanDetails")
             .WithOpenApi();
