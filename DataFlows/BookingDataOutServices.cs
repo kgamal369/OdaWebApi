@@ -84,10 +84,10 @@ namespace OdaWepApi.DataFlows
                     Select(k => k.UnittypeName).FirstOrDefaultAsync() : null;
 
             // Calculate total price first
-            var totalPrice = totalPlanPrice + totalAddonPrice;
+            var totalprice_Addons_plan = totalPlanPrice + totalAddonPrice;
 
             // Calculate InterestrateValue first before using it
-            var interestrateValue = paymentPlan.Interestrateperyearpercentage / 100 * totalPrice;
+            var interestrateValue = paymentPlan.Interestrateperyearpercentage / 100 * totalprice_Addons_plan;
 
             var paymentDTO = new PaymentDTO
             {
@@ -96,11 +96,11 @@ namespace OdaWepApi.DataFlows
                 Numberofinstallmentmonths = paymentPlan.Numberofinstallmentmonths,
                 Downpayment = paymentPlan.Downpayment,
                 Downpaymentpercentage = paymentPlan.Downpaymentpercentage,
-                DPValue = paymentPlan.Downpaymentpercentage / 100 * totalPrice,
+                DPValue = paymentPlan.Downpaymentpercentage / 100 * totalprice_Addons_plan,
 
                 Adminfees = paymentPlan.Adminfees,
                 Adminfeespercentage = paymentPlan.Adminfeespercentage,
-                AdminfeesValue = paymentPlan.Adminfeespercentage / 100 * totalPrice,
+                AdminfeesValue = paymentPlan.Adminfeespercentage / 100 * totalprice_Addons_plan,
 
                 Interestrate = paymentPlan.Interestrate,
                 Interestrateperyearpercentage = paymentPlan.Interestrateperyearpercentage,
@@ -111,7 +111,7 @@ namespace OdaWepApi.DataFlows
                 {
                     Installmentmonth = id.Installmentmonth,
                     Installmentpercentage = id.Installmentpercentage,
-                    Installmentvalue = (decimal)((totalPrice + interestrateValue) * id.Installmentpercentage / 100)
+                    Installmentvalue = (decimal)((totalprice_Addons_plan + interestrateValue) * id.Installmentpercentage / 100)
                 }).ToList()
             };
 
@@ -135,8 +135,8 @@ namespace OdaWepApi.DataFlows
                 AddonPerRequests = addonPerRequestDetails,
                 CustomerInfo = customer ?? new Customer(), // Ensure non-null assignment
                 questions = selectedquestions,
-                TotalAmount = (decimal)(totalPrice + interestrateValue),
-                TotalAmount_Addons_plan = totalPrice,
+                TotalAmount = (decimal)(totalprice_Addons_plan + interestrateValue),
+                TotalAmount_Addons_plan = totalprice_Addons_plan,
                 paymentDTO = paymentDTO
             };
         }
