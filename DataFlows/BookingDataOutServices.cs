@@ -112,7 +112,7 @@ namespace OdaWepApi.DataFlows
                 {
                     Installmentmonth = id.Installmentmonth,
                     Installmentpercentage = id.Installmentpercentage,
-                    Installmentvalue = (decimal)((totalprice_Addons_plan + interestrateValue) * id.Installmentpercentage / 100)
+                    Installmentvalue = (decimal)((totalprice_Addons_plan + TotalInterestrateValue) * id.Installmentpercentage / 100)
                 }).ToList()
             };
 
