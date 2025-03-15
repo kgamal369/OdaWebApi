@@ -104,7 +104,7 @@ namespace OdaWepApi.DataFlows
 
                 Interestrate = paymentPlan.Interestrate,
                 Interestrateperyearpercentage = paymentPlan.Interestrateperyearpercentage,
-                InterestrateValue = interestrateValue, // Assign the precomputed value
+                InterestrateValue = interestrateValue * (paymentPlan.Numberofinstallmentmonths / 12), // Assign the precomputed value
 
                 EqualPayment = paymentPlan.Paymentplanid != 1 && paymentPlan.Paymentplanid != 2,
                 InstallmentDTO = paymentPlan.Installmentbreakdowns.Select(id => new InstallmentDTO

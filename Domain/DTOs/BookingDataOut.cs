@@ -16,15 +16,15 @@ namespace OdaWepApi.Domain.DTOs
         public string? UnittypeName { get; set; }
         public int PlanID { get; set; }
         public string PlanName { get; set; }
-        public decimal TotalPlanPrice { get; set; }
         public List<AddonDetail> Addons { get; set; }
-        public decimal SumOfTotalAddonPrices { get; set; }
         public int? AutomationID { get; set; }
         public List<AddonPerRequestDetail>? AddonPerRequests { get; set; }
         public List<Question>? questions { get; set; }
         public Customer CustomerInfo { get; set; }
         public PaymentDTO paymentDTO { get; set; }
-        public decimal TotalAmount { get; set; }
+        public decimal TotalPlanPrice { get; set; }
+        public decimal SumOfTotalAddonPrices { get; set; }
         public decimal TotalAmount_Addons_plan { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 }
