@@ -16,7 +16,7 @@ namespace OdaWepApi.Domain.DTOs
         public decimal? Adminfeespercentage { get; set; }
         public bool Interestrate { get; set; }
         public decimal? Interestrateperyearpercentage { get; set; }
-        public Boolean EqualPayment { get; set; } // 1 =Equal ; 0 = false
+        public bool EqualPayment { get; set; } // 1 =Equal ; 0 = false
         public List<InstallmentDTO> InstallmentDTO { get; set; }
     }
 }
