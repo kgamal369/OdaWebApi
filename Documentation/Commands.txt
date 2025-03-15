@@ -35,10 +35,13 @@ dotnet publish -c Release -o ./publish
 dotnet publish -c Release -o C:\Workspace\OdaWebApi\bin\Release\net8.0
 sc.exe create OdaWebApiService binPath= "C:\Workspace\OdaWebApi\bin\Release\net8.0\OdaWepApi.exe" start= auto
 net start OdaWebApiService
+
+publish Procedure :
 sc.exe stop OdaWebApiService
+dotnet publish -c Release -o C:\OdaWebApi
 sc.exe start OdaWebApiService
 
-publish :dotnet publish -c Release -o C:\OdaWebApi
+
 
 Enable Automatic Restart on Service Failure :
 sc failure OdaWebApiService reset= 60 actions= restart/60000/restart/60000
