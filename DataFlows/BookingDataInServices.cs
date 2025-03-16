@@ -50,6 +50,9 @@ namespace OdaWepApi.DataFlows
                 // Create apartment addon per requests
                 await CreateApartmentAddonPerRequests(db, newApartmentId, bookingDataIn.AddonPerRequestIDs);
 
+                // Create Rooms 
+                await CreateApartmentRooms(db, newApartmentId, bookingId, bookingDataIn);
+                
                 await transaction.CommitAsync(); // 🔥 Commit only if everything succeeds
 
                 return bookingId;
