@@ -48,8 +48,8 @@ namespace OdaWepApi.DataFlows
                 Unitormeter = aa.Addon.Unitormeter,
                 Description = aa.Addon.Description,
                 Quantity = aa.Quantity,
-                Price = (decimal)((aa.Addon.Unitormeter == UnitOrMeterType.Unit) 
-                        ? aa.Addon.Price * aa.Quantity 
+                Price = (decimal)((aa.Addon.Unitormeter == UnitOrMeterType.Unit)
+                        ? aa.Addon.Price * aa.Quantity
                         : aa.Addon.Price * (apartment.Apartmentspace ?? 0))
             }).ToList();
 
@@ -115,17 +115,22 @@ namespace OdaWepApi.DataFlows
                 }).ToList()
             };
 
+            var apartmentDTO = new ApartmentDTO
+            {
+                ApartmentId = apartment?.Apartmentid ?? 0,
+                ApartmentType = (int?)(apartment?.Apartmenttype),
+                ApartmentAddress = apartment.Apartmentaddress,
+                ApartmentSpace = apartment.Apartmentspace ?? 0,
+                Unittypeid = apartment.Unittypeid ?? 0,
+                UnittypeName = unitTypeName
+            };
+
             return new BookingDataOut
             {
                 BookingID = booking.Bookingid,
                 DeveloperID = apartment.Developerid ?? 0,
                 ProjectID = apartment.Projectid ?? 0,
-                NewApartmentID = apartment?.Apartmentid ?? 0,
-                ApartmentType = (ApartmentType)(apartment?.Apartmenttype),
-                ApartmentAddress = apartment.Apartmentaddress,
-                ApartmentSpace = apartment.Apartmentspace ?? 0,
-                Unittypeid = apartment.Unittypeid ?? 0,
-                UnittypeName = unitTypeName,
+                ApartmentDTO = apartmentDTO,
                 PlanID = plan?.Planid ?? 0,
                 PlanName = plan?.Planname ?? "N/A",
                 TotalPlanPrice = totalPlanPrice,

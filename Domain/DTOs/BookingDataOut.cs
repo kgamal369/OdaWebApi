@@ -8,12 +8,7 @@ namespace OdaWepApi.Domain.DTOs
         public int BookingID { get; set; }
         public int? DeveloperID { get; set; }
         public int? ProjectID { get; set; }
-        public int NewApartmentID { get; set; }
-        public ApartmentType ApartmentType { get; set; }
-        public string? ApartmentAddress { get; set; }
-        public decimal ApartmentSpace { get; set; }
-        public int? Unittypeid { get; set; }
-        public string? UnittypeName { get; set; }
+        public ApartmentDTO ApartmentDTO { get; set; }
         public int PlanID { get; set; }
         public string PlanName { get; set; }
         public List<AddonDetail> Addons { get; set; }

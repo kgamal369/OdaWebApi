@@ -477,6 +477,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Roomid).HasColumnName("roomid");
             entity.Property(e => e.Automationid).HasColumnName("automationid");
             entity.Property(e => e.Bookingid).HasColumnName("bookingid");
+            entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
             entity.Property(e => e.Createddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createddatetime");
@@ -499,6 +500,11 @@ public partial class OdaDbContext : DbContext
                 .HasForeignKey(d => d.Bookingid)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("faceliftroom_bookingid_fkey");
+
+            entity.HasOne(d => d.Apartment).WithMany(p => p.FaceliftRooms)
+                .HasForeignKey(d => d.Apartmentid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("faceliftroom_apartmentid_fkey");
         });
 
 

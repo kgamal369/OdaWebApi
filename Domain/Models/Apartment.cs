@@ -52,6 +52,9 @@ public partial class Apartment
     [JsonIgnore]
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
+    [JsonIgnore]
+    public virtual ICollection<Faceliftroom> FaceliftRooms { get; set; } = new List<Faceliftroom>();
+
     public virtual Developer? Developer { get; set; }
     [JsonIgnore]
     [ForeignKey("Planid")]

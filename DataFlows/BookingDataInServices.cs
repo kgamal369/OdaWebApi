@@ -120,6 +120,12 @@ namespace OdaWepApi.DataFlows
             }
             await db.SaveChangesAsync();
         }
+
+
+        private static async Task CreateApartmentRooms(OdaDbContext db, int newApartmentId,BookingDataIn bookingDataIn)
+        {
+        
+        }
         private static async Task CreateApartmentAddonPerRequests(OdaDbContext db, int newApartmentId, List<int> addonPerRequestIDs)
         {
             foreach (var addonPerRequestId in addonPerRequestIDs)

@@ -10,7 +10,6 @@ namespace OdaWepApi.DataFlows
         private static readonly int smtpPort = 587; // Gmail SMTP Port
         private static readonly string smtpUsername = "OdaWebApiBookingEmail@gmail.com";
         private static readonly string smtpPassword = "ebtn rtlo xcih frcp";
-
         public static readonly List<string> recipientEmails = new List<string>
         {
             "eng.karim.gamal369@gmail.com",
@@ -28,7 +27,6 @@ namespace OdaWepApi.DataFlows
                     client.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
                     client.EnableSsl = true; // Ensure SSL is enabled
                     client.UseDefaultCredentials = false; // Ensure explicit credentials are used
-
 
                     using (var mailMessage = new MailMessage())
                     {
@@ -110,9 +108,9 @@ namespace OdaWepApi.DataFlows
             return $@"
                     <h2>Booking Confirmed!</h2>
                     <p><strong>Booking ID:</strong> {bookingDataOut.BookingID}</p>
-                    <p><strong>Order Type:</strong> {bookingDataOut.ApartmentType}</p>
-                    <p><strong>Unit type name:</strong> {bookingDataOut.UnittypeName}</p>
-                    <p><strong>Apartment Space:</strong> {bookingDataOut.ApartmentSpace}</p>
+                    <p><strong>Order Type:</strong> {bookingDataOut.ApartmentDTO.ApartmentType}</p>
+                    <p><strong>Unit type name:</strong> {bookingDataOut.ApartmentDTO.UnittypeName}</p>
+                    <p><strong>Apartment Space:</strong> {bookingDataOut.ApartmentDTO.ApartmentSpace}</p>
                     <p><strong>DeveloperID:</strong> {bookingDataOut.DeveloperID}</p>
                     <p><strong>Customer Name:</strong> {bookingDataOut.CustomerInfo?.Firstname ?? "N/A"}</p>
                     <p><strong>Customer Email:</strong> {bookingDataOut.CustomerInfo?.Email ?? "N/A"} </p>
@@ -154,9 +152,9 @@ namespace OdaWepApi.DataFlows
             return $@"
                     <h2>Dear Customer Booking Confirmed!</h2>
                     <p><strong>Booking ID:</strong> {bookingDataOut.BookingID}</p>
-                    <p><strong>Order Type:</strong> {bookingDataOut.ApartmentType}</p>
-                    <p><strong>Unit type name:</strong> {bookingDataOut.UnittypeName}</p>
-                    <p><strong>Apartment Space:</strong> {bookingDataOut.ApartmentSpace}</p>
+                    <p><strong>Order Type:</strong> {bookingDataOut.ApartmentDTO.ApartmentType}</p>
+                    <p><strong>Unit type name:</strong> {bookingDataOut.ApartmentDTO.UnittypeName}</p>
+                    <p><strong>Apartment Space:</strong> {bookingDataOut.ApartmentDTO.ApartmentSpace}</p>
                     <p><strong>DeveloperId:</strong> {bookingDataOut.DeveloperID}</p>
                     <p><strong>Plan Name:</strong> {bookingDataOut.PlanName}</p>
                     <p><strong>addonsDetails:</strong> {addonsDetails}</p>
