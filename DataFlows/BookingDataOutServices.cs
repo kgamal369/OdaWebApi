@@ -76,6 +76,16 @@ namespace OdaWepApi.DataFlows
                 .Select(k => k.UnittypeName)
                 .FirstOrDefaultAsync() ?? "N/A";
 
+            var groupedRooms = await db.Faceliftrooms
+                .Where(r => r.Apartmentid == apartment.Apartmentid)
+                .GroupBy(r => r.Roomtype)
+                .Select(g => new ApartmentRoomsDTO
+                {
+                    RoomType = g.Key,
+                    Quantity = g.Count()
+                })
+                .ToListAsync();
+
             var totalAddonPrice = addonDetails.Sum(a => a.Price);
             var totalPrice_Addons_Plan = totalPlanPrice + totalAddonPrice;
 
@@ -122,7 +132,8 @@ namespace OdaWepApi.DataFlows
                 ApartmentAddress = apartment.Apartmentaddress,
                 ApartmentSpace = apartment.Apartmentspace ?? 0,
                 Unittypeid = apartment.Unittypeid ?? 0,
-                UnittypeName = unitTypeName
+                UnittypeName = unitTypeName,
+                ApartmentRooms = groupedRooms,
             };
 
             return new BookingDataOut

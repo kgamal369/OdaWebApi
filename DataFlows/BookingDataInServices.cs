@@ -122,9 +122,30 @@ namespace OdaWepApi.DataFlows
         }
 
 
-        private static async Task CreateApartmentRooms(OdaDbContext db, int newApartmentId,BookingDataIn bookingDataIn)
+        private static async Task CreateApartmentRooms(OdaDbContext db, int newApartmentId, int bookingId, BookingDataIn bookingDataIn)
         {
-        
+            var roomToInsert = new List<Faceliftroom>();
+            foreach (var room in bookingDataIn.apartmentDTO.ApartmentRooms)
+            {
+                if (room.Quantity.HasValue && room.Quantity.Value > 0)
+                {
+                    for (int i = 0; i < room.Quantity.Value; i++)
+                    {
+                        var newRoom = new Faceliftroom
+                        {
+                            Roomtype = room.RoomType,
+                            Automationid = bookingDataIn.AutomationID,
+                            Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                            Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                            Apartmentid = newApartmentId,
+                            Bookingid = bookingId
+                        };
+                        roomToInsert.Add(newRoom);
+                    }
+                }
+            }
+            db.Faceliftrooms.AddRange(roomToInsert);
+            await db.SaveChangesAsync();
         }
         private static async Task CreateApartmentAddonPerRequests(OdaDbContext db, int newApartmentId, List<int> addonPerRequestIDs)
         {
