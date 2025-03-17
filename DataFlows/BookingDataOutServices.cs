@@ -148,6 +148,7 @@ namespace OdaWepApi.DataFlows
                 Addons = addonDetails,
                 SumOfTotalAddonPrices = totalAddonPrice,
                 AutomationID = apartment.Automationid,
+                AddonPerRequests = addonPerRequestDetails,
                 CustomerInfo = booking.Customer ?? new Customer(),
                 questions = selectedQuestions,
                 TotalAmount = totalAmount,

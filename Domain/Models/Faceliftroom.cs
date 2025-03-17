@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-using OdaWepApi.Domain.Enums;
+﻿using OdaWepApi.Domain.Enums;
 
 namespace OdaWepApi.Domain.Models;
 
