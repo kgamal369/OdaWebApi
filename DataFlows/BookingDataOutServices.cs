@@ -85,7 +85,7 @@ namespace OdaWepApi.DataFlows
                     Quantity = g.Count()
                 })
                 .ToListAsync();
-
+                
             var totalAddonPrice = addonDetails.Sum(a => a.Price);
             var totalPrice_Addons_Plan = totalPlanPrice + totalAddonPrice;
 
@@ -95,54 +95,68 @@ namespace OdaWepApi.DataFlows
             decimal totalAmount = totalPrice_Addons_Plan;
             List<decimal> installmentValues = new List<decimal>();
 
+            // ✅ Ensure default values for null fields
+            decimal downPaymentPercentage = paymentPlan.Downpaymentpercentage ?? 0;
+            decimal adminFeesPercentage = paymentPlan.Adminfeespercentage ?? 0;
+            decimal interestRatePerYear = paymentPlan.Interestrateperyearpercentage ?? 0;
+            int numberOfInstallments = paymentPlan.Numberofinstallmentmonths > 0 ? paymentPlan.Numberofinstallmentmonths : 1;
+
+            // ✅ Safe Calculations
+            decimal DPValue = (downPaymentPercentage / 100) * totalPrice_Addons_Plan;
+            decimal AdminFeesValue = (adminFeesPercentage / 100) * totalPrice_Addons_Plan;
+
             if (isEqualPayment)
             {
-                interestRateValuePerYear = (decimal)(paymentPlan.Interestrateperyearpercentage / 100 * totalPrice_Addons_Plan);
-                totalInterestRateValue = interestRateValuePerYear * (paymentPlan.Numberofinstallmentmonths / 12);
-                totalAmount += totalInterestRateValue;
-                // Fixed equal payment for each month
-                decimal equalInstallment = totalAmount / paymentPlan.Numberofinstallmentmonths;
-                installmentValues = Enumerable.Repeat(equalInstallment, paymentPlan.Numberofinstallmentmonths).ToList();
+                if (paymentPlan.Interestrate)
+                {
+                    interestRateValuePerYear = (interestRatePerYear / 100) * totalPrice_Addons_Plan;
+                    totalInterestRateValue = interestRateValuePerYear * (numberOfInstallments / 12);
+                    totalAmount += totalInterestRateValue;
+                }
+
+                // ✅ Prevent division by zero
+                decimal equalInstallment = totalAmount / numberOfInstallments;
+                installmentValues = Enumerable.Repeat(equalInstallment, numberOfInstallments).ToList();
             }
             else
             {
                 List<decimal> installmentPercentage = paymentPlan.Installmentbreakdowns
-                        .Select(id => id.Installmentpercentage)
-                        .ToList();
+                    .Select(id => id.Installmentpercentage)
+                    .ToList();
 
                 foreach (var percentage in installmentPercentage)
                 {
-                    decimal value = percentage / 100m * totalAmount; // Calculate installment value
+                    decimal value = (percentage / 100m) * totalAmount; // ✅ Safe calculation
                     installmentValues.Add(value);
                 }
             }
-            // ✅ Correctly assign each month a SINGLE installment value
 
+            // ✅ Correctly assign each month a SINGLE installment value
             var paymentDTO = new PaymentDTO
             {
                 Paymentplanid = paymentPlan.Paymentplanid,
                 Paymentplanname = paymentPlan.Paymentplanname,
-                Numberofinstallmentmonths = paymentPlan.Numberofinstallmentmonths,
+                Numberofinstallmentmonths = numberOfInstallments,
                 Downpayment = paymentPlan.Downpayment,
-                Downpaymentpercentage = paymentPlan.Downpaymentpercentage,
-                DPValue = paymentPlan.Downpaymentpercentage / 100 * totalPrice_Addons_Plan,
+                Downpaymentpercentage = downPaymentPercentage,
+                DPValue = DPValue,
                 Adminfees = paymentPlan.Adminfees,
-                Adminfeespercentage = paymentPlan.Adminfeespercentage,
-                AdminfeesValue = paymentPlan.Adminfeespercentage / 100 * totalPrice_Addons_Plan,
+                Adminfeespercentage = adminFeesPercentage,
+                AdminfeesValue = AdminFeesValue,
                 Interestrate = paymentPlan.Interestrate,
-                Interestrateperyearpercentage = paymentPlan.Interestrateperyearpercentage,
+                Interestrateperyearpercentage = interestRatePerYear,
                 EqualPayment = isEqualPayment,
                 InterestrateValuePerYear = interestRateValuePerYear,
                 TotalInterestrateValue = totalInterestRateValue,
+
                 InstallmentDTO = paymentPlan.Installmentbreakdowns
                     .Select((id, index) => new InstallmentDTO
                     {
                         Installmentmonth = id.Installmentmonth,
                         Installmentpercentage = id.Installmentpercentage,
-                        Installmentvalue = installmentValues.ElementAtOrDefault(index) // Assign correct value
+                        Installmentvalue = installmentValues.ElementAtOrDefault(index) // ✅ Assign correct value
                     }).ToList()
             };
-
             var apartmentDTO = new ApartmentDTO
             {
                 ApartmentId = apartment?.Apartmentid ?? 0,
@@ -153,7 +167,6 @@ namespace OdaWepApi.DataFlows
                 UnittypeName = unitTypeName,
                 ApartmentRooms = groupedRooms,
             };
-
             return new BookingDataOut
             {
                 BookingID = booking.Bookingid,

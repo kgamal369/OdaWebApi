@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using System.Globalization;
 using System.Threading.Tasks;
 using OdaWepApi.Domain.DTOs;
 namespace OdaWepApi.DataFlows
@@ -18,6 +19,10 @@ namespace OdaWepApi.DataFlows
             "Info@oda-me.com"
         };
 
+        public static string FormatCurrency(decimal value)
+        {
+            return value.ToString("#,##0.00", CultureInfo.InvariantCulture);
+        }
         public static async Task SendEmailToAllRecipients(string subject, string body)
         {
             try
@@ -91,13 +96,13 @@ namespace OdaWepApi.DataFlows
                 <td>{addon.Addongroup ?? "N/A"}</td>
                 <td>{addon.Description ?? "N/A"}</td>
                 <td>{addon.Quantity}</td>
-                <td>{addon.Price}</td>
+                <td>{FormatCurrency(addon.Price)}</td>
             </tr>
         "))
        : "<tr><td colspan='5'>No Add-ons Available.</td></tr>";
 
             string questionsDetails = bookingDataOut.questions != null && bookingDataOut.questions.Count > 0
-                ? string.Join("", bookingDataOut.questions.Select(q => $"<p><strong>{q.Questionname}:</strong> {q.Answer}</p>"))
+                ? string.Join("", bookingDataOut.questions.Select(q => $"<p><strong>{q.Questionsid}:</strong> {q.Answer}</p>"))
                 : "<p>No additional questions provided.</p>";
 
             return $@"
@@ -134,7 +139,7 @@ namespace OdaWepApi.DataFlows
         <h3>💳 Payment Plan</h3>
         <p><strong>Payment Program:</strong> {bookingDataOut.paymentDTO.Paymentplanname}</p>
         <p><strong>Installment Duration:</strong> {bookingDataOut.paymentDTO.Numberofinstallmentmonths} Months</p>
-        <p><strong>Total Amount:</strong> {bookingDataOut.TotalAmount}</p>
+        <p><strong>Total Amount:</strong> {FormatCurrency(bookingDataOut.TotalAmount)}</p>
 
         <h3>❓ Questions & Answers</h3>
         {questionsDetails}
@@ -154,7 +159,7 @@ namespace OdaWepApi.DataFlows
                 <td>{addon.AddonName}</td>
                 <td>{addon.Addongroup ?? "N/A"}</td>
                 <td>{addon.Quantity}</td>
-                <td>{addon.Price}</td>
+                <td>{FormatCurrency(addon.Price)}</td>
             </tr>
         "))
           : "<tr><td colspan='4'>No Add-ons Available.</td></tr>";
@@ -192,7 +197,7 @@ namespace OdaWepApi.DataFlows
         <h3>💳 Payment Program</h3>
         <p><strong>Payment Plan:</strong> {bookingDataOut.paymentDTO.Paymentplanname}</p>
         <p><strong>Installment Duration:</strong> {bookingDataOut.paymentDTO.Numberofinstallmentmonths} Months</p>
-        <p><strong>Total Amount:</strong> {bookingDataOut.TotalAmount}</p>
+        <p><strong>Total Amount:</strong> {FormatCurrency(bookingDataOut.TotalAmount)}</p>
 
         <h3>📞 ODA Contact Details</h3>
         <p><strong>Email:</strong> info@oda-me.com</p>
