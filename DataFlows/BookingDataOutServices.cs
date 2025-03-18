@@ -93,13 +93,30 @@ namespace OdaWepApi.DataFlows
             decimal interestRateValuePerYear = 0;
             decimal totalInterestRateValue = 0;
             decimal totalAmount = totalPrice_Addons_Plan;
+            List<decimal> installmentValues = new List<decimal>();
 
             if (isEqualPayment)
             {
                 interestRateValuePerYear = (decimal)(paymentPlan.Interestrateperyearpercentage / 100 * totalPrice_Addons_Plan);
                 totalInterestRateValue = interestRateValuePerYear * (paymentPlan.Numberofinstallmentmonths / 12);
                 totalAmount += totalInterestRateValue;
+                 // Fixed equal payment for each month
+                decimal equalInstallment = totalAmount / paymentPlan.Numberofinstallmentmonths;
+                installmentValues = Enumerable.Repeat(equalInstallment, paymentPlan.Numberofinstallmentmonths).ToList();
             }
+            else
+            {  
+                List<decimal> installmentPercentage = paymentPlan.Installmentbreakdowns
+                        .Select(id => id.Installmentpercentage)
+                        .ToList();
+
+                foreach (var percentage in installmentPercentage )
+                {
+                    decimal value = percentage / 100m * totalAmount; // Calculate installment value
+                    installmentValues.Add(value);
+                }
+            }
+        // ✅ Correctly assign each month a SINGLE installment value
 
             var paymentDTO = new PaymentDTO
             {
@@ -117,12 +134,13 @@ namespace OdaWepApi.DataFlows
                 EqualPayment = isEqualPayment,
                 InterestrateValuePerYear = interestRateValuePerYear,
                 TotalInterestrateValue = totalInterestRateValue,
-                InstallmentDTO = paymentPlan.Installmentbreakdowns.Select(id => new InstallmentDTO
-                {
-                    Installmentmonth = id.Installmentmonth,
-                    Installmentpercentage = id.Installmentpercentage,
-                    Installmentvalue = totalAmount / paymentPlan.Numberofinstallmentmonths
-                }).ToList()
+                 InstallmentDTO = paymentPlan.Installmentbreakdowns
+                    .Select((id, index) => new InstallmentDTO
+                    {
+                        Installmentmonth = id.Installmentmonth,
+                        Installmentpercentage = id.Installmentpercentage,
+                        Installmentvalue = installmentValues.ElementAtOrDefault(index) // Assign correct value
+                    }).ToList()
             };
 
             var apartmentDTO = new ApartmentDTO
