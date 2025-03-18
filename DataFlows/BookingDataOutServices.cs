@@ -85,7 +85,7 @@ namespace OdaWepApi.DataFlows
                     Quantity = g.Count()
                 })
                 .ToListAsync();
-                
+
             var totalAddonPrice = addonDetails.Sum(a => a.Price);
             var totalPrice_Addons_Plan = totalPlanPrice + totalAddonPrice;
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using OdaWepApi.DataFlows;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Infrastructure;
 
@@ -21,7 +22,13 @@ namespace OdaWepApi.API.DomainEndpoints
             {
                 db.Odaambassadors.Add(oda);
                 await db.SaveChangesAsync();
+                // Get Data for email
+                string emailBody = EmailService.GenerateEmailOdaAmbassadorBody(oda);
+                await EmailService.SendEmailToAllRecipients("Oda Ambassador Email!", emailBody);
+
                 return TypedResults.Created($"/api/Odaambassador/{oda.Odaambassadorid}", oda);
+
+
             }).WithName("CreateOdaAmbassador").WithOpenApi();
         }
     }

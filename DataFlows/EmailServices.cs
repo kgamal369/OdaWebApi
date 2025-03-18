@@ -3,6 +3,7 @@ using System.Net.Mail;
 using System.Globalization;
 using System.Threading.Tasks;
 using OdaWepApi.Domain.DTOs;
+using OdaWepApi.Domain.Models;
 namespace OdaWepApi.DataFlows
 {
     public static class EmailService
@@ -209,5 +210,51 @@ namespace OdaWepApi.DataFlows
         <p><strong>The Oda Team</strong></p>
     ";
         }
+
+
+        public static string GenerateEmailOdaAmbassadorBody(Odaambassador odaAmbassador)
+        {
+            return $@"
+        <h2>New Ambassador Registration</h2>
+        <p>A new ambassador has registered. Please review their details and contact them.</p>
+        <hr>
+        <h3>📌 Ambassador Details</h3 >
+        <p><strong>Owner Name:</strong> {odaAmbassador.Ownername}</p>
+        <p><strong>Owner Phone:</strong> {odaAmbassador.Ownerphonenumber}</p>
+        <p><strong>Owner Unit Area:</strong> {odaAmbassador.Ownerunitarea} m²</p>
+        <p><strong>Owner Unit Location:</strong> {odaAmbassador.Ownerunitlocation}</p>
+        <p><strong>Owner Developer:</strong> {odaAmbassador.Ownerdeveloper}</p>
+        <p><strong>Owner Select Budget:</strong> {odaAmbassador.Ownerselectbudget}</p>
+        <p><strong>Referral Name:</strong> {odaAmbassador.Referralname}</p>
+        <p><strong>Referral Phone:</strong> {odaAmbassador.Referralphonenumber}</p>
+        <p><strong>Referral Email:</strong> {odaAmbassador.Referralemail}</p>
+        <p><strong>Referral Client Statue:</strong> {odaAmbassador.Referralclientstatue}</p>
+        <hr>
+        <p><strong>Please review this registration and contact the ambassador.</strong></p>
+        <p>Best Regards,</p>
+        <p>The Oda Team</p>
+        ";
+        }
+
+
+        public static string GenerateEmailContactUsBody(Contactus contactus)
+        {
+            return $@"
+            
+            <h2>New Contact Us Request</h2>
+            <p>A new contact us request has been submitted. Please review the details and contact the customer.</p>
+            <hr>
+            <h3>📌 Contact Us Details</h3
+            <p><strong>Full Name:</strong> {contactus.Firstname}</p>
+            <p><strong>Email:</strong> {contactus.Email}</p>
+            <p><strong>Phone:</strong> {contactus.Phonenumber}</p>
+            <p><strong>Message:</strong> {contactus.Comments}</p>
+            <hr>
+            <p><strong>Please review this request and contact the customer.</strong></p>
+            <p>Best Regards,</p>
+            <p>The Oda Team</p>
+            ";
+        }
+
     }
 }
