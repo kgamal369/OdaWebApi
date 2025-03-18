@@ -61,7 +61,8 @@ namespace OdaWepApi.DataFlows
                         Quantity = room.AddonSelectionsList[i].Quantity,
                     };
                     db.FaceliftroomAddons.Add(faceliftroomAddon);
-                };
+                }
+                ;
                 await db.SaveChangesAsync();
             }
         }

@@ -100,23 +100,23 @@ namespace OdaWepApi.DataFlows
                 interestRateValuePerYear = (decimal)(paymentPlan.Interestrateperyearpercentage / 100 * totalPrice_Addons_Plan);
                 totalInterestRateValue = interestRateValuePerYear * (paymentPlan.Numberofinstallmentmonths / 12);
                 totalAmount += totalInterestRateValue;
-                 // Fixed equal payment for each month
+                // Fixed equal payment for each month
                 decimal equalInstallment = totalAmount / paymentPlan.Numberofinstallmentmonths;
                 installmentValues = Enumerable.Repeat(equalInstallment, paymentPlan.Numberofinstallmentmonths).ToList();
             }
             else
-            {  
+            {
                 List<decimal> installmentPercentage = paymentPlan.Installmentbreakdowns
                         .Select(id => id.Installmentpercentage)
                         .ToList();
 
-                foreach (var percentage in installmentPercentage )
+                foreach (var percentage in installmentPercentage)
                 {
                     decimal value = percentage / 100m * totalAmount; // Calculate installment value
                     installmentValues.Add(value);
                 }
             }
-        // ✅ Correctly assign each month a SINGLE installment value
+            // ✅ Correctly assign each month a SINGLE installment value
 
             var paymentDTO = new PaymentDTO
             {
@@ -134,7 +134,7 @@ namespace OdaWepApi.DataFlows
                 EqualPayment = isEqualPayment,
                 InterestrateValuePerYear = interestRateValuePerYear,
                 TotalInterestrateValue = totalInterestRateValue,
-                 InstallmentDTO = paymentPlan.Installmentbreakdowns
+                InstallmentDTO = paymentPlan.Installmentbreakdowns
                     .Select((id, index) => new InstallmentDTO
                     {
                         Installmentmonth = id.Installmentmonth,
