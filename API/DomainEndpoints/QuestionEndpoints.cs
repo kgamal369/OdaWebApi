@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using OdaWepApi.Domain.Models;
@@ -8,40 +7,66 @@ namespace OdaWepApi.API.DomainEndpoints
 {
     public static class QuestionEndpoints
     {
-        public static void MapQuestionEndpoints(IEndpointRouteBuilder routes)
+        public static void MapQuestionEndpoints(this IEndpointRouteBuilder routes)
         {
             var group = routes.MapGroup("/api/Questions").WithTags(nameof(Question));
 
             // Get all Questions
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                var questions = await db.Questions.ToListAsync();
-                return TypedResults.Ok(questions);
+                return await db.Questions.AsNoTracking().ToListAsync();
             })
             .WithName("GetAllQuestions")
             .WithOpenApi();
 
             // Get Question by Id
-            group.MapGet("/{id:int}", async Task<IResult> (int id, OdaDbContext db) =>
+            group.MapGet("/{id}", async Task<Results<Ok<Question>, NotFound>> (int id, OdaDbContext db) =>
             {
                 var question = await db.Questions.AsNoTracking()
-                    .FirstOrDefaultAsync(q => q.Questionsid == id);
-
-                return question != null ? TypedResults.Ok(question) : TypedResults.NotFound();
+                    .FirstOrDefaultAsync(a => a.Questionid == id);
+                return question is not null
+                    ? TypedResults.Ok(question)
+                    : TypedResults.NotFound();
             })
             .WithName("GetQuestionById")
             .WithOpenApi();
 
-            // Get all Questions of a specific Booking Id
-            group.MapGet("/booking/{bookingId:int}", async Task<IResult> (int bookingId, OdaDbContext db) =>
+            // Create a new Question
+            group.MapPost("/", async Task<IResult> (Question question, OdaDbContext db) =>
             {
-                var questions = await db.Questions.AsNoTracking()
-                    .Where(q => q.Bookingid == bookingId)
-                    .ToListAsync();
-
-                return questions.Any() ? TypedResults.Ok(questions) : TypedResults.NotFound();
+                db.Questions.Add(question);
+                await db.SaveChangesAsync();
+                return TypedResults.Created($"/api/Questions/{question.Questionid}", question);
             })
-            .WithName("GetQuestionsOfBookingId")
+            .WithName("CreateQuestion")
+            .WithOpenApi();
+
+            // Update a Question
+            group.MapPut("/{id:int}", async Task<IResult> (int id, Question updatedQuestion, OdaDbContext db) =>
+            {
+                var question = await db.Questions.FindAsync(id);
+                if (question == null) return TypedResults.NotFound();
+
+                question.Questiontext = updatedQuestion.Questiontext;
+                question.Createdat = updatedQuestion.Createdat;
+                await db.SaveChangesAsync();
+
+                return TypedResults.NoContent();
+            })
+            .WithName("UpdateQuestion")
+            .WithOpenApi();
+
+            // Delete a Question
+            group.MapDelete("/{id:int}", async Task<IResult> (int id, OdaDbContext db) =>
+            {
+                var question = await db.Questions.FindAsync(id);
+                if (question == null) return TypedResults.NotFound();
+
+                db.Questions.Remove(question);
+                await db.SaveChangesAsync();
+                return TypedResults.NoContent();
+            })
+            .WithName("DeleteQuestion")
             .WithOpenApi();
         }
     }

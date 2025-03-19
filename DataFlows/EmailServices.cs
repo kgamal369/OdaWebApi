@@ -102,8 +102,8 @@ namespace OdaWepApi.DataFlows
         "))
        : "<tr><td colspan='5'>No Add-ons Available.</td></tr>";
 
-            string questionsDetails = bookingDataOut.questions != null && bookingDataOut.questions.Count > 0
-                ? string.Join("", bookingDataOut.questions.Select(q => $"<p><strong>{q.Questionsid}:</strong> {q.Answer}</p>"))
+            string questionsDetails = bookingDataOut.CustomerAnswers != null && bookingDataOut.CustomerAnswers.Count > 0
+                ? string.Join("", bookingDataOut.CustomerAnswers.Select(q => $"<p><strong>{q.Questiontext}:</strong> {q.Answertext}</p>"))
                 : "<p>No additional questions provided.</p>";
 
             return $@"

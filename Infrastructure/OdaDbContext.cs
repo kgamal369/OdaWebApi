@@ -19,6 +19,8 @@ public partial class OdaDbContext : DbContext
 
     public virtual DbSet<Addperrequest> Addperrequests { get; set; }
 
+    public virtual DbSet<Answer> Answers { get; set; }
+
     public virtual DbSet<Apartment> Apartments { get; set; }
 
     public virtual DbSet<ApartmentAddon> ApartmentAddons { get; set; }
@@ -34,6 +36,8 @@ public partial class OdaDbContext : DbContext
     public virtual DbSet<Contactus> Contactus { get; set; }
 
     public virtual DbSet<Customer> Customers { get; set; }
+
+    public virtual DbSet<Customeranswer> Customeranswers { get; set; }
 
     public virtual DbSet<Developer> Developers { get; set; }
 
@@ -134,6 +138,29 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Price)
                 .HasPrecision(10, 2)
                 .HasColumnName("price");
+        });
+
+        modelBuilder.Entity<Answer>(entity =>
+        {
+            entity.HasKey(e => e.Answerid).HasName("answers_pkey");
+
+            entity.ToTable("answers");
+
+            entity.Property(e => e.Answerid).HasColumnName("answerid");
+            entity.Property(e => e.Answercode)
+                .HasMaxLength(1)
+                .HasColumnName("answercode");
+            entity.Property(e => e.Answertext).HasColumnName("answertext");
+            entity.Property(e => e.Createdat)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdat");
+            entity.Property(e => e.Questionid).HasColumnName("questionid");
+
+            entity.HasOne(d => d.Question).WithMany(p => p.Answers)
+                .HasForeignKey(d => d.Questionid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("answers_questionid_fkey");
         });
 
         modelBuilder.Entity<Apartment>(entity =>
@@ -388,6 +415,39 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Phonenumber)
                 .HasMaxLength(20)
                 .HasColumnName("phonenumber");
+        });
+
+        modelBuilder.Entity<Customeranswer>(entity =>
+        {
+            entity.HasKey(e => e.Customeranswerid).HasName("customeranswers_pkey");
+
+            entity.ToTable("customeranswers");
+
+            entity.HasIndex(e => new { e.Bookingid, e.Questionid }, "customeranswers_bookingid_questionid_key").IsUnique();
+
+            entity.Property(e => e.Customeranswerid).HasColumnName("customeranswerid");
+            entity.Property(e => e.Answerid).HasColumnName("answerid");
+            entity.Property(e => e.Bookingid).HasColumnName("bookingid");
+            entity.Property(e => e.Createdat)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdat");
+            entity.Property(e => e.Questionid).HasColumnName("questionid");
+
+            entity.HasOne(d => d.Answer).WithMany(p => p.Customeranswers)
+                .HasForeignKey(d => d.Answerid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("customeranswers_answerid_fkey");
+
+            entity.HasOne(d => d.Booking).WithMany(p => p.Customeranswers)
+                .HasForeignKey(d => d.Bookingid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("customeranswers_bookingid_fkey");
+
+            entity.HasOne(d => d.Question).WithMany(p => p.Customeranswers)
+                .HasForeignKey(d => d.Questionid)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("customeranswers_questionid_fkey");
         });
 
         modelBuilder.Entity<Developer>(entity =>
@@ -807,20 +867,19 @@ public partial class OdaDbContext : DbContext
         });
 
         modelBuilder.Entity<Question>(entity =>
-        {
-            entity.HasKey(e => e.Questionsid).HasName("questions_pkey");
-            entity.ToTable("questions");
-            entity.Property(e => e.Questionsid).HasColumnName("questionsid");
-            entity.Property(e => e.Answer).HasColumnName("answer");
-            entity.Property(e => e.Bookingid).HasColumnName("bookingid");
-            entity.Property(e => e.Questionname)
-                .HasMaxLength(255)
-                .HasColumnName("questionname");
-            entity.HasOne(d => d.Booking).WithMany(p => p.Questions)
-                .HasForeignKey(d => d.Bookingid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("questions_bookingid_fkey");
-        });
+          {
+              entity.HasKey(e => e.Questionid).HasName("questions_pkey");
+
+              entity.ToTable("questions");
+
+              entity.Property(e => e.Questionid).HasColumnName("questionid");
+              entity.Property(e => e.Createdat)
+                  .HasDefaultValueSql("now()")
+                  .HasColumnType("timestamp without time zone")
+                  .HasColumnName("createdat");
+              entity.Property(e => e.Questiontext).HasColumnName("questiontext");
+          });
+
         modelBuilder.Entity<Role>(entity =>
         {
             entity.HasKey(e => e.Roleid).HasName("role_pkey");

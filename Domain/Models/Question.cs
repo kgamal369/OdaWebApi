@@ -1,17 +1,17 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OdaWepApi.Domain.Models;
 
 public partial class Question
 {
-    public int Questionsid { get; set; }
+    public int Questionid { get; set; }
 
-    public string? Questionname { get; set; }
+    public string Questiontext { get; set; } = null!;
 
-    public int? Answer { get; set; }
+    public DateTime? Createdat { get; set; }
 
-    public int? Bookingid { get; set; }
+    public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
 
-    [JsonIgnore]
-    public virtual Booking? Booking { get; set; }
+    public virtual ICollection<Customeranswer> Customeranswers { get; set; } = new List<Customeranswer>();
 }

@@ -20,7 +20,7 @@ namespace OdaWepApi.DataFlows
                     .ThenInclude(a => a.Automation)
                 .Include(b => b.Paymentplan)
                     .ThenInclude(p => p.Installmentbreakdowns)
-                .Include(b => b.Questions)
+                .Include(b => b.Customeranswers)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Bookingid == bookingID);
 
@@ -66,9 +66,20 @@ namespace OdaWepApi.DataFlows
                 AddonPerRequestDescription = aapr.Addperrequest.Description
             }).ToList();
 
-            var selectedQuestions = await db.Questions
-                .Where(q => q.Bookingid == bookingID)
-                .AsNoTracking()
+            // ✅ Get the selected CustomerAnswerDTO from the database
+            var customerAnswers = await db.Customeranswers
+                .Where(ca => ca.Bookingid == bookingID)
+                .Include(ca => ca.Question)
+                .Include(ca => ca.Answer)
+                .Select(ca => new CustomerAnswersDTO
+                {
+                    Customeranswerid = ca.Customeranswerid,
+                    Questionid = ca.Questionid,
+                    Questiontext = ca.Question != null ? ca.Question.Questiontext : string.Empty,
+                    Answerid = ca.Answerid,
+                    Answertext = ca.Answer != null ? ca.Answer.Answertext : string.Empty,
+                    Answercode = ca.Answer != null ? ca.Answer.Answercode : ' '
+                })
                 .ToListAsync();
 
             var unitTypeName = await db.Unittypes
@@ -186,7 +197,7 @@ namespace OdaWepApi.DataFlows
                 AutomationID = apartment.Automationid,
                 AddonPerRequests = addonPerRequestDetails,
                 CustomerInfo = booking.Customer ?? new Customer(),
-                questions = selectedQuestions,
+                CustomerAnswers = customerAnswers,
                 TotalAmount = totalAmount,
                 TotalAmount_Addons_plan = totalPrice_Addons_Plan,
                 paymentDTO = paymentDTO

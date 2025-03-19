@@ -41,7 +41,8 @@ public partial class Booking
     public virtual User? User { get; set; }
 
     [JsonIgnore]
-    public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
-    [JsonIgnore]
     public virtual ICollection<Faceliftroom> FaceliftRooms { get; set; } = new List<Faceliftroom>();
+
+    [JsonIgnore]
+    public virtual ICollection<Customeranswer> Customeranswers { get; set; } = new List<Customeranswer>();
 }

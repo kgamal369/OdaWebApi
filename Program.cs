@@ -1,9 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using OdaWepApi.API.DomainEndpoints;
 using OdaWepApi.API.DTOEndpoints;
@@ -128,32 +125,34 @@ app.MapControllers();
 // ✅ Map Additional Endpoints
 app.MapAddonEndpoints();
 app.MapAddperrequestEndpoints();
+app.MapAnswerEndpoints();
 app.MapApartmentEndpoints();
-app.MapAutomationEndpoints();
 app.MapAutomationDetailsEndpoints();
-app.MapBookingEndpoints();
-app.MapCustomerEndpoints();
-app.MapDeveloperEndpoints();
-app.MapInstallmentBreakdownEndpoints();
-app.MapInvoiceEndpoints();
-app.MapPlanEndpoints();
-app.MapPaymentPlanEndpoints();
-app.MapPlanDetailsEndpoints();
-app.MapPermissionEndpoints();
-app.MapProjectEndpoints();
-app.MapRoleEndpoints();
-app.MapUserEndpoints();
+app.MapAutomationEndpoints();
 app.MapBookingDataInEndpoints();
 app.MapBookingDataOutEndpoints();
-app.MapUnittypeEndpoints();
-app.MapOdaAmbassadorEndpoints();
+app.MapBookingEndpoints();
 app.MapContactUsEndpoints();
-
-app.MapFaceLiftAddonEndpoints();
+app.MapCustomerAnswerEndpoints();
+app.MapCustomerEndpoints();
+app.MapDeveloperEndpoints();
 app.MapFaceLiftAddperrequestEndpoints();
+app.MapFaceLiftAddonEndpoints();
 app.MapFaceLiftApartmentDTOEndpoints();
-app.MapFaceLiftBookingDataOutDTOEndpoints();
 app.MapFaceLiftBookingDataInDTOEndpoints();
+app.MapFaceLiftBookingDataOutDTOEndpoints();
+app.MapInstallmentBreakdownEndpoints();
+app.MapInvoiceEndpoints();
+app.MapOdaAmbassadorEndpoints();
+app.MapPaymentPlanEndpoints();
+app.MapPermissionEndpoints();
+app.MapPlanDetailsEndpoints();
+app.MapPlanEndpoints();
+app.MapProjectEndpoints();
+app.MapQuestionEndpoints();
+app.MapRoleEndpoints();
+app.MapUnittypeEndpoints();
+app.MapUserEndpoints();
 
 // ✅ Ensure Database is Ready
 try

@@ -42,7 +42,7 @@ namespace OdaWepApi.DataFlows
                 int bookingId = await CreateBookingRecord(db, newApartmentId, customerId, bookingDataIn);
 
                 // Insert questions associated with the booking
-                await CreateOrGetQuestion(db, bookingDataIn.Questions, bookingId);
+                await CreateOrGetQuestion(db, bookingDataIn.CustomerAnswers, bookingId);
 
                 // Create apartment addons
                 await CreateApartmentAddons(db, newApartmentId, bookingDataIn.Addons);
@@ -94,21 +94,20 @@ namespace OdaWepApi.DataFlows
 
             return booking.Bookingid;
         }
-        private static async Task<int> CreateOrGetQuestion(OdaDbContext db, List<Question> questions, int bookingId)
+        private static async Task<int> CreateOrGetQuestion(OdaDbContext db, List<Customeranswer> customeranswers, int bookingId)
         {
-            if (questions == null || questions.Count == 0)
+            if (customeranswers == null || customeranswers.Count == 0)
             {
                 return 0;
             }
-
-            foreach (var question in questions)
+            foreach (var customeranswer in customeranswers)
             {
-                question.Bookingid = bookingId; // Ensure the booking ID is set
+                customeranswer.Bookingid = bookingId; // Ensure the booking ID is set
             }
-
-            db.Questions.AddRange(questions); // Add the list of questions to the context
+            db.Customeranswers.AddRange(customeranswers); // Add the list of questions to the context
             return await db.SaveChangesAsync(); // Save changes and return the number of affected rows
         }
+
         private static async Task CreateApartmentAddons(OdaDbContext db, int newApartmentId, List<AddonSelection> addons)
         {
             foreach (var addon in addons)
