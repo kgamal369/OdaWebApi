@@ -89,7 +89,7 @@ namespace OdaWepApi.DataFlows
             var totalAddonPrice = addonDetails.Sum(a => a.Price);
 
             var totalAirconditionerPrice = addonDetails
-                .Where(a => a.Addongroup == "Airconditioner")
+                .Where(a => a.Addongroup == "AirConditioning")
                 .Sum(a => a.Price);
             var totalPrice_Addons_Plan = totalPlanPrice + totalAddonPrice;
 
