@@ -87,6 +87,10 @@ namespace OdaWepApi.DataFlows
                 .ToListAsync();
 
             var totalAddonPrice = addonDetails.Sum(a => a.Price);
+
+            var totalAirconditionerPrice = addonDetails
+                .Where(a => a.Addongroup == "Airconditioner")
+                .Sum(a => a.Price);
             var totalPrice_Addons_Plan = totalPlanPrice + totalAddonPrice;
 
             bool isEqualPayment = paymentPlan.Paymentplanid != 1 && paymentPlan.Paymentplanid != 2;
@@ -178,6 +182,7 @@ namespace OdaWepApi.DataFlows
                 TotalPlanPrice = totalPlanPrice,
                 Addons = addonDetails,
                 SumOfTotalAddonPrices = totalAddonPrice,
+                TotalAirconditionerPrice = totalAirconditionerPrice,
                 AutomationID = apartment.Automationid,
                 AddonPerRequests = addonPerRequestDetails,
                 CustomerInfo = booking.Customer ?? new Customer(),
