@@ -94,7 +94,7 @@ namespace OdaWepApi.DataFlows
 
             return booking.Bookingid;
         }
-        private static async Task<int> CreateOrGetQuestion(OdaDbContext db, List<Customeranswer> customeranswers, int bookingId)
+        private static async Task<int> CreateOrGetQuestion(OdaDbContext db, List<CustomerAnswersInDTO> customeranswers, int bookingId)
         {
             if (customeranswers == null || customeranswers.Count == 0)
             {
@@ -102,9 +102,14 @@ namespace OdaWepApi.DataFlows
             }
             foreach (var customeranswer in customeranswers)
             {
-                customeranswer.Bookingid = bookingId; // Ensure the booking ID is set
+                var dbCustAnswer = new Customeranswer
+                {
+                    Questionid = customeranswer.Questionid,
+                    Answerid = customeranswer.Answerid,
+                    Bookingid = bookingId
+                };
+                db.Customeranswers.Add(dbCustAnswer);
             }
-            db.Customeranswers.AddRange(customeranswers); // Add the list of questions to the context
             return await db.SaveChangesAsync(); // Save changes and return the number of affected rows
         }
 

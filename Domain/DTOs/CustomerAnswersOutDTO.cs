@@ -1,7 +1,7 @@
 using System;
 namespace OdaWepApi.Domain.DTOs
 {
-    public class CustomerAnswersDTO
+    public class CustomerAnswersOutDTO
     {
         public int Customeranswerid { get; set; }
         public int? Questionid { get; set; }

@@ -12,6 +12,6 @@ namespace OdaWepApi.Domain.DTOs
         public int? AutomationID { get; set; }
         public Customer CustomerInfo { get; set; }
         public int PaymentPlanID { get; set; }
-        public List<Customeranswer> CustomerAnswers { get; set; }
+        public List<CustomerAnswersInDTO> CustomerAnswers { get; set; }
     }
 }

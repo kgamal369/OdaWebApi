@@ -13,6 +13,8 @@ public partial class Answer
 
     public char Answercode { get; set; }
 
+    public byte[]? AnswerPhoto { get; set; }
+
     public DateTime? Createdat { get; set; }
 
     public virtual ICollection<Customeranswer> Customeranswers { get; set; } = new List<Customeranswer>();

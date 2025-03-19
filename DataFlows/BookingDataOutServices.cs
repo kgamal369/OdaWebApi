@@ -71,7 +71,7 @@ namespace OdaWepApi.DataFlows
                 .Where(ca => ca.Bookingid == bookingID)
                 .Include(ca => ca.Question)
                 .Include(ca => ca.Answer)
-                .Select(ca => new CustomerAnswersDTO
+                .Select(ca => new CustomerAnswersOutDTO
                 {
                     Customeranswerid = ca.Customeranswerid,
                     Questionid = ca.Questionid,

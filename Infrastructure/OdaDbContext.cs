@@ -151,6 +151,7 @@ public partial class OdaDbContext : DbContext
                 .HasMaxLength(1)
                 .HasColumnName("answercode");
             entity.Property(e => e.Answertext).HasColumnName("answertext");
+            entity.Property(e => e.AnswerPhoto).HasColumnName("answerphoto");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")

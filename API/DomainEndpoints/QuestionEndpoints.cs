@@ -19,6 +19,31 @@ namespace OdaWepApi.API.DomainEndpoints
             .WithName("GetAllQuestions")
             .WithOpenApi();
 
+            // ✅ Get all Questions with their Answers
+            group.MapGet("/with-answers", async (OdaDbContext db) =>
+            {
+                var questionsWithAnswers = await db.Questions
+                    .Include(q => q.Answers)
+                    .Select(q => new
+                    {
+                        Questionid = q.Questionid,
+                        Questiontext = q.Questiontext,
+                        Answers = q.Answers.Select(a => new
+                        {
+                            Answerid = a.Answerid,
+                            Answercode = a.Answercode,
+                            Answertext = a.Answertext,
+                            AnswerPhotoBase64 = a.AnswerPhoto != null ? Convert.ToBase64String(a.AnswerPhoto) : null
+                        }).ToList()
+                    })
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                return TypedResults.Ok(questionsWithAnswers);
+            })
+            .WithName("GetAllQuestionAnswers")
+            .WithOpenApi();
+
             // Get Question by Id
             group.MapGet("/{id}", async Task<Results<Ok<Question>, NotFound>> (int id, OdaDbContext db) =>
             {
