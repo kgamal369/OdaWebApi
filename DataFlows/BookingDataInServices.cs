@@ -42,7 +42,8 @@ namespace OdaWepApi.DataFlows
                 int bookingId = await CreateBookingRecord(db, newApartmentId, customerId, bookingDataIn);
 
                 // Insert questions associated with the booking
-                await CreateOrGetQuestion(db, bookingDataIn.CustomerAnswers, bookingId);
+                await CreateCustomerAnswer(db, bookingDataIn.CustomerAnswers, bookingId);
+
 
                 // Create apartment addons
                 await CreateApartmentAddons(db, newApartmentId, bookingDataIn.Addons);
@@ -94,7 +95,7 @@ namespace OdaWepApi.DataFlows
 
             return booking.Bookingid;
         }
-        private static async Task<int> CreateOrGetQuestion(OdaDbContext db, List<CustomerAnswersInDTO> customeranswers, int bookingId)
+        private static async Task<int> CreateCustomerAnswer(OdaDbContext db, List<CustomerAnswersInDTO> customeranswers, int bookingId)
         {
             if (customeranswers == null || customeranswers.Count == 0)
             {
@@ -154,20 +155,7 @@ namespace OdaWepApi.DataFlows
             db.Faceliftrooms.AddRange(roomToInsert);
             await db.SaveChangesAsync();
         }
-        private static async Task CreateApartmentAddonPerRequests(OdaDbContext db, int newApartmentId, List<int> addonPerRequestIDs)
-        {
-            foreach (var addonPerRequestId in addonPerRequestIDs)
-            {
-                var apartmentAddonPerRequest = new ApartmentAddonperrequest
-                {
-                    Apartmentid = newApartmentId,
-                    Addperrequestid = addonPerRequestId,
-                    Quantity = 1
-                };
-                db.ApartmentAddonperrequests.Add(apartmentAddonPerRequest);
-            }
-            await db.SaveChangesAsync();
-        }
+
         private static async Task<decimal> CalculateTotalAmount(OdaDbContext db, int newApartmentId, BookingDataIn bookingDataIn)
         {
             var plan = await db.Plans.FindAsync(bookingDataIn.PlanID);
@@ -224,6 +212,10 @@ namespace OdaWepApi.DataFlows
 
             // Update apartment addon per requests
             await UpdateApartmentAddonPerRequests(db, booking.Apartmentid ?? 0, bookingDataIn.AddonPerRequestIDs);
+
+            // Update questions associated with the booking
+            await updateCustomerAnswer(db, bookingDataIn.CustomerAnswers, bookingID);
+
             // Save changes to the database
             await db.SaveChangesAsync();
 
@@ -247,6 +239,21 @@ namespace OdaWepApi.DataFlows
             }
             await db.SaveChangesAsync();
         }
+
+        private static async Task CreateApartmentAddonPerRequests(OdaDbContext db, int newApartmentId, List<int> addonPerRequestIDs)
+        {
+            foreach (var addonPerRequestId in addonPerRequestIDs)
+            {
+                var apartmentAddonPerRequest = new ApartmentAddonperrequest
+                {
+                    Apartmentid = newApartmentId,
+                    Addperrequestid = addonPerRequestId,
+                    Quantity = 1
+                };
+                db.ApartmentAddonperrequests.Add(apartmentAddonPerRequest);
+            }
+            await db.SaveChangesAsync();
+        }
         private static async Task UpdateApartmentAddonPerRequests(OdaDbContext db, int apartmentId, List<int> addonPerRequestIDs)
         {
             var existingAddonPerRequests = db.ApartmentAddonperrequests.Where(a => a.Apartmentid == apartmentId);
@@ -263,6 +270,23 @@ namespace OdaWepApi.DataFlows
                 db.ApartmentAddonperrequests.Add(apartmentAddonPerRequest);
             }
             await db.SaveChangesAsync();
+        }
+        private static async Task updateCustomerAnswer(OdaDbContext db, List<CustomerAnswersInDTO> customeranswers, int bookingId)
+        {
+            var existingCustomerAnswers = db.Customeranswers.Where(a => a.Bookingid == bookingId);
+            db.Customeranswers.RemoveRange(existingCustomerAnswers);
+
+            foreach (var customeranswer in customeranswers)
+            {
+                var dbCustAnswer = new Customeranswer
+                {
+                    Questionid = customeranswer.Questionid,
+                    Answerid = customeranswer.Answerid,
+                    Bookingid = bookingId
+                };
+                db.Customeranswers.Add(dbCustAnswer);
+            }
+            await db.SaveChangesAsync(); // Save changes and return the number of affected rows
         }
     }
 }

@@ -14,7 +14,7 @@ namespace OdaWepApi.API.DomainEndpoints
             // Get all Addons
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                return await db.Addons.AsNoTracking().ToListAsync();
+                return await db.Addons.AsNoTracking().OrderBy(a => a.Addonid).ToListAsync();
             })
             .WithName("GetAllAddons")
             .WithOpenApi();

@@ -3,8 +3,6 @@ using OdaWepApi.Infrastructure;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Domain.DTOs;
 using OdaWepApi.Domain.Enums;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OdaWepApi.DataFlows
 {

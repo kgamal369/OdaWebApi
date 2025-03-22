@@ -1,6 +1,8 @@
 ﻿# Visual Studio temporary files
 .vs/
+.vscode/
 .config/
+.sonarqube/
 *.vsidx
 *.suo
 *.cache

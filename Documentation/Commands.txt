@@ -51,3 +51,14 @@ sc failure OdaWebApiService reset= 60 actions= restart/60000/restart/60000
 IP : 52.169.144.36
 Username : odaadmin
 Password :0d@Project123 
+
+
+9.SonarQube
+server : http://localhost:9000
+Username : Admin
+Password : THEspider369!
+run :dotnet sonarscanner begin /k:"OdaWebApi" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="admin"
+build :dotnet build
+Scan :dotnet sonarscanner end /d:sonar.login="admin"
+dotnet sonarscanner begin /k:"OdaWebApi" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="sqa_d1dc38abdbe1c3b5980e83ff2fbdd31a5e2b61a1"
+dotnet sonarscanner end /d:sonar.login="sqa_d1dc38abdbe1c3b5980e83ff2fbdd31a5e2b61a1"
