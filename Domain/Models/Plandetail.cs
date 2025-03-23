@@ -12,6 +12,8 @@ public partial class Plandetail
 
     public int? Planid { get; set; }
 
+    public int? DisplayOrder { get; set; }
+
     public string? Description { get; set; }
 
     public DateTime? Createdatetime { get; set; }

@@ -14,6 +14,8 @@ public partial class Addon
     public string? Description { get; set; }
 
     public string? Brand { get; set; }
+    
+    public int? DisplayOrder { get; set; }
 
     public DateTime? Createddatetime { get; set; }
 

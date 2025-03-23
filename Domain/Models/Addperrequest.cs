@@ -9,6 +9,8 @@ public partial class Addperrequest
     public decimal? Price { get; set; }
 
     public string? Description { get; set; }
+    
+    public int? DisplayOrder { get; set; }
 
     public DateTime? Createddatetime { get; set; }
 

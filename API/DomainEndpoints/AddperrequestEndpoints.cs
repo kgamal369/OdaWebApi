@@ -14,7 +14,10 @@ namespace OdaWepApi.API.DomainEndpoints
             // Get all Addperrequests
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                return await db.Addperrequests.AsNoTracking().ToListAsync();
+                return await db.Addperrequests
+                .AsNoTracking()
+                .OrderBy(a => a.DisplayOrder)
+                .ToListAsync();
             })
            .WithName("GetAllAddperrequests")
            .WithOpenApi();

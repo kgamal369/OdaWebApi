@@ -101,6 +101,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Addonname)
                 .HasMaxLength(255)
                 .HasColumnName("addonname");
+            entity.Property(e => e.DisplayOrder).HasColumnName("displayorder");    
             entity.Property(e => e.Brand).HasColumnName("brand");
             entity.Property(e => e.Createddatetime)
                 .HasColumnType("timestamp without time zone")
@@ -128,6 +129,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Addperrequestname)
                 .HasMaxLength(255)
                 .HasColumnName("addperrequestname");
+            entity.Property(e => e.DisplayOrder).HasColumnName("displayorder");    
             entity.Property(e => e.Createddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createddatetime");
@@ -810,6 +812,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .HasColumnName("description");
+            entity.Property(e => e.DisplayOrder).HasColumnName("displayorder");    
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");
