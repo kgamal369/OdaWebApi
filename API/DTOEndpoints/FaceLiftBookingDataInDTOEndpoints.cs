@@ -34,13 +34,9 @@ namespace OdaWepApi.API.DTOEndpoints
                 try
                 {
 
-                    //  int updatedBookingId = await FaceLiftBookingDataInServices.UpdateFaceLiftBookingDataIn(db, bookingID, faceLiftBookingDataInDTO);
-                    // var bookingDataOut = await FaceLiftBookingDataOutServices.GetFaceLiftBookingDataOut(db, updatedBookingId);
-                    // return Results.Ok(bookingDataOut);
-
-                    //var FaceLiftBookingDataOut = await FaceLiftBookingDataOutServices.GetFaceLiftBookingDataOut(db, bookingID);
-                    var faceLiftBookingDataOut = new FaceLiftBookingDataOutDTO();
-                    return Results.Ok(faceLiftBookingDataOut);
+                    int updatedBookingId = await FaceLiftBookingDataInServices.UpdateFaceLiftBookingDataIn(db, bookingID, faceLiftBookingDataInDTO);
+                    var bookingDataOut = await FaceLiftBookingDataOutServices.GetFaceLiftBookingDataOutDTO(db, updatedBookingId);
+                    return Results.Ok(bookingDataOut);
                 }
                 catch (Exception ex)
                 {
