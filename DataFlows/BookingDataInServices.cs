@@ -36,14 +36,11 @@ namespace OdaWepApi.DataFlows
                 // Create or get customer
                 int customerId = await CreateOrGetCustomer(db, bookingDataIn.CustomerInfo);
 
-                // Create or get question
-
                 // Create booking record
                 int bookingId = await CreateBookingRecord(db, newApartmentId, customerId, bookingDataIn);
 
                 // Insert questions associated with the booking
                 await CreateCustomerAnswer(db, bookingDataIn.CustomerAnswers, bookingId);
-
 
                 // Create apartment addons
                 await CreateApartmentAddons(db, newApartmentId, bookingDataIn.Addons);
@@ -113,7 +110,6 @@ namespace OdaWepApi.DataFlows
             }
             return await db.SaveChangesAsync(); // Save changes and return the number of affected rows
         }
-
         private static async Task CreateApartmentAddons(OdaDbContext db, int newApartmentId, List<AddonSelection> addons)
         {
             foreach (var addon in addons)
@@ -128,8 +124,20 @@ namespace OdaWepApi.DataFlows
             }
             await db.SaveChangesAsync();
         }
-
-
+        private static async Task CreateApartmentAddonPerRequests(OdaDbContext db, int newApartmentId, List<int> addonPerRequestIDs)
+        {
+            foreach (var addonPerRequestId in addonPerRequestIDs)
+            {
+                var apartmentAddonPerRequest = new ApartmentAddonperrequest
+                {
+                    Apartmentid = newApartmentId,
+                    Addperrequestid = addonPerRequestId,
+                    Quantity = 1
+                };
+                db.ApartmentAddonperrequests.Add(apartmentAddonPerRequest);
+            }
+            await db.SaveChangesAsync();
+        }
         private static async Task CreateApartmentRooms(OdaDbContext db, int newApartmentId, int bookingId, BookingDataIn bookingDataIn)
         {
             var roomToInsert = new List<Faceliftroom>();
@@ -155,7 +163,6 @@ namespace OdaWepApi.DataFlows
             db.Faceliftrooms.AddRange(roomToInsert);
             await db.SaveChangesAsync();
         }
-
         private static async Task<decimal> CalculateTotalAmount(OdaDbContext db, int newApartmentId, BookingDataIn bookingDataIn)
         {
             var plan = await db.Plans.FindAsync(bookingDataIn.PlanID);
@@ -171,6 +178,7 @@ namespace OdaWepApi.DataFlows
             }
             return totalPlanPrice + totalAddonPrice;
         }
+
         public static async Task<int> UpdateBookingDataIn(OdaDbContext db, int bookingID, BookingDataIn bookingDataIn)
         {
             // Fetch the existing booking
@@ -236,21 +244,6 @@ namespace OdaWepApi.DataFlows
                     Quantity = addon.Quantity
                 };
                 db.ApartmentAddons.Add(apartmentAddon);
-            }
-            await db.SaveChangesAsync();
-        }
-
-        private static async Task CreateApartmentAddonPerRequests(OdaDbContext db, int newApartmentId, List<int> addonPerRequestIDs)
-        {
-            foreach (var addonPerRequestId in addonPerRequestIDs)
-            {
-                var apartmentAddonPerRequest = new ApartmentAddonperrequest
-                {
-                    Apartmentid = newApartmentId,
-                    Addperrequestid = addonPerRequestId,
-                    Quantity = 1
-                };
-                db.ApartmentAddonperrequests.Add(apartmentAddonPerRequest);
             }
             await db.SaveChangesAsync();
         }

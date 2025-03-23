@@ -8,5 +8,6 @@ namespace OdaWepApi.Domain.DTOs.FaceLiftDTO
         public int BookingID { get; set; }
         public int? AutomationID { get; set; }
         public List<AddonPerRequestDetail>? AddonPerRequests { get; set; }
+        public List<FaceLiftRoomDTO>? Rooms { get; set; }
     }
 }
