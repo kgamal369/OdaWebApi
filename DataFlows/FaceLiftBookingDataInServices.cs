@@ -56,6 +56,8 @@ namespace OdaWepApi.DataFlows
             {
                 Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                 Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                Apartmenttype = ApartmentType.Facelift,
+                Apartmentstatus = Apartmentstatus.InProgress,
                 Automationid = faceLiftBookingDataInDTO.AutomationID,
             };
             db.Apartments.Add(Apartment);
@@ -116,13 +118,13 @@ namespace OdaWepApi.DataFlows
         {
             foreach (var addonPerRequestId in addonPerRequestIDs)
             {
-                var apartmentAddonPerRequest = new ApartmentAddonperrequest
+                var apartmentAddonPerRequest = new FaceliftroomAddonperrequest
                 {
                     Apartmentid = newApartmentId,
                     Addperrequestid = addonPerRequestId,
                     Quantity = 1
                 };
-                db.ApartmentAddonperrequests.Add(apartmentAddonPerRequest);
+                db.FaceliftroomAddonperrequests.Add(apartmentAddonPerRequest);
             }
             await db.SaveChangesAsync();
         }

@@ -21,7 +21,8 @@
     public enum ApartmentType
     {
         Project,
-        Kit
+        Kit,
+        Facelift
     }
 
     public enum Apartmentstatus

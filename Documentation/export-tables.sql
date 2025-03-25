@@ -650,10 +650,10 @@ CREATE Table public.FaceLiftRoom_addon (
 )
 
 CREATE TABLE public.FaceLiftRoom_addonperrequest (
-	roomid int4 NOT NULL,
+	apartmentid int4 NOT NULL,
 	addperrequestid int4 NOT NULL,
 	quantity int4 DEFAULT 1 NULL,
-	CONSTRAINT room_addonperrequest_pkey PRIMARY KEY (roomid, addperrequestid),
-	CONSTRAINT room_addon_apartmentid_fkey FOREIGN KEY (roomid) REFERENCES public.FaceLiftRoom(roomid) ON DELETE CASCADE,
+	CONSTRAINT room_addonperrequest_pkey PRIMARY KEY (apartmentid, addperrequestid),
+	CONSTRAINT room_addon_apartmentid_fkey FOREIGN KEY (apartmentid) REFERENCES public.apartment(roomid) ON DELETE CASCADE,
 	CONSTRAINT apartment_addonperrequest_addperrequestid_fkey FOREIGN KEY (addperrequestid) REFERENCES public.FaceLiftaddperrequest(addperrequestid) ON DELETE CASCADE
 );

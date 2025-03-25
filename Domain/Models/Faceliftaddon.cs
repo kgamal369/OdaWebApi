@@ -20,13 +20,14 @@ public partial class Faceliftaddon
 
     public string? Brand { get; set; }
 
-    public FaceLiftRoomType FaceLiftRoomType { get; set; }
-
     public DateTime? Createddatetime { get; set; }
 
     public DateTime? Lastmodifieddatetime { get; set; }
 
     public string? Unitormeter { get; set; }
+    public int? Displayorder { get; set; }
+
+    public FaceLiftRoomType Faceliftroomtype { get; set; }
 
     public virtual ICollection<FaceliftroomAddon> FaceliftroomAddons { get; set; } = new List<FaceliftroomAddon>();
 }

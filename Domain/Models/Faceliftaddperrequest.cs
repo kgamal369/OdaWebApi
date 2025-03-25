@@ -16,6 +16,6 @@ public partial class Faceliftaddperrequest
     public DateTime? Createddatetime { get; set; }
 
     public DateTime? Lastmodifieddatetime { get; set; }
-
+    public int? Displayorder { get; set; }
     public virtual ICollection<FaceliftroomAddonperrequest> FaceliftroomAddonperrequests { get; set; } = new List<FaceliftroomAddonperrequest>();
 }

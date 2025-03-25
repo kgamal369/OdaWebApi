@@ -26,7 +26,7 @@ namespace OdaWepApi.DataFlows
 
             var paymentPlan = booking.Paymentplan ?? throw new System.Exception("Payment plan not found.");
 
-            var addonPerRequests = await db.ApartmentAddonperrequests
+            var addonPerRequests = await db.FaceliftroomAddonperrequests
                 .Where(aapr => aapr.Apartmentid == apartment.Apartmentid)
                 .Include(aapr => aapr.Addperrequest)
                 .AsNoTracking()

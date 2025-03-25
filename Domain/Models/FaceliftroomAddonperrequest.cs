@@ -5,7 +5,7 @@ namespace OdaWepApi.Domain.Models;
 
 public partial class FaceliftroomAddonperrequest
 {
-    public int Roomid { get; set; }
+    public int Apartmentid { get; set; }
 
     public int Addperrequestid { get; set; }
 
@@ -13,5 +13,5 @@ public partial class FaceliftroomAddonperrequest
 
     public virtual Faceliftaddperrequest Addperrequest { get; set; } = null!;
 
-    public virtual Faceliftroom Room { get; set; } = null!;
+    public virtual Apartment Apartment { get; set; } = null!;
 }

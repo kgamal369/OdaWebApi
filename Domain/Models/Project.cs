@@ -15,7 +15,7 @@ public partial class Project
 
     public int? Totalunits { get; set; }
 
-    public byte[]? Projectlogo { get; set; } // Changed from List<byte[]> to byte[]
+    public byte[]? Projectlogo { get; set; }
 
     public DateTime? Createdatetime { get; set; }
 

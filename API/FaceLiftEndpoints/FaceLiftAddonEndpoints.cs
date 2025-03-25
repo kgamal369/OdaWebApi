@@ -14,7 +14,10 @@ namespace OdaWepApi.API.FaceLiftEndpoints
             // Get all FaceLiftAddonsAddons
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                return await db.Faceliftaddons.AsNoTracking().ToListAsync();
+                return await db.Faceliftaddons
+                .AsNoTracking()
+                .OrderBy(a => a.Displayorder)
+                .ToListAsync();
             })
             .WithName("GetAllFaceLiftAddons")
             .WithOpenApi();
@@ -24,7 +27,7 @@ namespace OdaWepApi.API.FaceLiftEndpoints
              {
                  var grouped = await db.Faceliftaddons
                      .AsNoTracking()
-                     .GroupBy(a => a.FaceLiftRoomType)
+                     .GroupBy(a => a.Faceliftroomtype)
                      .ToDictionaryAsync(
                          g => g.Key.ToString(),
                          g => g.OrderBy(a => a.Addonid).ToList()
@@ -69,7 +72,7 @@ namespace OdaWepApi.API.FaceLiftEndpoints
                 existing.Price = input.Price;
                 existing.Description = input.Description;
                 existing.Brand = input.Brand;
-                existing.FaceLiftRoomType = input.FaceLiftRoomType;
+                existing.Faceliftroomtype = input.Faceliftroomtype;
                 existing.Unitormeter = input.Unitormeter;
                 existing.Lastmodifieddatetime = DateTime.UtcNow;
 

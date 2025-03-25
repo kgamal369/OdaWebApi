@@ -33,7 +33,7 @@ namespace OdaWepApi.API.DomainEndpoints
                             Answerid = a.Answerid,
                             Answercode = a.Answercode,
                             Answertext = a.Answertext,
-                            AnswerPhotoBase64 = a.AnswerPhoto != null ? Convert.ToBase64String(a.AnswerPhoto) : null
+                            AnswerPhotoBase64 = a.Answerphoto != null ? Convert.ToBase64String(a.Answerphoto) : null
                         }).ToList()
                     })
                     .AsNoTracking()

@@ -18,12 +18,11 @@ public partial class Faceliftroom
 
     public int? Apartmentid { get; set; }
 
+    public virtual Apartment? Apartment { get; set; }
+
     public virtual Automation? Automation { get; set; }
 
     public virtual Booking? Booking { get; set; }
-    public virtual Apartment? Apartment { get; set; }
-
-    public virtual ICollection<FaceliftroomAddonperrequest> FaceliftroomAddonperrequests { get; set; } = new List<FaceliftroomAddonperrequest>();
 
     public virtual ICollection<FaceliftroomAddon> FaceliftroomAddons { get; set; } = new List<FaceliftroomAddon>();
 }

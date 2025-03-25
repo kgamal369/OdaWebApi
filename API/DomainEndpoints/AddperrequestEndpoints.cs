@@ -16,7 +16,7 @@ namespace OdaWepApi.API.DomainEndpoints
             {
                 return await db.Addperrequests
                 .AsNoTracking()
-                .OrderBy(a => a.DisplayOrder)
+                .OrderBy(a => a.Displayorder)
                 .ToListAsync();
             })
            .WithName("GetAllAddperrequests")

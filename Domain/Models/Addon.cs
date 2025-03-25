@@ -1,4 +1,7 @@
-﻿using OdaWepApi.Domain.Enums;
+﻿using System;
+using System.Collections.Generic;
+using OdaWepApi.Domain.Enums;
+
 namespace OdaWepApi.Domain.Models;
 
 public partial class Addon
@@ -14,8 +17,6 @@ public partial class Addon
     public string? Description { get; set; }
 
     public string? Brand { get; set; }
-    
-    public int? DisplayOrder { get; set; }
 
     public DateTime? Createddatetime { get; set; }
 
@@ -23,6 +24,7 @@ public partial class Addon
 
     public UnitOrMeterType Unitormeter { get; set; }
 
-    public virtual ICollection<ApartmentAddon> ApartmentAddons { get; set; } = new List<ApartmentAddon>();
+    public int? Displayorder { get; set; }
 
+    public virtual ICollection<ApartmentAddon> ApartmentAddons { get; set; } = new List<ApartmentAddon>();
 }

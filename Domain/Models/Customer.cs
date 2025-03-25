@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OdaWepApi.Domain.Models;
 
@@ -15,10 +16,10 @@ public partial class Customer
     public string? Phonenumber { get; set; }
 
     public string? Address { get; set; }
+
     public DateTime? Createdatetime { get; set; }
 
     public DateTime? Lastmodifieddatetime { get; set; }
 
-    [JsonIgnore]
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }

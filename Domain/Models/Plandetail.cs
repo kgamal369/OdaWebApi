@@ -12,8 +12,6 @@ public partial class Plandetail
 
     public int? Planid { get; set; }
 
-    public int? DisplayOrder { get; set; }
-
     public string? Description { get; set; }
 
     public DateTime? Createdatetime { get; set; }
@@ -22,6 +20,7 @@ public partial class Plandetail
 
     public int? Stars { get; set; }
 
-    public virtual Plan? Plan { get; set; }
+    public int? Displayorder { get; set; }
 
+    public virtual Plan? Plan { get; set; }
 }

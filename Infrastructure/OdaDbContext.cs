@@ -101,7 +101,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Addonname)
                 .HasMaxLength(255)
                 .HasColumnName("addonname");
-            entity.Property(e => e.DisplayOrder).HasColumnName("displayorder");    
+            entity.Property(e => e.Displayorder).HasColumnName("displayorder");
             entity.Property(e => e.Brand).HasColumnName("brand");
             entity.Property(e => e.Createddatetime)
                 .HasColumnType("timestamp without time zone")
@@ -129,7 +129,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Addperrequestname)
                 .HasMaxLength(255)
                 .HasColumnName("addperrequestname");
-            entity.Property(e => e.DisplayOrder).HasColumnName("displayorder");    
+            entity.Property(e => e.Displayorder).HasColumnName("displayorder");
             entity.Property(e => e.Createddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createddatetime");
@@ -153,7 +153,7 @@ public partial class OdaDbContext : DbContext
                 .HasMaxLength(1)
                 .HasColumnName("answercode");
             entity.Property(e => e.Answertext).HasColumnName("answertext");
-            entity.Property(e => e.AnswerPhoto).HasColumnName("answerphoto");
+            entity.Property(e => e.Answerphoto).HasColumnName("answerphoto");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
@@ -488,8 +488,9 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Addonname)
                 .HasMaxLength(255)
                 .HasColumnName("addonname");
+            entity.Property(e => e.Displayorder).HasColumnName("displayorder");
             entity.Property(e => e.Brand).HasColumnName("brand");
-            entity.Property(e => e.FaceLiftRoomType)
+            entity.Property(e => e.Faceliftroomtype)
                 .HasMaxLength(255)
                 .HasConversion<string>() // Convert Enum to string
                 .HasColumnType("text")
@@ -519,6 +520,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Addperrequestname)
                 .HasMaxLength(255)
                 .HasColumnName("addperrequestname");
+            entity.Property(e => e.Displayorder).HasColumnName("displayorder");
             entity.Property(e => e.Createddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createddatetime");
@@ -554,20 +556,20 @@ public partial class OdaDbContext : DbContext
                 .HasColumnName("roomtype");
 
             // Update navigation property names to match the domain models
-            entity.HasOne(d => d.Automation).WithMany(p => p.FaceLiftRooms) // Corrected to match Automation.FaceLiftRooms
+            entity.HasOne(d => d.Automation).WithMany(p => p.Faceliftrooms) // Corrected to match Automation.FaceLiftRooms
                 .HasForeignKey(d => d.Automationid)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("faceliftroom_automationid_fkey");
 
-            entity.HasOne(d => d.Booking).WithMany(p => p.FaceliftRooms) // Corrected to match Booking.FaceliftRooms
+            entity.HasOne(d => d.Booking).WithMany(p => p.Faceliftrooms) // Corrected to match Booking.FaceliftRooms
                 .HasForeignKey(d => d.Bookingid)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("faceliftroom_bookingid_fkey");
 
-            entity.HasOne(d => d.Apartment).WithMany(p => p.FaceliftRooms)
-                .HasForeignKey(d => d.Apartmentid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("faceliftroom_apartmentid_fkey");
+            entity.HasOne(d => d.Apartment).WithMany(p => p.Faceliftrooms)
+                 .HasForeignKey(d => d.Apartmentid)
+                 .OnDelete(DeleteBehavior.Cascade)
+                 .HasConstraintName("faceliftroom_apartmentid_fkey");
         });
 
 
@@ -591,25 +593,25 @@ public partial class OdaDbContext : DbContext
         });
 
         modelBuilder.Entity<FaceliftroomAddonperrequest>(entity =>
-        {
-            entity.HasKey(e => new { e.Roomid, e.Addperrequestid }).HasName("room_addonperrequest_pkey");
+                {
+                    entity.HasKey(e => new { e.Apartmentid, e.Addperrequestid }).HasName("room_addonperrequest_pkey");
 
-            entity.ToTable("faceliftroom_addonperrequest");
+                    entity.ToTable("faceliftroom_addonperrequest");
 
-            entity.Property(e => e.Roomid).HasColumnName("roomid");
-            entity.Property(e => e.Addperrequestid).HasColumnName("addperrequestid");
-            entity.Property(e => e.Quantity)
-                .HasDefaultValue(1)
-                .HasColumnName("quantity");
+                    entity.Property(e => e.Apartmentid).HasColumnName("apartmentid");
+                    entity.Property(e => e.Addperrequestid).HasColumnName("addperrequestid");
+                    entity.Property(e => e.Quantity)
+                        .HasDefaultValue(1)
+                        .HasColumnName("quantity");
 
-            entity.HasOne(d => d.Addperrequest).WithMany(p => p.FaceliftroomAddonperrequests)
-                .HasForeignKey(d => d.Addperrequestid)
-                .HasConstraintName("apartment_addonperrequest_addperrequestid_fkey");
+                    entity.HasOne(d => d.Addperrequest).WithMany(p => p.FaceliftroomAddonperrequests)
+                        .HasForeignKey(d => d.Addperrequestid)
+                        .HasConstraintName("apartment_addonperrequest_addperrequestid_fkey");
 
-            entity.HasOne(d => d.Room).WithMany(p => p.FaceliftroomAddonperrequests)
-                .HasForeignKey(d => d.Roomid)
-                .HasConstraintName("room_addon_apartmentid_fkey");
-        });
+                    entity.HasOne(d => d.Apartment).WithMany(p => p.FaceliftroomAddonperrequests)
+                        .HasForeignKey(d => d.Apartmentid)
+                        .HasConstraintName("room_addon_apartmentid_fkey");
+                });
 
         modelBuilder.Entity<Installmentbreakdown>(entity =>
         {
@@ -812,7 +814,7 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .HasColumnName("description");
-            entity.Property(e => e.DisplayOrder).HasColumnName("displayorder");    
+            entity.Property(e => e.Displayorder).HasColumnName("displayorder");
             entity.Property(e => e.Lastmodifieddatetime)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("lastmodifieddatetime");

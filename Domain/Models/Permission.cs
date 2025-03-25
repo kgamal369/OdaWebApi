@@ -1,4 +1,7 @@
-﻿namespace OdaWepApi.Domain.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace OdaWepApi.Domain.Models;
 
 public partial class Permission
 {
@@ -13,7 +16,4 @@ public partial class Permission
     public DateTime? Createdatetime { get; set; }
 
     public DateTime? Lastmodifieddatetime { get; set; }
-
-    public virtual Role? Role { get; set; }
-
 }

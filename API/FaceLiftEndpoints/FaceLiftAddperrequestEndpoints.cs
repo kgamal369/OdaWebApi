@@ -14,7 +14,7 @@ namespace OdaWepApi.API.FaceLiftEndpoints
             // Get all FaceLiftAddonsAddons
             group.MapGet("/", async (OdaDbContext db) =>
             {
-                return await db.Faceliftaddperrequests.AsNoTracking().ToListAsync();
+                return await db.Faceliftaddperrequests.AsNoTracking().OrderBy(a => a.Displayorder).ToListAsync();
             })
             .WithName("GetAllFaceLiftAddperrequest")
             .WithOpenApi();
