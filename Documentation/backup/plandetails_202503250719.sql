@@ -1,0 +1,66 @@
+INSERT INTO public.plandetails (plandetailsname,plandetailstype,planid,description,createdatetime,lastmodifieddatetime,stars,displayorder) VALUES
+	 ('Interior Walls Demolish Masonry & Plastering','Foundation',1,'',NULL,NULL,1,NULL),
+	 ('Electricity, Internet, Satellite, Decentral AC & Heating with Automation & Shutters piping only  ','Foundation',1,'',NULL,NULL,1,NULL),
+	 ('Interior Plumbing & Insulation ','Foundation',1,'',NULL,NULL,1,NULL),
+	 ('Interior Wall Pain& Cladding','Decoration',1,'',NULL,NULL,1,NULL),
+	 ('Gypsum Board','Decoration',1,'',NULL,NULL,1,NULL),
+	 ('Flooring(Reception / Hallway / Balcony)','Decoration',1,'Ceramic',NULL,NULL,NULL,NULL),
+	 ('Flooring(Rooms)','Decoration',1,'Ceramic',NULL,NULL,NULL,NULL),
+	 ('Flooring(Bathrooms/Kitchen)','Decoration',1,'Ceramic',NULL,NULL,NULL,NULL),
+	 ('Stairs(including handrail & tempered glass) ','Decoration',1,'Local Marble',NULL,NULL,NULL,NULL),
+	 ('Interior Doors','Decoration',1,'Basic filling density with local technical fiber board',NULL,NULL,NULL,NULL);
+INSERT INTO public.plandetails (plandetailsname,plandetailstype,planid,description,createdatetime,lastmodifieddatetime,stars,displayorder) VALUES
+	 ('Interior Walls Demolish Masonry & Plastering','Foundation',2,'',NULL,NULL,2,NULL),
+	 ('Electricity, Internet, Satellite, Decentral AC & Heating with Automation & Shutters piping only  ','Foundation',2,'',NULL,NULL,2,NULL),
+	 ('Interior Plumbing & Insulation ','Foundation',2,'',NULL,NULL,2,NULL),
+	 ('Interior Wall Pain& Cladding','Decoration',2,'',NULL,NULL,2,NULL),
+	 ('Gypsum Board','Decoration',2,'',NULL,NULL,2,NULL),
+	 ('Flooring(Reception / Hallway / Balcony)','Decoration',2,'Porcelain/Local Marble',NULL,NULL,NULL,NULL),
+	 ('Flooring(Rooms)','Decoration',2,'Porcelain/HDF',NULL,NULL,NULL,NULL),
+	 ('Flooring(Bathrooms/Kitchen)','Decoration',2,'Ceramic',NULL,NULL,NULL,NULL),
+	 ('Stairs(including handrail & tempered glass) ','Decoration',2,'Local Marble',NULL,NULL,NULL,NULL),
+	 ('Interior Doors','Decoration',2,'Medium filling density with wood board',NULL,NULL,NULL,NULL);
+INSERT INTO public.plandetails (plandetailsname,plandetailstype,planid,description,createdatetime,lastmodifieddatetime,stars,displayorder) VALUES
+	 ('Interior Walls Demolish Masonry & Plastering','Foundation',3,'',NULL,NULL,3,NULL),
+	 ('Electricity, Internet, Satellite, Decentral AC & Heating with Automation & Shutters piping only  ','Foundation',3,'',NULL,NULL,3,NULL),
+	 ('Interior Plumbing & Insulation ','Foundation',3,'',NULL,NULL,3,NULL),
+	 ('Interior Wall Pain& Cladding','Decoration',3,'',NULL,NULL,3,NULL),
+	 ('Gypsum Board','Decoration',3,'',NULL,NULL,3,NULL),
+	 ('Flooring(Reception / Hallway / Balcony)','Decoration',3,'HDF',NULL,NULL,NULL,NULL),
+	 ('Flooring(Rooms)','Decoration',3,'Local Marble/HDF',NULL,NULL,NULL,NULL),
+	 ('Flooring(Bathrooms/Kitchen)','Decoration',3,'Local Marble/Porcelain',NULL,NULL,NULL,NULL),
+	 ('Stairs(including handrail & tempered glass) ','Decoration',3,'Local Marble/Oak Wood',NULL,NULL,NULL,NULL),
+	 ('Interior Doors','Decoration',3,'Highest filling density/with oak board coating',NULL,NULL,NULL,NULL);
+INSERT INTO public.plandetails (plandetailsname,plandetailstype,planid,description,createdatetime,lastmodifieddatetime,stars,displayorder) VALUES
+	 ('Interior Walls Demolish Masonry & Plastering','Foundation',4,'',NULL,NULL,1,NULL),
+	 ('Electricity, Internet, Satellite, Decentral AC & Heating with Automation & Shutters piping only  ','Foundation',4,'',NULL,NULL,1,NULL),
+	 ('Interior Plumbing & Insulation ','Foundation',4,'',NULL,NULL,1,NULL),
+	 ('Interior Wall Pain& Cladding','Decoration',4,'',NULL,NULL,1,NULL),
+	 ('Gypsum Board','Decoration',4,'',NULL,NULL,1,NULL),
+	 ('Flooring(Reception / Hallway / Balcony)','Decoration',4,'Ceramic',NULL,NULL,NULL,NULL),
+	 ('Flooring(Rooms)','Decoration',4,'Ceramic',NULL,NULL,NULL,NULL),
+	 ('Flooring(Bathrooms/Kitchen)','Decoration',4,'Ceramic',NULL,NULL,NULL,NULL),
+	 ('Stairs(including handrail & tempered glass) ','Decoration',4,'Local Marble',NULL,NULL,NULL,NULL),
+	 ('Interior Doors','Decoration',4,'Basic filling density with local technical fiber board',NULL,NULL,NULL,NULL);
+INSERT INTO public.plandetails (plandetailsname,plandetailstype,planid,description,createdatetime,lastmodifieddatetime,stars,displayorder) VALUES
+	 ('Interior Walls Demolish Masonry & Plastering','Foundation',5,'',NULL,NULL,2,NULL),
+	 ('Electricity, Internet, Satellite, Decentral AC & Heating with Automation & Shutters piping only  ','Foundation',5,'',NULL,NULL,2,NULL),
+	 ('Interior Plumbing & Insulation ','Foundation',5,'',NULL,NULL,2,NULL),
+	 ('Interior Wall Pain& Cladding','Decoration',5,'',NULL,NULL,2,NULL),
+	 ('Gypsum Board','Decoration',5,'',NULL,NULL,2,NULL),
+	 ('Flooring(Reception / Hallway / Balcony)','Decoration',5,'Porcelain/Local Marble',NULL,NULL,NULL,NULL),
+	 ('Flooring(Rooms)','Decoration',5,'Porcelain/HDF',NULL,NULL,NULL,NULL),
+	 ('Flooring(Bathrooms/Kitchen)','Decoration',5,'Ceramic',NULL,NULL,NULL,NULL),
+	 ('Stairs(including handrail & tempered glass) ','Decoration',5,'Local Marble',NULL,NULL,NULL,NULL),
+	 ('Interior Doors','Decoration',5,'Medium filling density with wood board',NULL,NULL,NULL,NULL);
+INSERT INTO public.plandetails (plandetailsname,plandetailstype,planid,description,createdatetime,lastmodifieddatetime,stars,displayorder) VALUES
+	 ('Interior Walls Demolish Masonry & Plastering','Foundation',6,'',NULL,NULL,3,NULL),
+	 ('Electricity, Internet, Satellite, Decentral AC & Heating with Automation & Shutters piping only  ','Foundation',6,'',NULL,NULL,3,NULL),
+	 ('Interior Plumbing & Insulation ','Foundation',6,'',NULL,NULL,3,NULL),
+	 ('Interior Wall Pain& Cladding','Decoration',6,'',NULL,NULL,3,NULL),
+	 ('Gypsum Board','Decoration',6,'',NULL,NULL,3,NULL),
+	 ('Flooring(Reception / Hallway / Balcony)','Decoration',6,'HDF',NULL,NULL,NULL,NULL),
+	 ('Flooring(Rooms)','Decoration',6,'Local Marble/HDF',NULL,NULL,NULL,NULL),
+	 ('Flooring(Bathrooms/Kitchen)','Decoration',6,'Local Marble/Porcelain',NULL,NULL,NULL,NULL),
+	 ('Stairs(including handrail & tempered glass) ','Decoration',6,'Local Marble/Oak Wood',NULL,NULL,NULL,NULL),
+	 ('Interior Doors','Decoration',6,'Highest filling density/with oak board coating',NULL,NULL,NULL,NULL);
