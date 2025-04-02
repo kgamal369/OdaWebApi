@@ -10,7 +10,7 @@ namespace OdaWepApi.Domain.DTOs
         public string? ApartmentAddress { get; set; }
         public int? Unittypeid { get; set; }
         public string? UnittypeName { get; set; }
-        public List<ApartmentRoomsDTO>? ApartmentRooms { get; set; }
-        public FaceLiftRoomType RoomType { get; internal set; }
+    //    public List<ApartmentRoomsDTO>? ApartmentRooms { get; set; }
+    //    public FaceLiftRoomType? RoomType { get; internal set; }
     }
 }
