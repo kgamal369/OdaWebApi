@@ -1,0 +1,31 @@
+OdaWebApi/
+│
+├── API/                        # API Layer - Controllers & Endpoints
+│   ├── DomainEndpoints/
+│   ├── DTOEndpoints/
+│   └── FaceLiftEndpoints/
+│
+├── Application/               # Business logic & use cases
+│   ├── Interfaces/            # Interfaces for services & repos
+│   ├── Services/              # Business services (BookingDataInServices, etc.)
+│   ├── Validators/            # FluentValidation rules
+│   └── Mappings/              # AutoMapper profiles
+│
+├── Domain/                    # Core domain logic & models
+│   ├── Models/                # Entity models
+│   ├── DTOs/                  # View/composite DTOs
+│   ├── Enums/                 # Enums used across the app
+│   └── ValueObjects/          # (Optional) reusable small objects
+│
+├── Infrastructure/            # EF Core, file logging, email, etc.
+│   ├── DbContext/             # EF DbContext & Configs
+│   ├── Repositories/          # Implementation of interfaces
+│   └── Services/              # Infra services (email, file upload, etc.)
+│
+├── Migrations/                # EF Core Migrations
+│
+├── Tests/                     # Unit & integration tests
+│
+├── Program.cs                 # App entry point
+├── appsettings.json
+└── OdaWebApi.csproj

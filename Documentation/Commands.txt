@@ -11,8 +11,9 @@
     dotnet clean OdaWepApi.csproj
     dotnet restore OdaWepApi.csproj
     dotnet build OdaWepApi.csproj 
-    dotnet build -c Release
     dotnet run OdaWepApi.csproj 
+
+    dotnet build -c Release
 
 3.prettier:
     dotnet format OdaWepApi.csproj
@@ -55,10 +56,16 @@ Password :0d@Project123
 
 9.SonarQube
 server : http://localhost:9000
-Username : Admin
+Username : admin
 Password : THEspider369!
-run :dotnet sonarscanner begin /k:"OdaWebApi" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="admin"
-build :dotnet build
+run :docker run -d --name sonarqube \
+  -p 9000:9000 \
+  -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
+  sonarqube:lts
+run sonarqube service : C:\SonarQube\bin\windows-x86-64> .\StartSonar.bat
+build :dotnet build OdaWepApi.sln
+
 Scan :dotnet sonarscanner end /d:sonar.login="admin"
 dotnet sonarscanner begin /k:"OdaWebApi" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="sqa_d1dc38abdbe1c3b5980e83ff2fbdd31a5e2b61a1"
+dotnet build OdaWepApi.sln
 dotnet sonarscanner end /d:sonar.login="sqa_d1dc38abdbe1c3b5980e83ff2fbdd31a5e2b61a1"
