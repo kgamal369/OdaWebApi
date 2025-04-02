@@ -42,18 +42,24 @@ public partial class Apartment
 
     public int? Unittypeid { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<ApartmentAddonperrequest> ApartmentAddonperrequests { get; set; } = new List<ApartmentAddonperrequest>();
 
+    [JsonIgnore]
     public virtual ICollection<ApartmentAddon> ApartmentAddons { get; set; } = new List<ApartmentAddon>();
 
+    [JsonIgnore]
     public virtual Automation? Automation { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual Developer? Developer { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<FaceliftroomAddonperrequest> FaceliftroomAddonperrequests { get; set; } = new List<FaceliftroomAddonperrequest>();
 
+    [JsonIgnore]
     public virtual ICollection<Faceliftroom> Faceliftrooms { get; set; } = new List<Faceliftroom>();
 
     public virtual Plan? Plan { get; set; }

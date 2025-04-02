@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using OdaWepApi.Domain.Enums;
 
 namespace OdaWepApi.Domain.Models;
@@ -26,17 +27,24 @@ public partial class Booking
 
     public decimal Totalamount { get; set; }
 
+    [JsonIgnore]
     public virtual Apartment? Apartment { get; set; }
 
+    [JsonIgnore]
     public virtual Customer? Customer { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Customeranswer> Customeranswers { get; set; } = new List<Customeranswer>();
 
+    [JsonIgnore]
     public virtual ICollection<Faceliftroom> Faceliftrooms { get; set; } = new List<Faceliftroom>();
 
+    [JsonIgnore]
     public virtual Paymentmethod? Paymentmethod { get; set; }
 
+    [JsonIgnore]
     public virtual Paymentplan? Paymentplan { get; set; }
 
+    [JsonIgnore]
     public virtual User? User { get; set; }
 }

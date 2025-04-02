@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace OdaWepApi.Domain.Models;
 
@@ -21,5 +22,6 @@ public partial class Customer
 
     public DateTime? Lastmodifieddatetime { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }
