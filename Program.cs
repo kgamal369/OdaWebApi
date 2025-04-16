@@ -4,8 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using OdaWepApi.API.DomainEndpoints;
 using OdaWepApi.API.DTOEndpoints;
-using OdaWepApi.API.FaceLiftEndpoints;
 using OdaWepApi.Infrastructure;
+using OdaWepApi.API.DomainEndpoints.Forms;
+using OdaWepApi.API.DomainEndpoints.FaceLiftEndpoints;
+using OdaWepApi.API.DomainEndpoints.LocateYourHome_BuildYourKit;
+using OdaWepApi.API.DomainEndpoints.Common;
 
 // Create Host Builder
 var builder = WebApplication.CreateBuilder(args);
@@ -141,6 +144,7 @@ app.MapFaceLiftAddonEndpoints();
 app.MapFaceLiftApartmentDTOEndpoints();
 app.MapFaceLiftBookingDataInDTOEndpoints();
 app.MapFaceLiftBookingDataOutDTOEndpoints();
+app.MapFaceLiftFormEndpoints();
 app.MapInstallmentBreakdownEndpoints();
 app.MapInvoiceEndpoints();
 app.MapOdaAmbassadorEndpoints();

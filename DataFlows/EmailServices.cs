@@ -3,7 +3,7 @@ using System.Net.Mail;
 using System.Globalization;
 using System.Threading.Tasks;
 using OdaWepApi.Domain.DTOs;
-using OdaWepApi.Domain.Models;
+using OdaWepApi.Domain.Models.Forms;
 namespace OdaWepApi.DataFlows
 {
     public static class EmailService

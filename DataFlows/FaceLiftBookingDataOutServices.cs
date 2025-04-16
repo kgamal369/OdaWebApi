@@ -15,16 +15,13 @@ namespace OdaWepApi.DataFlows
                 .Include(b => b.Customer)
                 .Include(b => b.Apartment)
                 .ThenInclude(a => a.Automation)
-                .Include(b => b.Paymentplan)
-                  .ThenInclude(p => p.Installmentbreakdowns)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Bookingid == bookingID);
 
             if (booking == null) return null;
 
             var apartment = booking.Apartment;
             if (apartment == null) return null;
-
-            var paymentPlan = booking.Paymentplan ?? throw new System.Exception("Payment plan not found.");
 
             var addonPerRequests = await db.FaceliftroomAddonperrequests
                 .Where(aapr => aapr.Apartmentid == apartment.Apartmentid)
@@ -43,32 +40,63 @@ namespace OdaWepApi.DataFlows
        .Where(r => r.Bookingid == bookingID && r.Apartmentid == booking.Apartmentid)
        .ToListAsync();
 
-            var faceLiftRoomDTO = new List<FaceLiftRoomDTO>();
+            var faceLiftRoomDTO = new List<FaceLiftRoomsDataOutDTO>();
 
             foreach (var room in rooms)
             {
                 var addons = await db.FaceliftroomAddons
                     .Where(a => a.Roomid == room.Roomid)
-                    .Select(a => new AddonSelection
+                    .Select(a => new AddonDetail
                     {
                         AddonID = a.Addonid,
-                        Quantity = a.Quantity
+                        AddonName = a.Addon.Addonname,
+                        Addongroup = a.Addon.Addongroup,
+                        Unitormeter = a.Addon.Unitormeter,
+                        Description = a.Addon.Description,
+                        Quantity = a.Quantity,
+                        Price = (decimal)((a.Addon.Unitormeter == UnitOrMeterType.Unit)
+                        ? a.Addon.Price * a.Quantity
+                        : a.Addon.Price * (apartment.Apartmentspace ?? 0))
                     })
+                    .AsNoTracking()
                     .ToListAsync();
 
-                faceLiftRoomDTO.Add(new FaceLiftRoomDTO
+
+                var TotalRoomAddonPrice = addons.Sum(a => a.Price); // Initialize the TotalRoomAddonPrice for each room
+                var TotalRoomAirconditionerPrice = addons
+                .Where(a => a.Addongroup == "AirConditioning")
+                .Sum(a => a.Price);
+
+                faceLiftRoomDTO.Add(new FaceLiftRoomsDataOutDTO
                 {
                     RoomType = room.Roomtype,
-                    AddonSelectionsList = addons
+                    AddonDetail = addons,
+                    TotalAddonPrice = TotalRoomAddonPrice,
+                    TotalAirconditionerPrice = TotalRoomAirconditionerPrice
                 });
             }
-
+            var totalPrice = faceLiftRoomDTO.Sum(r => r.TotalAddonPrice);
+            var totalAirconditionerPrice = faceLiftRoomDTO.Sum(r => r.TotalAirconditionerPrice);
+            var apartmentRooms = await db.Faceliftrooms
+                .Where(r => r.Apartmentid == apartment.Apartmentid)
+                .GroupBy(r => r.Roomtype)
+                .Select(g => new ApartmentRoomsDTO
+                {
+                    RoomType = g.Key,
+                    NumberOfRoomsQuantity = g.Count()
+                })
+                .ToListAsync();
             return new FaceLiftBookingDataOutDTO
             {
                 BookingID = booking.Bookingid,
                 AutomationID = booking.Apartment?.Automationid,
                 AddonPerRequests = addonPerRequestDetails,
-                Rooms = faceLiftRoomDTO
+                Rooms = faceLiftRoomDTO,
+
+                ApartmentRooms = apartmentRooms,
+                SumOfTotalAddonPrices = (decimal)totalPrice,
+                TotalAirconditionerPrice = (decimal)totalAirconditionerPrice
+
             };
         }
     }

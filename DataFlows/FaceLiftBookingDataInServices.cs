@@ -1,10 +1,12 @@
 using OdaWepApi.Infrastructure;
-using OdaWepApi.Domain.Models;
 using OdaWepApi.Domain.DTOs;
 using OdaWepApi.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using OdaWepApi.Domain.DTOs.FaceLiftDTO;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using OdaWepApi.Domain.Models.FaceLift;
+using OdaWepApi.Domain.Models.Common;
+using OdaWepApi.Domain.Models.LocateYourHome_BuildYourKit;
 
 namespace OdaWepApi.DataFlows
 {
@@ -20,7 +22,7 @@ namespace OdaWepApi.DataFlows
                 {
                     Customerid = await CreateOrGetCustomer(db, faceLiftBookingDataInDTO.CustomerInfo),
                     Apartmentid = await CreateOrGetApartment(db, faceLiftBookingDataInDTO),
-                    Paymentplanid = faceLiftBookingDataInDTO.PaymentPlanID,
+                    //    Paymentplanid = faceLiftBookingDataInDTO.PaymentPlanID,
                     Createdatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     Bookingstatus = Bookingstatus.InProgress,
@@ -174,7 +176,7 @@ namespace OdaWepApi.DataFlows
 
 
             // Update the booking fields
-            booking.Paymentplanid = bookingDataIn.PaymentPlanID;
+            // booking.Paymentplanid = bookingDataIn.PaymentPlanID;
             booking.Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             booking.Totalamount = await CalculateTotalAmount(db, bookingDataIn);
 

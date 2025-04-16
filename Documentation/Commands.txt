@@ -62,7 +62,7 @@ run :docker run -d --name sonarqube \
   -p 9000:9000 \
   -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
   sonarqube:lts
-run sonarqube service : C:\SonarQube\bin\windows-x86-64> .\StartSonar.bat
+run sonarqube service : cd C:\sonarqube\bin\windows-x86-64 .\StartSonar.bat
 build :dotnet build OdaWepApi.sln
 
 Scan :dotnet sonarscanner end /d:sonar.login="admin"

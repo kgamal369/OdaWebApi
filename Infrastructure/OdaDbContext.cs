@@ -1,7 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using OdaWepApi.Domain.Models;
+using OdaWepApi.Domain.Models.Common;
+using OdaWepApi.Domain.Models.FaceLift;
+using OdaWepApi.Domain.Models.Forms;
+using OdaWepApi.Domain.Models.LocateYourHome_BuildYourKit;
 namespace OdaWepApi.Infrastructure;
 
 public partial class OdaDbContext : DbContext
@@ -44,6 +48,8 @@ public partial class OdaDbContext : DbContext
     public virtual DbSet<Faceliftaddon> Faceliftaddons { get; set; }
 
     public virtual DbSet<Faceliftaddperrequest> Faceliftaddperrequests { get; set; }
+
+    public virtual DbSet<Faceliftform> Faceliftforms { get; set; }
 
     public virtual DbSet<Faceliftroom> Faceliftrooms { get; set; }
 
@@ -531,6 +537,17 @@ public partial class OdaDbContext : DbContext
             entity.Property(e => e.Price)
                 .HasPrecision(10, 2)
                 .HasColumnName("price");
+        });
+
+        modelBuilder.Entity<Faceliftform>(entity =>
+        {
+            entity.Property(e => e.FaceLiftFormId).HasColumnName("faceliftformid"); // 🟢 Add this line
+            entity.ToTable("faceliftform");
+            entity.Property(e => e.FirstName).HasColumnName("firstname");
+            entity.Property(e => e.PhoneNumber).HasColumnName("phonenumber");
+            entity.Property(e => e.BedroomsCount).HasColumnName("bedroomscount");
+            entity.Property(e => e.BathroomsCount).HasColumnName("bathroomscount");
+            entity.Property(e => e.KitchenCount).HasColumnName("kitchencount");
         });
 
         modelBuilder.Entity<Faceliftroom>(entity =>

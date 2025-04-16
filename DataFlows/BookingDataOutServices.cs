@@ -3,6 +3,7 @@ using OdaWepApi.Infrastructure;
 using OdaWepApi.Domain.Models;
 using OdaWepApi.Domain.DTOs;
 using OdaWepApi.Domain.Enums;
+using OdaWepApi.Domain.Models.Common;
 
 namespace OdaWepApi.DataFlows
 {

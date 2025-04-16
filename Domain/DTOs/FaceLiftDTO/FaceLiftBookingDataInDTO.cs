@@ -1,4 +1,4 @@
-using OdaWepApi.Domain.Models;
+using OdaWepApi.Domain.Models.Common;
 
 namespace OdaWepApi.Domain.DTOs.FaceLiftDTO
 {
@@ -8,6 +8,5 @@ namespace OdaWepApi.Domain.DTOs.FaceLiftDTO
         public List<int> AddonPerRequestIDs { get; set; }
         public int? AutomationID { get; set; }
         public Customer CustomerInfo { get; set; }
-        public int PaymentPlanID { get; set; }
     }
 }

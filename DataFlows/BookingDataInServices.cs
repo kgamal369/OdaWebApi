@@ -1,8 +1,10 @@
 ﻿using OdaWepApi.Infrastructure;
-using OdaWepApi.Domain.Models;
 using OdaWepApi.Domain.DTOs;
 using OdaWepApi.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using OdaWepApi.Domain.Models.Common;
+using OdaWepApi.Domain.Models.Forms;
+using OdaWepApi.Domain.Models.LocateYourHome_BuildYourKit;
 
 namespace OdaWepApi.DataFlows
 {
@@ -49,7 +51,7 @@ namespace OdaWepApi.DataFlows
                 await CreateApartmentAddonPerRequests(db, newApartmentId, bookingDataIn.AddonPerRequestIDs);
 
                 // Create Rooms 
-                await CreateApartmentRooms(db, newApartmentId, bookingId, bookingDataIn);
+                //    await CreateApartmentRooms(db, newApartmentId, bookingId, bookingDataIn);
 
                 await transaction.CommitAsync(); // 🔥 Commit only if everything succeeds
 
@@ -138,31 +140,31 @@ namespace OdaWepApi.DataFlows
             }
             await db.SaveChangesAsync();
         }
-        private static async Task CreateApartmentRooms(OdaDbContext db, int newApartmentId, int bookingId, BookingDataIn bookingDataIn)
-        {
-            var roomToInsert = new List<Faceliftroom>();
-            foreach (var room in bookingDataIn.apartmentDTO.ApartmentRooms)
-            {
-                if (room.Quantity.HasValue && room.Quantity.Value > 0)
-                {
-                    for (int i = 0; i < room.Quantity.Value; i++)
-                    {
-                        var newRoom = new Faceliftroom
-                        {
-                            Roomtype = room.RoomType,
-                            Automationid = bookingDataIn.AutomationID,
-                            Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                            Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                            Apartmentid = newApartmentId,
-                            Bookingid = bookingId
-                        };
-                        roomToInsert.Add(newRoom);
-                    }
-                }
-            }
-            db.Faceliftrooms.AddRange(roomToInsert);
-            await db.SaveChangesAsync();
-        }
+        // private static async Task CreateApartmentRooms(OdaDbContext db, int newApartmentId, int bookingId, BookingDataIn bookingDataIn)
+        // {
+        //     var roomToInsert = new List<Faceliftroom>();
+        //     foreach (var room in bookingDataIn.apartmentDTO.ApartmentRooms)
+        //     {
+        //         if (room.Quantity.HasValue && room.Quantity.Value > 0)
+        //         {
+        //             for (int i = 0; i < room.Quantity.Value; i++)
+        //             {
+        //                 var newRoom = new Faceliftroom
+        //                 {
+        //                     Roomtype = room.RoomType,
+        //                     Automationid = bookingDataIn.AutomationID,
+        //                     Createddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+        //                     Lastmodifieddatetime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+        //                     Apartmentid = newApartmentId,
+        //                     Bookingid = bookingId
+        //                 };
+        //                 roomToInsert.Add(newRoom);
+        //             }
+        //         }
+        //     }
+        //     db.Faceliftrooms.AddRange(roomToInsert);
+        //     await db.SaveChangesAsync();
+        // }
         private static async Task<decimal> CalculateTotalAmount(OdaDbContext db, int newApartmentId, BookingDataIn bookingDataIn)
         {
             var plan = await db.Plans.FindAsync(bookingDataIn.PlanID);

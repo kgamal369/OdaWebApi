@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OdaWepApi.Domain.Models.Common;
+using System;
 using System.Collections.Generic;
 
 namespace OdaWepApi.Domain.Models;

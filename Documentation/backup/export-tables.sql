@@ -69,6 +69,16 @@ CREATE TABLE public.contactus (
 	CONSTRAINT contactus_pkey PRIMARY KEY (contactusid)
 );
 
+Create Table public.FaceLiftForm (
+	FaceLiftFormId serial4 NOT NULL,
+	FirstName varchar NOT NULL,
+	PhoneNumber varchar NOT NULL,
+	BedroomsCount int4 NOT NULL,
+	BathroomsCount int4 NOT NULL,
+	KitchenCount int4 NOT NULL,
+	CONSTRAINT FaceLiftForm_pkey PRIMARY KEY (FaceLiftFormId)
+);
+
 
 -- public.customer definition
 

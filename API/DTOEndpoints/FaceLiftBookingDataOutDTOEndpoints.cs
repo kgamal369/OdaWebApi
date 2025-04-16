@@ -1,7 +1,7 @@
-using OdaWepApi.Domain.DTOs;
-using OdaWepApi.Infrastructure;
+using Microsoft.AspNetCore.Http.HttpResults;
 using OdaWepApi.DataFlows;
 using OdaWepApi.Domain.DTOs.FaceLiftDTO;
+using OdaWepApi.Infrastructure;
 
 namespace OdaWepApi.API.DTOEndpoints
 {
@@ -11,13 +11,13 @@ namespace OdaWepApi.API.DTOEndpoints
         {
             var group = routes.MapGroup("/api/FaceLiftBookingDataOutDTO").WithTags(nameof(FaceLiftBookingDataOutDTO));
 
-            group.MapGet("/{bookingId}", async (int bookingId, OdaDbContext db) =>
+            group.MapGet("/{bookingId}", async Task<Results<Ok<FaceLiftBookingDataOutDTO>, NotFound>> (int bookingId, OdaDbContext db) =>
             {
-                // Call the GetFaceLiftBookingDataOut method
                 var bookingDataOut = await FaceLiftBookingDataOutServices.GetFaceLiftBookingDataOutDTO(db, bookingId);
 
-                // Return the result
-                return bookingDataOut != null ? Results.Ok(bookingDataOut) : Results.NotFound();
+                return bookingDataOut != null
+                    ? TypedResults.Ok(bookingDataOut)
+                    : TypedResults.NotFound();
             });
         }
     }
