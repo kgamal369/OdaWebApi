@@ -15,9 +15,10 @@ namespace OdaWepApi.DataFlows
         public static readonly List<string> recipientEmails = new List<string>
         {
             "eng.karim.gamal369@gmail.com",
+            "ahayaly@gmail.com",
             "ahmedshawky985@gmail.com",
             "mohamed.k.elhawary@gmail.com",
-            "Info@oda-me.com"
+            "info@oda-me.com"
         };
 
         public static string FormatCurrency(decimal value)
